@@ -1,0 +1,3891 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> sequence
+Rule 1     atomar -> NUMBER
+Rule 2     atomar -> FLOAT
+Rule 3     atomar -> IDENTIFIER
+Rule 4     atomar -> LPAREN expression RPAREN
+Rule 5     expression -> expression PLUS expression
+Rule 6     expression -> expression MINUS expression
+Rule 7     expression -> expression TIMES expression
+Rule 8     expression -> expression DIVIDE expression
+Rule 9     expression -> expression DIVIDE_CEIL expression
+Rule 10    expression -> expression DIVIDE_FLOOR expression
+Rule 11    expression -> expression MOD expression
+Rule 12    expression -> expression EXP expression
+Rule 13    expression -> expression AND expression
+Rule 14    expression -> expression OR expression
+Rule 15    expression -> expression XOR expression
+Rule 16    expression -> expression GREATER_THAN expression
+Rule 17    expression -> expression SMALLER_THAN expression
+Rule 18    expression -> expression SMALLER_EQUALS expression
+Rule 19    expression -> expression GREATER_EQUALS expression
+Rule 20    expression -> expression EQUALS expression
+Rule 21    expression -> expression UNEQUALS expression
+Rule 22    expression -> atomar
+Rule 23    comparator -> cmp expression
+Rule 24    cmp -> GREATER_THAN
+Rule 25    cmp -> SMALLER_THAN
+Rule 26    cmp -> SMALLER_EQUALS
+Rule 27    cmp -> GREATER_EQUALS
+Rule 28    cmp -> EQUALS
+Rule 29    cmp -> UNEQUALS
+Rule 30    comparator -> comparator comparator
+Rule 31    expression -> expression comparator
+Rule 32    expression -> expression PLUS PLUS
+Rule 33    expression -> expression MINUS MINUS
+Rule 34    expression -> expression TIMES TIMES expression
+Rule 35    expression -> NOT expression
+Rule 36    expression -> MINUS expression
+Rule 37    expression -> PLUS expression
+Rule 38    expression -> expression IMAG
+Rule 39    expression -> IDENTIFIER ASSIGN expression
+Rule 40    sequence -> BEGIN body END
+Rule 41    sequence -> BEGIN body SEMICOLON END
+Rule 42    body -> expression
+Rule 43    body -> body SEMICOLON expression
+
+Terminals, with rules where they appear
+
+AND                  : 13
+ASSIGN               : 39
+BEGIN                : 40 41
+DIVIDE               : 8
+DIVIDE_CEIL          : 9
+DIVIDE_FLOOR         : 10
+END                  : 40 41
+EQUALS               : 20 28
+EXP                  : 12
+FLOAT                : 2
+GREATER_EQUALS       : 19 27
+GREATER_THAN         : 16 24
+IDENTIFIER           : 3 39
+IMAG                 : 38
+LPAREN               : 4
+MINUS                : 6 33 33 36
+MOD                  : 11
+NOT                  : 35
+NUMBER               : 1
+OR                   : 14
+PLUS                 : 5 32 32 37
+RPAREN               : 4
+SEMICOLON            : 41 43
+SMALLER_EQUALS       : 18 26
+SMALLER_THAN         : 17 25
+TIMES                : 7 34 34
+UNEQUALS             : 21 29
+XOR                  : 15
+error                : 
+
+Nonterminals, with rules where they appear
+
+atomar               : 22
+body                 : 40 41 43
+cmp                  : 23
+comparator           : 30 30 31
+expression           : 4 5 5 6 6 7 7 8 8 9 9 10 10 11 11 12 12 13 13 14 14 15 15 16 16 17 17 18 18 19 19 20 20 21 21 23 31 32 33 34 34 35 36 37 38 39 42 43
+sequence             : 0
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . sequence
+    (40) sequence -> . BEGIN body END
+    (41) sequence -> . BEGIN body SEMICOLON END
+
+    BEGIN           shift and go to state 2
+
+    sequence                       shift and go to state 1
+
+state 1
+
+    (0) S' -> sequence .
+
+
+
+state 2
+
+    (40) sequence -> BEGIN . body END
+    (41) sequence -> BEGIN . body SEMICOLON END
+    (42) body -> . expression
+    (43) body -> . body SEMICOLON expression
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    body                           shift and go to state 3
+    expression                     shift and go to state 4
+    atomar                         shift and go to state 7
+
+state 3
+
+    (40) sequence -> BEGIN body . END
+    (41) sequence -> BEGIN body . SEMICOLON END
+    (43) body -> body . SEMICOLON expression
+
+    END             shift and go to state 13
+    SEMICOLON       shift and go to state 14
+
+
+state 4
+
+    (42) body -> expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    END             reduce using rule 42 (body -> expression .)
+    SEMICOLON       reduce using rule 42 (body -> expression .)
+    PLUS            shift and go to state 15
+    MINUS           shift and go to state 16
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    DIVIDE_CEIL     shift and go to state 19
+    DIVIDE_FLOOR    shift and go to state 20
+    MOD             shift and go to state 21
+    EXP             shift and go to state 22
+    AND             shift and go to state 23
+    OR              shift and go to state 24
+    XOR             shift and go to state 25
+    GREATER_THAN    shift and go to state 26
+    SMALLER_THAN    shift and go to state 27
+    SMALLER_EQUALS  shift and go to state 28
+    GREATER_EQUALS  shift and go to state 29
+    EQUALS          shift and go to state 30
+    UNEQUALS        shift and go to state 31
+    IMAG            shift and go to state 33
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 5
+
+    (37) expression -> PLUS . expression
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    expression                     shift and go to state 35
+    atomar                         shift and go to state 7
+
+state 6
+
+    (36) expression -> MINUS . expression
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    expression                     shift and go to state 36
+    atomar                         shift and go to state 7
+
+state 7
+
+    (22) expression -> atomar .
+
+    PLUS            reduce using rule 22 (expression -> atomar .)
+    MINUS           reduce using rule 22 (expression -> atomar .)
+    TIMES           reduce using rule 22 (expression -> atomar .)
+    DIVIDE          reduce using rule 22 (expression -> atomar .)
+    DIVIDE_CEIL     reduce using rule 22 (expression -> atomar .)
+    DIVIDE_FLOOR    reduce using rule 22 (expression -> atomar .)
+    MOD             reduce using rule 22 (expression -> atomar .)
+    EXP             reduce using rule 22 (expression -> atomar .)
+    AND             reduce using rule 22 (expression -> atomar .)
+    OR              reduce using rule 22 (expression -> atomar .)
+    XOR             reduce using rule 22 (expression -> atomar .)
+    GREATER_THAN    reduce using rule 22 (expression -> atomar .)
+    SMALLER_THAN    reduce using rule 22 (expression -> atomar .)
+    SMALLER_EQUALS  reduce using rule 22 (expression -> atomar .)
+    GREATER_EQUALS  reduce using rule 22 (expression -> atomar .)
+    EQUALS          reduce using rule 22 (expression -> atomar .)
+    UNEQUALS        reduce using rule 22 (expression -> atomar .)
+    IMAG            reduce using rule 22 (expression -> atomar .)
+    END             reduce using rule 22 (expression -> atomar .)
+    SEMICOLON       reduce using rule 22 (expression -> atomar .)
+    RPAREN          reduce using rule 22 (expression -> atomar .)
+
+
+state 8
+
+    (35) expression -> NOT . expression
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    expression                     shift and go to state 37
+    atomar                         shift and go to state 7
+
+state 9
+
+    (39) expression -> IDENTIFIER . ASSIGN expression
+    (3) atomar -> IDENTIFIER .
+
+    ASSIGN          shift and go to state 38
+    PLUS            reduce using rule 3 (atomar -> IDENTIFIER .)
+    MINUS           reduce using rule 3 (atomar -> IDENTIFIER .)
+    TIMES           reduce using rule 3 (atomar -> IDENTIFIER .)
+    DIVIDE          reduce using rule 3 (atomar -> IDENTIFIER .)
+    DIVIDE_CEIL     reduce using rule 3 (atomar -> IDENTIFIER .)
+    DIVIDE_FLOOR    reduce using rule 3 (atomar -> IDENTIFIER .)
+    MOD             reduce using rule 3 (atomar -> IDENTIFIER .)
+    EXP             reduce using rule 3 (atomar -> IDENTIFIER .)
+    AND             reduce using rule 3 (atomar -> IDENTIFIER .)
+    OR              reduce using rule 3 (atomar -> IDENTIFIER .)
+    XOR             reduce using rule 3 (atomar -> IDENTIFIER .)
+    GREATER_THAN    reduce using rule 3 (atomar -> IDENTIFIER .)
+    SMALLER_THAN    reduce using rule 3 (atomar -> IDENTIFIER .)
+    SMALLER_EQUALS  reduce using rule 3 (atomar -> IDENTIFIER .)
+    GREATER_EQUALS  reduce using rule 3 (atomar -> IDENTIFIER .)
+    EQUALS          reduce using rule 3 (atomar -> IDENTIFIER .)
+    UNEQUALS        reduce using rule 3 (atomar -> IDENTIFIER .)
+    IMAG            reduce using rule 3 (atomar -> IDENTIFIER .)
+    END             reduce using rule 3 (atomar -> IDENTIFIER .)
+    SEMICOLON       reduce using rule 3 (atomar -> IDENTIFIER .)
+    RPAREN          reduce using rule 3 (atomar -> IDENTIFIER .)
+
+
+state 10
+
+    (1) atomar -> NUMBER .
+
+    PLUS            reduce using rule 1 (atomar -> NUMBER .)
+    MINUS           reduce using rule 1 (atomar -> NUMBER .)
+    TIMES           reduce using rule 1 (atomar -> NUMBER .)
+    DIVIDE          reduce using rule 1 (atomar -> NUMBER .)
+    DIVIDE_CEIL     reduce using rule 1 (atomar -> NUMBER .)
+    DIVIDE_FLOOR    reduce using rule 1 (atomar -> NUMBER .)
+    MOD             reduce using rule 1 (atomar -> NUMBER .)
+    EXP             reduce using rule 1 (atomar -> NUMBER .)
+    AND             reduce using rule 1 (atomar -> NUMBER .)
+    OR              reduce using rule 1 (atomar -> NUMBER .)
+    XOR             reduce using rule 1 (atomar -> NUMBER .)
+    GREATER_THAN    reduce using rule 1 (atomar -> NUMBER .)
+    SMALLER_THAN    reduce using rule 1 (atomar -> NUMBER .)
+    SMALLER_EQUALS  reduce using rule 1 (atomar -> NUMBER .)
+    GREATER_EQUALS  reduce using rule 1 (atomar -> NUMBER .)
+    EQUALS          reduce using rule 1 (atomar -> NUMBER .)
+    UNEQUALS        reduce using rule 1 (atomar -> NUMBER .)
+    IMAG            reduce using rule 1 (atomar -> NUMBER .)
+    END             reduce using rule 1 (atomar -> NUMBER .)
+    SEMICOLON       reduce using rule 1 (atomar -> NUMBER .)
+    RPAREN          reduce using rule 1 (atomar -> NUMBER .)
+
+
+state 11
+
+    (2) atomar -> FLOAT .
+
+    PLUS            reduce using rule 2 (atomar -> FLOAT .)
+    MINUS           reduce using rule 2 (atomar -> FLOAT .)
+    TIMES           reduce using rule 2 (atomar -> FLOAT .)
+    DIVIDE          reduce using rule 2 (atomar -> FLOAT .)
+    DIVIDE_CEIL     reduce using rule 2 (atomar -> FLOAT .)
+    DIVIDE_FLOOR    reduce using rule 2 (atomar -> FLOAT .)
+    MOD             reduce using rule 2 (atomar -> FLOAT .)
+    EXP             reduce using rule 2 (atomar -> FLOAT .)
+    AND             reduce using rule 2 (atomar -> FLOAT .)
+    OR              reduce using rule 2 (atomar -> FLOAT .)
+    XOR             reduce using rule 2 (atomar -> FLOAT .)
+    GREATER_THAN    reduce using rule 2 (atomar -> FLOAT .)
+    SMALLER_THAN    reduce using rule 2 (atomar -> FLOAT .)
+    SMALLER_EQUALS  reduce using rule 2 (atomar -> FLOAT .)
+    GREATER_EQUALS  reduce using rule 2 (atomar -> FLOAT .)
+    EQUALS          reduce using rule 2 (atomar -> FLOAT .)
+    UNEQUALS        reduce using rule 2 (atomar -> FLOAT .)
+    IMAG            reduce using rule 2 (atomar -> FLOAT .)
+    END             reduce using rule 2 (atomar -> FLOAT .)
+    SEMICOLON       reduce using rule 2 (atomar -> FLOAT .)
+    RPAREN          reduce using rule 2 (atomar -> FLOAT .)
+
+
+state 12
+
+    (4) atomar -> LPAREN . expression RPAREN
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    expression                     shift and go to state 39
+    atomar                         shift and go to state 7
+
+state 13
+
+    (40) sequence -> BEGIN body END .
+
+    $end            reduce using rule 40 (sequence -> BEGIN body END .)
+
+
+state 14
+
+    (41) sequence -> BEGIN body SEMICOLON . END
+    (43) body -> body SEMICOLON . expression
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    END             shift and go to state 40
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    expression                     shift and go to state 41
+    atomar                         shift and go to state 7
+
+state 15
+
+    (5) expression -> expression PLUS . expression
+    (32) expression -> expression PLUS . PLUS
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    PLUS            shift and go to state 43
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    expression                     shift and go to state 42
+    atomar                         shift and go to state 7
+
+state 16
+
+    (6) expression -> expression MINUS . expression
+    (33) expression -> expression MINUS . MINUS
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    MINUS           shift and go to state 45
+    NOT             shift and go to state 8
+    PLUS            shift and go to state 5
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    expression                     shift and go to state 44
+    atomar                         shift and go to state 7
+
+state 17
+
+    (7) expression -> expression TIMES . expression
+    (34) expression -> expression TIMES . TIMES expression
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    TIMES           shift and go to state 47
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    expression                     shift and go to state 46
+    atomar                         shift and go to state 7
+
+state 18
+
+    (8) expression -> expression DIVIDE . expression
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    expression                     shift and go to state 48
+    atomar                         shift and go to state 7
+
+state 19
+
+    (9) expression -> expression DIVIDE_CEIL . expression
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    expression                     shift and go to state 49
+    atomar                         shift and go to state 7
+
+state 20
+
+    (10) expression -> expression DIVIDE_FLOOR . expression
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    expression                     shift and go to state 50
+    atomar                         shift and go to state 7
+
+state 21
+
+    (11) expression -> expression MOD . expression
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    expression                     shift and go to state 51
+    atomar                         shift and go to state 7
+
+state 22
+
+    (12) expression -> expression EXP . expression
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    expression                     shift and go to state 52
+    atomar                         shift and go to state 7
+
+state 23
+
+    (13) expression -> expression AND . expression
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    expression                     shift and go to state 53
+    atomar                         shift and go to state 7
+
+state 24
+
+    (14) expression -> expression OR . expression
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    expression                     shift and go to state 54
+    atomar                         shift and go to state 7
+
+state 25
+
+    (15) expression -> expression XOR . expression
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    expression                     shift and go to state 55
+    atomar                         shift and go to state 7
+
+state 26
+
+    (16) expression -> expression GREATER_THAN . expression
+    (24) cmp -> GREATER_THAN .
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    IDENTIFIER      reduce using rule 24 (cmp -> GREATER_THAN .)
+    NUMBER          reduce using rule 24 (cmp -> GREATER_THAN .)
+    FLOAT           reduce using rule 24 (cmp -> GREATER_THAN .)
+    LPAREN          reduce using rule 24 (cmp -> GREATER_THAN .)
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+
+  ! NOT             [ reduce using rule 24 (cmp -> GREATER_THAN .) ]
+  ! MINUS           [ reduce using rule 24 (cmp -> GREATER_THAN .) ]
+  ! PLUS            [ reduce using rule 24 (cmp -> GREATER_THAN .) ]
+  ! IDENTIFIER      [ shift and go to state 9 ]
+  ! NUMBER          [ shift and go to state 10 ]
+  ! FLOAT           [ shift and go to state 11 ]
+  ! LPAREN          [ shift and go to state 12 ]
+
+    expression                     shift and go to state 56
+    atomar                         shift and go to state 7
+
+state 27
+
+    (17) expression -> expression SMALLER_THAN . expression
+    (25) cmp -> SMALLER_THAN .
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    IDENTIFIER      reduce using rule 25 (cmp -> SMALLER_THAN .)
+    NUMBER          reduce using rule 25 (cmp -> SMALLER_THAN .)
+    FLOAT           reduce using rule 25 (cmp -> SMALLER_THAN .)
+    LPAREN          reduce using rule 25 (cmp -> SMALLER_THAN .)
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+
+  ! NOT             [ reduce using rule 25 (cmp -> SMALLER_THAN .) ]
+  ! MINUS           [ reduce using rule 25 (cmp -> SMALLER_THAN .) ]
+  ! PLUS            [ reduce using rule 25 (cmp -> SMALLER_THAN .) ]
+  ! IDENTIFIER      [ shift and go to state 9 ]
+  ! NUMBER          [ shift and go to state 10 ]
+  ! FLOAT           [ shift and go to state 11 ]
+  ! LPAREN          [ shift and go to state 12 ]
+
+    expression                     shift and go to state 57
+    atomar                         shift and go to state 7
+
+state 28
+
+    (18) expression -> expression SMALLER_EQUALS . expression
+    (26) cmp -> SMALLER_EQUALS .
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    IDENTIFIER      reduce using rule 26 (cmp -> SMALLER_EQUALS .)
+    NUMBER          reduce using rule 26 (cmp -> SMALLER_EQUALS .)
+    FLOAT           reduce using rule 26 (cmp -> SMALLER_EQUALS .)
+    LPAREN          reduce using rule 26 (cmp -> SMALLER_EQUALS .)
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+
+  ! NOT             [ reduce using rule 26 (cmp -> SMALLER_EQUALS .) ]
+  ! MINUS           [ reduce using rule 26 (cmp -> SMALLER_EQUALS .) ]
+  ! PLUS            [ reduce using rule 26 (cmp -> SMALLER_EQUALS .) ]
+  ! IDENTIFIER      [ shift and go to state 9 ]
+  ! NUMBER          [ shift and go to state 10 ]
+  ! FLOAT           [ shift and go to state 11 ]
+  ! LPAREN          [ shift and go to state 12 ]
+
+    expression                     shift and go to state 58
+    atomar                         shift and go to state 7
+
+state 29
+
+    (19) expression -> expression GREATER_EQUALS . expression
+    (27) cmp -> GREATER_EQUALS .
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    IDENTIFIER      reduce using rule 27 (cmp -> GREATER_EQUALS .)
+    NUMBER          reduce using rule 27 (cmp -> GREATER_EQUALS .)
+    FLOAT           reduce using rule 27 (cmp -> GREATER_EQUALS .)
+    LPAREN          reduce using rule 27 (cmp -> GREATER_EQUALS .)
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+
+  ! NOT             [ reduce using rule 27 (cmp -> GREATER_EQUALS .) ]
+  ! MINUS           [ reduce using rule 27 (cmp -> GREATER_EQUALS .) ]
+  ! PLUS            [ reduce using rule 27 (cmp -> GREATER_EQUALS .) ]
+  ! IDENTIFIER      [ shift and go to state 9 ]
+  ! NUMBER          [ shift and go to state 10 ]
+  ! FLOAT           [ shift and go to state 11 ]
+  ! LPAREN          [ shift and go to state 12 ]
+
+    expression                     shift and go to state 59
+    atomar                         shift and go to state 7
+
+state 30
+
+    (20) expression -> expression EQUALS . expression
+    (28) cmp -> EQUALS .
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    IDENTIFIER      reduce using rule 28 (cmp -> EQUALS .)
+    NUMBER          reduce using rule 28 (cmp -> EQUALS .)
+    FLOAT           reduce using rule 28 (cmp -> EQUALS .)
+    LPAREN          reduce using rule 28 (cmp -> EQUALS .)
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+
+  ! NOT             [ reduce using rule 28 (cmp -> EQUALS .) ]
+  ! MINUS           [ reduce using rule 28 (cmp -> EQUALS .) ]
+  ! PLUS            [ reduce using rule 28 (cmp -> EQUALS .) ]
+  ! IDENTIFIER      [ shift and go to state 9 ]
+  ! NUMBER          [ shift and go to state 10 ]
+  ! FLOAT           [ shift and go to state 11 ]
+  ! LPAREN          [ shift and go to state 12 ]
+
+    expression                     shift and go to state 60
+    atomar                         shift and go to state 7
+
+state 31
+
+    (21) expression -> expression UNEQUALS . expression
+    (29) cmp -> UNEQUALS .
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    IDENTIFIER      reduce using rule 29 (cmp -> UNEQUALS .)
+    NUMBER          reduce using rule 29 (cmp -> UNEQUALS .)
+    FLOAT           reduce using rule 29 (cmp -> UNEQUALS .)
+    LPAREN          reduce using rule 29 (cmp -> UNEQUALS .)
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+
+  ! NOT             [ reduce using rule 29 (cmp -> UNEQUALS .) ]
+  ! MINUS           [ reduce using rule 29 (cmp -> UNEQUALS .) ]
+  ! PLUS            [ reduce using rule 29 (cmp -> UNEQUALS .) ]
+  ! IDENTIFIER      [ shift and go to state 9 ]
+  ! NUMBER          [ shift and go to state 10 ]
+  ! FLOAT           [ shift and go to state 11 ]
+  ! LPAREN          [ shift and go to state 12 ]
+
+    expression                     shift and go to state 61
+    atomar                         shift and go to state 7
+
+state 32
+
+    (31) expression -> expression comparator .
+    (30) comparator -> comparator . comparator
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+  ! shift/reduce conflict for GREATER_THAN resolved as shift
+  ! shift/reduce conflict for SMALLER_THAN resolved as shift
+  ! shift/reduce conflict for SMALLER_EQUALS resolved as shift
+  ! shift/reduce conflict for GREATER_EQUALS resolved as shift
+  ! shift/reduce conflict for EQUALS resolved as shift
+  ! shift/reduce conflict for UNEQUALS resolved as shift
+    PLUS            reduce using rule 31 (expression -> expression comparator .)
+    MINUS           reduce using rule 31 (expression -> expression comparator .)
+    TIMES           reduce using rule 31 (expression -> expression comparator .)
+    DIVIDE          reduce using rule 31 (expression -> expression comparator .)
+    DIVIDE_CEIL     reduce using rule 31 (expression -> expression comparator .)
+    DIVIDE_FLOOR    reduce using rule 31 (expression -> expression comparator .)
+    MOD             reduce using rule 31 (expression -> expression comparator .)
+    EXP             reduce using rule 31 (expression -> expression comparator .)
+    AND             reduce using rule 31 (expression -> expression comparator .)
+    OR              reduce using rule 31 (expression -> expression comparator .)
+    XOR             reduce using rule 31 (expression -> expression comparator .)
+    IMAG            reduce using rule 31 (expression -> expression comparator .)
+    END             reduce using rule 31 (expression -> expression comparator .)
+    SEMICOLON       reduce using rule 31 (expression -> expression comparator .)
+    RPAREN          reduce using rule 31 (expression -> expression comparator .)
+    GREATER_THAN    shift and go to state 63
+    SMALLER_THAN    shift and go to state 64
+    SMALLER_EQUALS  shift and go to state 65
+    GREATER_EQUALS  shift and go to state 66
+    EQUALS          shift and go to state 67
+    UNEQUALS        shift and go to state 68
+
+  ! GREATER_THAN    [ reduce using rule 31 (expression -> expression comparator .) ]
+  ! SMALLER_THAN    [ reduce using rule 31 (expression -> expression comparator .) ]
+  ! SMALLER_EQUALS  [ reduce using rule 31 (expression -> expression comparator .) ]
+  ! GREATER_EQUALS  [ reduce using rule 31 (expression -> expression comparator .) ]
+  ! EQUALS          [ reduce using rule 31 (expression -> expression comparator .) ]
+  ! UNEQUALS        [ reduce using rule 31 (expression -> expression comparator .) ]
+
+    comparator                     shift and go to state 62
+    cmp                            shift and go to state 34
+
+state 33
+
+    (38) expression -> expression IMAG .
+
+    PLUS            reduce using rule 38 (expression -> expression IMAG .)
+    MINUS           reduce using rule 38 (expression -> expression IMAG .)
+    TIMES           reduce using rule 38 (expression -> expression IMAG .)
+    DIVIDE          reduce using rule 38 (expression -> expression IMAG .)
+    DIVIDE_CEIL     reduce using rule 38 (expression -> expression IMAG .)
+    DIVIDE_FLOOR    reduce using rule 38 (expression -> expression IMAG .)
+    MOD             reduce using rule 38 (expression -> expression IMAG .)
+    EXP             reduce using rule 38 (expression -> expression IMAG .)
+    AND             reduce using rule 38 (expression -> expression IMAG .)
+    OR              reduce using rule 38 (expression -> expression IMAG .)
+    XOR             reduce using rule 38 (expression -> expression IMAG .)
+    GREATER_THAN    reduce using rule 38 (expression -> expression IMAG .)
+    SMALLER_THAN    reduce using rule 38 (expression -> expression IMAG .)
+    SMALLER_EQUALS  reduce using rule 38 (expression -> expression IMAG .)
+    GREATER_EQUALS  reduce using rule 38 (expression -> expression IMAG .)
+    EQUALS          reduce using rule 38 (expression -> expression IMAG .)
+    UNEQUALS        reduce using rule 38 (expression -> expression IMAG .)
+    IMAG            reduce using rule 38 (expression -> expression IMAG .)
+    END             reduce using rule 38 (expression -> expression IMAG .)
+    SEMICOLON       reduce using rule 38 (expression -> expression IMAG .)
+    RPAREN          reduce using rule 38 (expression -> expression IMAG .)
+
+
+state 34
+
+    (23) comparator -> cmp . expression
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    expression                     shift and go to state 69
+    atomar                         shift and go to state 7
+
+state 35
+
+    (37) expression -> PLUS expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    PLUS            reduce using rule 37 (expression -> PLUS expression .)
+    MINUS           reduce using rule 37 (expression -> PLUS expression .)
+    TIMES           reduce using rule 37 (expression -> PLUS expression .)
+    DIVIDE          reduce using rule 37 (expression -> PLUS expression .)
+    DIVIDE_CEIL     reduce using rule 37 (expression -> PLUS expression .)
+    DIVIDE_FLOOR    reduce using rule 37 (expression -> PLUS expression .)
+    MOD             reduce using rule 37 (expression -> PLUS expression .)
+    EXP             reduce using rule 37 (expression -> PLUS expression .)
+    AND             reduce using rule 37 (expression -> PLUS expression .)
+    OR              reduce using rule 37 (expression -> PLUS expression .)
+    XOR             reduce using rule 37 (expression -> PLUS expression .)
+    GREATER_THAN    reduce using rule 37 (expression -> PLUS expression .)
+    SMALLER_THAN    reduce using rule 37 (expression -> PLUS expression .)
+    SMALLER_EQUALS  reduce using rule 37 (expression -> PLUS expression .)
+    GREATER_EQUALS  reduce using rule 37 (expression -> PLUS expression .)
+    EQUALS          reduce using rule 37 (expression -> PLUS expression .)
+    UNEQUALS        reduce using rule 37 (expression -> PLUS expression .)
+    IMAG            reduce using rule 37 (expression -> PLUS expression .)
+    END             reduce using rule 37 (expression -> PLUS expression .)
+    SEMICOLON       reduce using rule 37 (expression -> PLUS expression .)
+    RPAREN          reduce using rule 37 (expression -> PLUS expression .)
+
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+  ! TIMES           [ shift and go to state 17 ]
+  ! DIVIDE          [ shift and go to state 18 ]
+  ! DIVIDE_CEIL     [ shift and go to state 19 ]
+  ! DIVIDE_FLOOR    [ shift and go to state 20 ]
+  ! MOD             [ shift and go to state 21 ]
+  ! EXP             [ shift and go to state 22 ]
+  ! AND             [ shift and go to state 23 ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! GREATER_THAN    [ shift and go to state 26 ]
+  ! SMALLER_THAN    [ shift and go to state 27 ]
+  ! SMALLER_EQUALS  [ shift and go to state 28 ]
+  ! GREATER_EQUALS  [ shift and go to state 29 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! UNEQUALS        [ shift and go to state 31 ]
+  ! IMAG            [ shift and go to state 33 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 36
+
+    (36) expression -> MINUS expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    PLUS            reduce using rule 36 (expression -> MINUS expression .)
+    MINUS           reduce using rule 36 (expression -> MINUS expression .)
+    TIMES           reduce using rule 36 (expression -> MINUS expression .)
+    DIVIDE          reduce using rule 36 (expression -> MINUS expression .)
+    DIVIDE_CEIL     reduce using rule 36 (expression -> MINUS expression .)
+    DIVIDE_FLOOR    reduce using rule 36 (expression -> MINUS expression .)
+    MOD             reduce using rule 36 (expression -> MINUS expression .)
+    EXP             reduce using rule 36 (expression -> MINUS expression .)
+    AND             reduce using rule 36 (expression -> MINUS expression .)
+    OR              reduce using rule 36 (expression -> MINUS expression .)
+    XOR             reduce using rule 36 (expression -> MINUS expression .)
+    GREATER_THAN    reduce using rule 36 (expression -> MINUS expression .)
+    SMALLER_THAN    reduce using rule 36 (expression -> MINUS expression .)
+    SMALLER_EQUALS  reduce using rule 36 (expression -> MINUS expression .)
+    GREATER_EQUALS  reduce using rule 36 (expression -> MINUS expression .)
+    EQUALS          reduce using rule 36 (expression -> MINUS expression .)
+    UNEQUALS        reduce using rule 36 (expression -> MINUS expression .)
+    IMAG            reduce using rule 36 (expression -> MINUS expression .)
+    END             reduce using rule 36 (expression -> MINUS expression .)
+    SEMICOLON       reduce using rule 36 (expression -> MINUS expression .)
+    RPAREN          reduce using rule 36 (expression -> MINUS expression .)
+
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+  ! TIMES           [ shift and go to state 17 ]
+  ! DIVIDE          [ shift and go to state 18 ]
+  ! DIVIDE_CEIL     [ shift and go to state 19 ]
+  ! DIVIDE_FLOOR    [ shift and go to state 20 ]
+  ! MOD             [ shift and go to state 21 ]
+  ! EXP             [ shift and go to state 22 ]
+  ! AND             [ shift and go to state 23 ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! GREATER_THAN    [ shift and go to state 26 ]
+  ! SMALLER_THAN    [ shift and go to state 27 ]
+  ! SMALLER_EQUALS  [ shift and go to state 28 ]
+  ! GREATER_EQUALS  [ shift and go to state 29 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! UNEQUALS        [ shift and go to state 31 ]
+  ! IMAG            [ shift and go to state 33 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 37
+
+    (35) expression -> NOT expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    PLUS            reduce using rule 35 (expression -> NOT expression .)
+    MINUS           reduce using rule 35 (expression -> NOT expression .)
+    TIMES           reduce using rule 35 (expression -> NOT expression .)
+    DIVIDE          reduce using rule 35 (expression -> NOT expression .)
+    DIVIDE_CEIL     reduce using rule 35 (expression -> NOT expression .)
+    DIVIDE_FLOOR    reduce using rule 35 (expression -> NOT expression .)
+    MOD             reduce using rule 35 (expression -> NOT expression .)
+    EXP             reduce using rule 35 (expression -> NOT expression .)
+    AND             reduce using rule 35 (expression -> NOT expression .)
+    OR              reduce using rule 35 (expression -> NOT expression .)
+    XOR             reduce using rule 35 (expression -> NOT expression .)
+    GREATER_THAN    reduce using rule 35 (expression -> NOT expression .)
+    SMALLER_THAN    reduce using rule 35 (expression -> NOT expression .)
+    SMALLER_EQUALS  reduce using rule 35 (expression -> NOT expression .)
+    GREATER_EQUALS  reduce using rule 35 (expression -> NOT expression .)
+    EQUALS          reduce using rule 35 (expression -> NOT expression .)
+    UNEQUALS        reduce using rule 35 (expression -> NOT expression .)
+    IMAG            reduce using rule 35 (expression -> NOT expression .)
+    END             reduce using rule 35 (expression -> NOT expression .)
+    SEMICOLON       reduce using rule 35 (expression -> NOT expression .)
+    RPAREN          reduce using rule 35 (expression -> NOT expression .)
+
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+  ! TIMES           [ shift and go to state 17 ]
+  ! DIVIDE          [ shift and go to state 18 ]
+  ! DIVIDE_CEIL     [ shift and go to state 19 ]
+  ! DIVIDE_FLOOR    [ shift and go to state 20 ]
+  ! MOD             [ shift and go to state 21 ]
+  ! EXP             [ shift and go to state 22 ]
+  ! AND             [ shift and go to state 23 ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! GREATER_THAN    [ shift and go to state 26 ]
+  ! SMALLER_THAN    [ shift and go to state 27 ]
+  ! SMALLER_EQUALS  [ shift and go to state 28 ]
+  ! GREATER_EQUALS  [ shift and go to state 29 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! UNEQUALS        [ shift and go to state 31 ]
+  ! IMAG            [ shift and go to state 33 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 38
+
+    (39) expression -> IDENTIFIER ASSIGN . expression
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    expression                     shift and go to state 70
+    atomar                         shift and go to state 7
+
+state 39
+
+    (4) atomar -> LPAREN expression . RPAREN
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    RPAREN          shift and go to state 71
+    PLUS            shift and go to state 15
+    MINUS           shift and go to state 16
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    DIVIDE_CEIL     shift and go to state 19
+    DIVIDE_FLOOR    shift and go to state 20
+    MOD             shift and go to state 21
+    EXP             shift and go to state 22
+    AND             shift and go to state 23
+    OR              shift and go to state 24
+    XOR             shift and go to state 25
+    GREATER_THAN    shift and go to state 26
+    SMALLER_THAN    shift and go to state 27
+    SMALLER_EQUALS  shift and go to state 28
+    GREATER_EQUALS  shift and go to state 29
+    EQUALS          shift and go to state 30
+    UNEQUALS        shift and go to state 31
+    IMAG            shift and go to state 33
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 40
+
+    (41) sequence -> BEGIN body SEMICOLON END .
+
+    $end            reduce using rule 41 (sequence -> BEGIN body SEMICOLON END .)
+
+
+state 41
+
+    (43) body -> body SEMICOLON expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    END             reduce using rule 43 (body -> body SEMICOLON expression .)
+    SEMICOLON       reduce using rule 43 (body -> body SEMICOLON expression .)
+    PLUS            shift and go to state 15
+    MINUS           shift and go to state 16
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    DIVIDE_CEIL     shift and go to state 19
+    DIVIDE_FLOOR    shift and go to state 20
+    MOD             shift and go to state 21
+    EXP             shift and go to state 22
+    AND             shift and go to state 23
+    OR              shift and go to state 24
+    XOR             shift and go to state 25
+    GREATER_THAN    shift and go to state 26
+    SMALLER_THAN    shift and go to state 27
+    SMALLER_EQUALS  shift and go to state 28
+    GREATER_EQUALS  shift and go to state 29
+    EQUALS          shift and go to state 30
+    UNEQUALS        shift and go to state 31
+    IMAG            shift and go to state 33
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 42
+
+    (5) expression -> expression PLUS expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    PLUS            reduce using rule 5 (expression -> expression PLUS expression .)
+    MINUS           reduce using rule 5 (expression -> expression PLUS expression .)
+    AND             reduce using rule 5 (expression -> expression PLUS expression .)
+    OR              reduce using rule 5 (expression -> expression PLUS expression .)
+    XOR             reduce using rule 5 (expression -> expression PLUS expression .)
+    GREATER_THAN    reduce using rule 5 (expression -> expression PLUS expression .)
+    SMALLER_THAN    reduce using rule 5 (expression -> expression PLUS expression .)
+    SMALLER_EQUALS  reduce using rule 5 (expression -> expression PLUS expression .)
+    GREATER_EQUALS  reduce using rule 5 (expression -> expression PLUS expression .)
+    EQUALS          reduce using rule 5 (expression -> expression PLUS expression .)
+    UNEQUALS        reduce using rule 5 (expression -> expression PLUS expression .)
+    END             reduce using rule 5 (expression -> expression PLUS expression .)
+    SEMICOLON       reduce using rule 5 (expression -> expression PLUS expression .)
+    RPAREN          reduce using rule 5 (expression -> expression PLUS expression .)
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    DIVIDE_CEIL     shift and go to state 19
+    DIVIDE_FLOOR    shift and go to state 20
+    MOD             shift and go to state 21
+    EXP             shift and go to state 22
+    IMAG            shift and go to state 33
+
+  ! TIMES           [ reduce using rule 5 (expression -> expression PLUS expression .) ]
+  ! DIVIDE          [ reduce using rule 5 (expression -> expression PLUS expression .) ]
+  ! DIVIDE_CEIL     [ reduce using rule 5 (expression -> expression PLUS expression .) ]
+  ! DIVIDE_FLOOR    [ reduce using rule 5 (expression -> expression PLUS expression .) ]
+  ! MOD             [ reduce using rule 5 (expression -> expression PLUS expression .) ]
+  ! EXP             [ reduce using rule 5 (expression -> expression PLUS expression .) ]
+  ! IMAG            [ reduce using rule 5 (expression -> expression PLUS expression .) ]
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+  ! AND             [ shift and go to state 23 ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! GREATER_THAN    [ shift and go to state 26 ]
+  ! SMALLER_THAN    [ shift and go to state 27 ]
+  ! SMALLER_EQUALS  [ shift and go to state 28 ]
+  ! GREATER_EQUALS  [ shift and go to state 29 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! UNEQUALS        [ shift and go to state 31 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 43
+
+    (32) expression -> expression PLUS PLUS .
+    (37) expression -> PLUS . expression
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    PLUS            reduce using rule 32 (expression -> expression PLUS PLUS .)
+    MINUS           reduce using rule 32 (expression -> expression PLUS PLUS .)
+    TIMES           reduce using rule 32 (expression -> expression PLUS PLUS .)
+    DIVIDE          reduce using rule 32 (expression -> expression PLUS PLUS .)
+    DIVIDE_CEIL     reduce using rule 32 (expression -> expression PLUS PLUS .)
+    DIVIDE_FLOOR    reduce using rule 32 (expression -> expression PLUS PLUS .)
+    MOD             reduce using rule 32 (expression -> expression PLUS PLUS .)
+    EXP             reduce using rule 32 (expression -> expression PLUS PLUS .)
+    AND             reduce using rule 32 (expression -> expression PLUS PLUS .)
+    OR              reduce using rule 32 (expression -> expression PLUS PLUS .)
+    XOR             reduce using rule 32 (expression -> expression PLUS PLUS .)
+    GREATER_THAN    reduce using rule 32 (expression -> expression PLUS PLUS .)
+    SMALLER_THAN    reduce using rule 32 (expression -> expression PLUS PLUS .)
+    SMALLER_EQUALS  reduce using rule 32 (expression -> expression PLUS PLUS .)
+    GREATER_EQUALS  reduce using rule 32 (expression -> expression PLUS PLUS .)
+    EQUALS          reduce using rule 32 (expression -> expression PLUS PLUS .)
+    UNEQUALS        reduce using rule 32 (expression -> expression PLUS PLUS .)
+    IMAG            reduce using rule 32 (expression -> expression PLUS PLUS .)
+    END             reduce using rule 32 (expression -> expression PLUS PLUS .)
+    SEMICOLON       reduce using rule 32 (expression -> expression PLUS PLUS .)
+    RPAREN          reduce using rule 32 (expression -> expression PLUS PLUS .)
+    NOT             shift and go to state 8
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+  ! MINUS           [ shift and go to state 6 ]
+  ! PLUS            [ shift and go to state 5 ]
+
+    expression                     shift and go to state 35
+    atomar                         shift and go to state 7
+
+state 44
+
+    (6) expression -> expression MINUS expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    PLUS            reduce using rule 6 (expression -> expression MINUS expression .)
+    MINUS           reduce using rule 6 (expression -> expression MINUS expression .)
+    AND             reduce using rule 6 (expression -> expression MINUS expression .)
+    OR              reduce using rule 6 (expression -> expression MINUS expression .)
+    XOR             reduce using rule 6 (expression -> expression MINUS expression .)
+    GREATER_THAN    reduce using rule 6 (expression -> expression MINUS expression .)
+    SMALLER_THAN    reduce using rule 6 (expression -> expression MINUS expression .)
+    SMALLER_EQUALS  reduce using rule 6 (expression -> expression MINUS expression .)
+    GREATER_EQUALS  reduce using rule 6 (expression -> expression MINUS expression .)
+    EQUALS          reduce using rule 6 (expression -> expression MINUS expression .)
+    UNEQUALS        reduce using rule 6 (expression -> expression MINUS expression .)
+    END             reduce using rule 6 (expression -> expression MINUS expression .)
+    SEMICOLON       reduce using rule 6 (expression -> expression MINUS expression .)
+    RPAREN          reduce using rule 6 (expression -> expression MINUS expression .)
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    DIVIDE_CEIL     shift and go to state 19
+    DIVIDE_FLOOR    shift and go to state 20
+    MOD             shift and go to state 21
+    EXP             shift and go to state 22
+    IMAG            shift and go to state 33
+
+  ! TIMES           [ reduce using rule 6 (expression -> expression MINUS expression .) ]
+  ! DIVIDE          [ reduce using rule 6 (expression -> expression MINUS expression .) ]
+  ! DIVIDE_CEIL     [ reduce using rule 6 (expression -> expression MINUS expression .) ]
+  ! DIVIDE_FLOOR    [ reduce using rule 6 (expression -> expression MINUS expression .) ]
+  ! MOD             [ reduce using rule 6 (expression -> expression MINUS expression .) ]
+  ! EXP             [ reduce using rule 6 (expression -> expression MINUS expression .) ]
+  ! IMAG            [ reduce using rule 6 (expression -> expression MINUS expression .) ]
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+  ! AND             [ shift and go to state 23 ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! GREATER_THAN    [ shift and go to state 26 ]
+  ! SMALLER_THAN    [ shift and go to state 27 ]
+  ! SMALLER_EQUALS  [ shift and go to state 28 ]
+  ! GREATER_EQUALS  [ shift and go to state 29 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! UNEQUALS        [ shift and go to state 31 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 45
+
+    (33) expression -> expression MINUS MINUS .
+    (36) expression -> MINUS . expression
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    PLUS            reduce using rule 33 (expression -> expression MINUS MINUS .)
+    MINUS           reduce using rule 33 (expression -> expression MINUS MINUS .)
+    TIMES           reduce using rule 33 (expression -> expression MINUS MINUS .)
+    DIVIDE          reduce using rule 33 (expression -> expression MINUS MINUS .)
+    DIVIDE_CEIL     reduce using rule 33 (expression -> expression MINUS MINUS .)
+    DIVIDE_FLOOR    reduce using rule 33 (expression -> expression MINUS MINUS .)
+    MOD             reduce using rule 33 (expression -> expression MINUS MINUS .)
+    EXP             reduce using rule 33 (expression -> expression MINUS MINUS .)
+    AND             reduce using rule 33 (expression -> expression MINUS MINUS .)
+    OR              reduce using rule 33 (expression -> expression MINUS MINUS .)
+    XOR             reduce using rule 33 (expression -> expression MINUS MINUS .)
+    GREATER_THAN    reduce using rule 33 (expression -> expression MINUS MINUS .)
+    SMALLER_THAN    reduce using rule 33 (expression -> expression MINUS MINUS .)
+    SMALLER_EQUALS  reduce using rule 33 (expression -> expression MINUS MINUS .)
+    GREATER_EQUALS  reduce using rule 33 (expression -> expression MINUS MINUS .)
+    EQUALS          reduce using rule 33 (expression -> expression MINUS MINUS .)
+    UNEQUALS        reduce using rule 33 (expression -> expression MINUS MINUS .)
+    IMAG            reduce using rule 33 (expression -> expression MINUS MINUS .)
+    END             reduce using rule 33 (expression -> expression MINUS MINUS .)
+    SEMICOLON       reduce using rule 33 (expression -> expression MINUS MINUS .)
+    RPAREN          reduce using rule 33 (expression -> expression MINUS MINUS .)
+    NOT             shift and go to state 8
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+  ! MINUS           [ shift and go to state 6 ]
+  ! PLUS            [ shift and go to state 5 ]
+
+    expression                     shift and go to state 36
+    atomar                         shift and go to state 7
+
+state 46
+
+    (7) expression -> expression TIMES expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    PLUS            reduce using rule 7 (expression -> expression TIMES expression .)
+    MINUS           reduce using rule 7 (expression -> expression TIMES expression .)
+    TIMES           reduce using rule 7 (expression -> expression TIMES expression .)
+    DIVIDE          reduce using rule 7 (expression -> expression TIMES expression .)
+    DIVIDE_CEIL     reduce using rule 7 (expression -> expression TIMES expression .)
+    DIVIDE_FLOOR    reduce using rule 7 (expression -> expression TIMES expression .)
+    MOD             reduce using rule 7 (expression -> expression TIMES expression .)
+    AND             reduce using rule 7 (expression -> expression TIMES expression .)
+    OR              reduce using rule 7 (expression -> expression TIMES expression .)
+    XOR             reduce using rule 7 (expression -> expression TIMES expression .)
+    GREATER_THAN    reduce using rule 7 (expression -> expression TIMES expression .)
+    SMALLER_THAN    reduce using rule 7 (expression -> expression TIMES expression .)
+    SMALLER_EQUALS  reduce using rule 7 (expression -> expression TIMES expression .)
+    GREATER_EQUALS  reduce using rule 7 (expression -> expression TIMES expression .)
+    EQUALS          reduce using rule 7 (expression -> expression TIMES expression .)
+    UNEQUALS        reduce using rule 7 (expression -> expression TIMES expression .)
+    END             reduce using rule 7 (expression -> expression TIMES expression .)
+    SEMICOLON       reduce using rule 7 (expression -> expression TIMES expression .)
+    RPAREN          reduce using rule 7 (expression -> expression TIMES expression .)
+    EXP             shift and go to state 22
+    IMAG            shift and go to state 33
+
+  ! EXP             [ reduce using rule 7 (expression -> expression TIMES expression .) ]
+  ! IMAG            [ reduce using rule 7 (expression -> expression TIMES expression .) ]
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+  ! TIMES           [ shift and go to state 17 ]
+  ! DIVIDE          [ shift and go to state 18 ]
+  ! DIVIDE_CEIL     [ shift and go to state 19 ]
+  ! DIVIDE_FLOOR    [ shift and go to state 20 ]
+  ! MOD             [ shift and go to state 21 ]
+  ! AND             [ shift and go to state 23 ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! GREATER_THAN    [ shift and go to state 26 ]
+  ! SMALLER_THAN    [ shift and go to state 27 ]
+  ! SMALLER_EQUALS  [ shift and go to state 28 ]
+  ! GREATER_EQUALS  [ shift and go to state 29 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! UNEQUALS        [ shift and go to state 31 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 47
+
+    (34) expression -> expression TIMES TIMES . expression
+    (5) expression -> . expression PLUS expression
+    (6) expression -> . expression MINUS expression
+    (7) expression -> . expression TIMES expression
+    (8) expression -> . expression DIVIDE expression
+    (9) expression -> . expression DIVIDE_CEIL expression
+    (10) expression -> . expression DIVIDE_FLOOR expression
+    (11) expression -> . expression MOD expression
+    (12) expression -> . expression EXP expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . expression GREATER_THAN expression
+    (17) expression -> . expression SMALLER_THAN expression
+    (18) expression -> . expression SMALLER_EQUALS expression
+    (19) expression -> . expression GREATER_EQUALS expression
+    (20) expression -> . expression EQUALS expression
+    (21) expression -> . expression UNEQUALS expression
+    (22) expression -> . atomar
+    (31) expression -> . expression comparator
+    (32) expression -> . expression PLUS PLUS
+    (33) expression -> . expression MINUS MINUS
+    (34) expression -> . expression TIMES TIMES expression
+    (35) expression -> . NOT expression
+    (36) expression -> . MINUS expression
+    (37) expression -> . PLUS expression
+    (38) expression -> . expression IMAG
+    (39) expression -> . IDENTIFIER ASSIGN expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+    (4) atomar -> . LPAREN expression RPAREN
+
+    NOT             shift and go to state 8
+    MINUS           shift and go to state 6
+    PLUS            shift and go to state 5
+    IDENTIFIER      shift and go to state 9
+    NUMBER          shift and go to state 10
+    FLOAT           shift and go to state 11
+    LPAREN          shift and go to state 12
+
+    expression                     shift and go to state 72
+    atomar                         shift and go to state 7
+
+state 48
+
+    (8) expression -> expression DIVIDE expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    PLUS            reduce using rule 8 (expression -> expression DIVIDE expression .)
+    MINUS           reduce using rule 8 (expression -> expression DIVIDE expression .)
+    TIMES           reduce using rule 8 (expression -> expression DIVIDE expression .)
+    DIVIDE          reduce using rule 8 (expression -> expression DIVIDE expression .)
+    DIVIDE_CEIL     reduce using rule 8 (expression -> expression DIVIDE expression .)
+    DIVIDE_FLOOR    reduce using rule 8 (expression -> expression DIVIDE expression .)
+    MOD             reduce using rule 8 (expression -> expression DIVIDE expression .)
+    AND             reduce using rule 8 (expression -> expression DIVIDE expression .)
+    OR              reduce using rule 8 (expression -> expression DIVIDE expression .)
+    XOR             reduce using rule 8 (expression -> expression DIVIDE expression .)
+    GREATER_THAN    reduce using rule 8 (expression -> expression DIVIDE expression .)
+    SMALLER_THAN    reduce using rule 8 (expression -> expression DIVIDE expression .)
+    SMALLER_EQUALS  reduce using rule 8 (expression -> expression DIVIDE expression .)
+    GREATER_EQUALS  reduce using rule 8 (expression -> expression DIVIDE expression .)
+    EQUALS          reduce using rule 8 (expression -> expression DIVIDE expression .)
+    UNEQUALS        reduce using rule 8 (expression -> expression DIVIDE expression .)
+    END             reduce using rule 8 (expression -> expression DIVIDE expression .)
+    SEMICOLON       reduce using rule 8 (expression -> expression DIVIDE expression .)
+    RPAREN          reduce using rule 8 (expression -> expression DIVIDE expression .)
+    EXP             shift and go to state 22
+    IMAG            shift and go to state 33
+
+  ! EXP             [ reduce using rule 8 (expression -> expression DIVIDE expression .) ]
+  ! IMAG            [ reduce using rule 8 (expression -> expression DIVIDE expression .) ]
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+  ! TIMES           [ shift and go to state 17 ]
+  ! DIVIDE          [ shift and go to state 18 ]
+  ! DIVIDE_CEIL     [ shift and go to state 19 ]
+  ! DIVIDE_FLOOR    [ shift and go to state 20 ]
+  ! MOD             [ shift and go to state 21 ]
+  ! AND             [ shift and go to state 23 ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! GREATER_THAN    [ shift and go to state 26 ]
+  ! SMALLER_THAN    [ shift and go to state 27 ]
+  ! SMALLER_EQUALS  [ shift and go to state 28 ]
+  ! GREATER_EQUALS  [ shift and go to state 29 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! UNEQUALS        [ shift and go to state 31 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 49
+
+    (9) expression -> expression DIVIDE_CEIL expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    PLUS            reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .)
+    MINUS           reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .)
+    TIMES           reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .)
+    DIVIDE          reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .)
+    DIVIDE_CEIL     reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .)
+    DIVIDE_FLOOR    reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .)
+    MOD             reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .)
+    AND             reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .)
+    OR              reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .)
+    XOR             reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .)
+    GREATER_THAN    reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .)
+    SMALLER_THAN    reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .)
+    SMALLER_EQUALS  reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .)
+    GREATER_EQUALS  reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .)
+    EQUALS          reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .)
+    UNEQUALS        reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .)
+    END             reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .)
+    SEMICOLON       reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .)
+    RPAREN          reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .)
+    EXP             shift and go to state 22
+    IMAG            shift and go to state 33
+
+  ! EXP             [ reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .) ]
+  ! IMAG            [ reduce using rule 9 (expression -> expression DIVIDE_CEIL expression .) ]
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+  ! TIMES           [ shift and go to state 17 ]
+  ! DIVIDE          [ shift and go to state 18 ]
+  ! DIVIDE_CEIL     [ shift and go to state 19 ]
+  ! DIVIDE_FLOOR    [ shift and go to state 20 ]
+  ! MOD             [ shift and go to state 21 ]
+  ! AND             [ shift and go to state 23 ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! GREATER_THAN    [ shift and go to state 26 ]
+  ! SMALLER_THAN    [ shift and go to state 27 ]
+  ! SMALLER_EQUALS  [ shift and go to state 28 ]
+  ! GREATER_EQUALS  [ shift and go to state 29 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! UNEQUALS        [ shift and go to state 31 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 50
+
+    (10) expression -> expression DIVIDE_FLOOR expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    PLUS            reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .)
+    MINUS           reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .)
+    TIMES           reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .)
+    DIVIDE          reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .)
+    DIVIDE_CEIL     reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .)
+    DIVIDE_FLOOR    reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .)
+    MOD             reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .)
+    AND             reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .)
+    OR              reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .)
+    XOR             reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .)
+    GREATER_THAN    reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .)
+    SMALLER_THAN    reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .)
+    SMALLER_EQUALS  reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .)
+    GREATER_EQUALS  reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .)
+    EQUALS          reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .)
+    UNEQUALS        reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .)
+    END             reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .)
+    SEMICOLON       reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .)
+    RPAREN          reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .)
+    EXP             shift and go to state 22
+    IMAG            shift and go to state 33
+
+  ! EXP             [ reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .) ]
+  ! IMAG            [ reduce using rule 10 (expression -> expression DIVIDE_FLOOR expression .) ]
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+  ! TIMES           [ shift and go to state 17 ]
+  ! DIVIDE          [ shift and go to state 18 ]
+  ! DIVIDE_CEIL     [ shift and go to state 19 ]
+  ! DIVIDE_FLOOR    [ shift and go to state 20 ]
+  ! MOD             [ shift and go to state 21 ]
+  ! AND             [ shift and go to state 23 ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! GREATER_THAN    [ shift and go to state 26 ]
+  ! SMALLER_THAN    [ shift and go to state 27 ]
+  ! SMALLER_EQUALS  [ shift and go to state 28 ]
+  ! GREATER_EQUALS  [ shift and go to state 29 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! UNEQUALS        [ shift and go to state 31 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 51
+
+    (11) expression -> expression MOD expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    PLUS            reduce using rule 11 (expression -> expression MOD expression .)
+    MINUS           reduce using rule 11 (expression -> expression MOD expression .)
+    TIMES           reduce using rule 11 (expression -> expression MOD expression .)
+    DIVIDE          reduce using rule 11 (expression -> expression MOD expression .)
+    DIVIDE_CEIL     reduce using rule 11 (expression -> expression MOD expression .)
+    DIVIDE_FLOOR    reduce using rule 11 (expression -> expression MOD expression .)
+    MOD             reduce using rule 11 (expression -> expression MOD expression .)
+    AND             reduce using rule 11 (expression -> expression MOD expression .)
+    OR              reduce using rule 11 (expression -> expression MOD expression .)
+    XOR             reduce using rule 11 (expression -> expression MOD expression .)
+    GREATER_THAN    reduce using rule 11 (expression -> expression MOD expression .)
+    SMALLER_THAN    reduce using rule 11 (expression -> expression MOD expression .)
+    SMALLER_EQUALS  reduce using rule 11 (expression -> expression MOD expression .)
+    GREATER_EQUALS  reduce using rule 11 (expression -> expression MOD expression .)
+    EQUALS          reduce using rule 11 (expression -> expression MOD expression .)
+    UNEQUALS        reduce using rule 11 (expression -> expression MOD expression .)
+    END             reduce using rule 11 (expression -> expression MOD expression .)
+    SEMICOLON       reduce using rule 11 (expression -> expression MOD expression .)
+    RPAREN          reduce using rule 11 (expression -> expression MOD expression .)
+    EXP             shift and go to state 22
+    IMAG            shift and go to state 33
+
+  ! EXP             [ reduce using rule 11 (expression -> expression MOD expression .) ]
+  ! IMAG            [ reduce using rule 11 (expression -> expression MOD expression .) ]
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+  ! TIMES           [ shift and go to state 17 ]
+  ! DIVIDE          [ shift and go to state 18 ]
+  ! DIVIDE_CEIL     [ shift and go to state 19 ]
+  ! DIVIDE_FLOOR    [ shift and go to state 20 ]
+  ! MOD             [ shift and go to state 21 ]
+  ! AND             [ shift and go to state 23 ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! GREATER_THAN    [ shift and go to state 26 ]
+  ! SMALLER_THAN    [ shift and go to state 27 ]
+  ! SMALLER_EQUALS  [ shift and go to state 28 ]
+  ! GREATER_EQUALS  [ shift and go to state 29 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! UNEQUALS        [ shift and go to state 31 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 52
+
+    (12) expression -> expression EXP expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    PLUS            reduce using rule 12 (expression -> expression EXP expression .)
+    MINUS           reduce using rule 12 (expression -> expression EXP expression .)
+    TIMES           reduce using rule 12 (expression -> expression EXP expression .)
+    DIVIDE          reduce using rule 12 (expression -> expression EXP expression .)
+    DIVIDE_CEIL     reduce using rule 12 (expression -> expression EXP expression .)
+    DIVIDE_FLOOR    reduce using rule 12 (expression -> expression EXP expression .)
+    MOD             reduce using rule 12 (expression -> expression EXP expression .)
+    AND             reduce using rule 12 (expression -> expression EXP expression .)
+    OR              reduce using rule 12 (expression -> expression EXP expression .)
+    XOR             reduce using rule 12 (expression -> expression EXP expression .)
+    GREATER_THAN    reduce using rule 12 (expression -> expression EXP expression .)
+    SMALLER_THAN    reduce using rule 12 (expression -> expression EXP expression .)
+    SMALLER_EQUALS  reduce using rule 12 (expression -> expression EXP expression .)
+    GREATER_EQUALS  reduce using rule 12 (expression -> expression EXP expression .)
+    EQUALS          reduce using rule 12 (expression -> expression EXP expression .)
+    UNEQUALS        reduce using rule 12 (expression -> expression EXP expression .)
+    END             reduce using rule 12 (expression -> expression EXP expression .)
+    SEMICOLON       reduce using rule 12 (expression -> expression EXP expression .)
+    RPAREN          reduce using rule 12 (expression -> expression EXP expression .)
+    EXP             shift and go to state 22
+    IMAG            shift and go to state 33
+
+  ! EXP             [ reduce using rule 12 (expression -> expression EXP expression .) ]
+  ! IMAG            [ reduce using rule 12 (expression -> expression EXP expression .) ]
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+  ! TIMES           [ shift and go to state 17 ]
+  ! DIVIDE          [ shift and go to state 18 ]
+  ! DIVIDE_CEIL     [ shift and go to state 19 ]
+  ! DIVIDE_FLOOR    [ shift and go to state 20 ]
+  ! MOD             [ shift and go to state 21 ]
+  ! AND             [ shift and go to state 23 ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! GREATER_THAN    [ shift and go to state 26 ]
+  ! SMALLER_THAN    [ shift and go to state 27 ]
+  ! SMALLER_EQUALS  [ shift and go to state 28 ]
+  ! GREATER_EQUALS  [ shift and go to state 29 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! UNEQUALS        [ shift and go to state 31 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 53
+
+    (13) expression -> expression AND expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    AND             reduce using rule 13 (expression -> expression AND expression .)
+    OR              reduce using rule 13 (expression -> expression AND expression .)
+    XOR             reduce using rule 13 (expression -> expression AND expression .)
+    END             reduce using rule 13 (expression -> expression AND expression .)
+    SEMICOLON       reduce using rule 13 (expression -> expression AND expression .)
+    RPAREN          reduce using rule 13 (expression -> expression AND expression .)
+    PLUS            shift and go to state 15
+    MINUS           shift and go to state 16
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    DIVIDE_CEIL     shift and go to state 19
+    DIVIDE_FLOOR    shift and go to state 20
+    MOD             shift and go to state 21
+    EXP             shift and go to state 22
+    GREATER_THAN    shift and go to state 26
+    SMALLER_THAN    shift and go to state 27
+    SMALLER_EQUALS  shift and go to state 28
+    GREATER_EQUALS  shift and go to state 29
+    EQUALS          shift and go to state 30
+    UNEQUALS        shift and go to state 31
+    IMAG            shift and go to state 33
+
+  ! PLUS            [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! MINUS           [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! TIMES           [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! DIVIDE          [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! DIVIDE_CEIL     [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! DIVIDE_FLOOR    [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! MOD             [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! EXP             [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! GREATER_THAN    [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! SMALLER_THAN    [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! SMALLER_EQUALS  [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! GREATER_EQUALS  [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! EQUALS          [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! UNEQUALS        [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! IMAG            [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! AND             [ shift and go to state 23 ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 54
+
+    (14) expression -> expression OR expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    OR              reduce using rule 14 (expression -> expression OR expression .)
+    END             reduce using rule 14 (expression -> expression OR expression .)
+    SEMICOLON       reduce using rule 14 (expression -> expression OR expression .)
+    RPAREN          reduce using rule 14 (expression -> expression OR expression .)
+    PLUS            shift and go to state 15
+    MINUS           shift and go to state 16
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    DIVIDE_CEIL     shift and go to state 19
+    DIVIDE_FLOOR    shift and go to state 20
+    MOD             shift and go to state 21
+    EXP             shift and go to state 22
+    AND             shift and go to state 23
+    XOR             shift and go to state 25
+    GREATER_THAN    shift and go to state 26
+    SMALLER_THAN    shift and go to state 27
+    SMALLER_EQUALS  shift and go to state 28
+    GREATER_EQUALS  shift and go to state 29
+    EQUALS          shift and go to state 30
+    UNEQUALS        shift and go to state 31
+    IMAG            shift and go to state 33
+
+  ! PLUS            [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! MINUS           [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! TIMES           [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! DIVIDE          [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! DIVIDE_CEIL     [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! DIVIDE_FLOOR    [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! MOD             [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! EXP             [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! AND             [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! XOR             [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! GREATER_THAN    [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! SMALLER_THAN    [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! SMALLER_EQUALS  [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! GREATER_EQUALS  [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! EQUALS          [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! UNEQUALS        [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! IMAG            [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! OR              [ shift and go to state 24 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 55
+
+    (15) expression -> expression XOR expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    OR              reduce using rule 15 (expression -> expression XOR expression .)
+    XOR             reduce using rule 15 (expression -> expression XOR expression .)
+    END             reduce using rule 15 (expression -> expression XOR expression .)
+    SEMICOLON       reduce using rule 15 (expression -> expression XOR expression .)
+    RPAREN          reduce using rule 15 (expression -> expression XOR expression .)
+    PLUS            shift and go to state 15
+    MINUS           shift and go to state 16
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    DIVIDE_CEIL     shift and go to state 19
+    DIVIDE_FLOOR    shift and go to state 20
+    MOD             shift and go to state 21
+    EXP             shift and go to state 22
+    AND             shift and go to state 23
+    GREATER_THAN    shift and go to state 26
+    SMALLER_THAN    shift and go to state 27
+    SMALLER_EQUALS  shift and go to state 28
+    GREATER_EQUALS  shift and go to state 29
+    EQUALS          shift and go to state 30
+    UNEQUALS        shift and go to state 31
+    IMAG            shift and go to state 33
+
+  ! PLUS            [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! MINUS           [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! TIMES           [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! DIVIDE          [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! DIVIDE_CEIL     [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! DIVIDE_FLOOR    [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! MOD             [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! EXP             [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! AND             [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! GREATER_THAN    [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! SMALLER_THAN    [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! SMALLER_EQUALS  [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! GREATER_EQUALS  [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! EQUALS          [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! UNEQUALS        [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! IMAG            [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 56
+
+    (16) expression -> expression GREATER_THAN expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    AND             reduce using rule 16 (expression -> expression GREATER_THAN expression .)
+    OR              reduce using rule 16 (expression -> expression GREATER_THAN expression .)
+    XOR             reduce using rule 16 (expression -> expression GREATER_THAN expression .)
+    EQUALS          reduce using rule 16 (expression -> expression GREATER_THAN expression .)
+    UNEQUALS        reduce using rule 16 (expression -> expression GREATER_THAN expression .)
+    END             reduce using rule 16 (expression -> expression GREATER_THAN expression .)
+    SEMICOLON       reduce using rule 16 (expression -> expression GREATER_THAN expression .)
+    RPAREN          reduce using rule 16 (expression -> expression GREATER_THAN expression .)
+    PLUS            shift and go to state 15
+    MINUS           shift and go to state 16
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    DIVIDE_CEIL     shift and go to state 19
+    DIVIDE_FLOOR    shift and go to state 20
+    MOD             shift and go to state 21
+    EXP             shift and go to state 22
+    IMAG            shift and go to state 33
+    GREATER_THAN    shift and go to state 26
+    SMALLER_THAN    shift and go to state 27
+    SMALLER_EQUALS  shift and go to state 28
+    GREATER_EQUALS  shift and go to state 29
+
+  ! PLUS            [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
+  ! MINUS           [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
+  ! TIMES           [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
+  ! DIVIDE          [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
+  ! DIVIDE_CEIL     [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
+  ! DIVIDE_FLOOR    [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
+  ! MOD             [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
+  ! EXP             [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
+  ! GREATER_THAN    [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
+  ! SMALLER_THAN    [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
+  ! SMALLER_EQUALS  [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
+  ! GREATER_EQUALS  [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
+  ! IMAG            [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
+  ! AND             [ shift and go to state 23 ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! UNEQUALS        [ shift and go to state 31 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 57
+
+    (17) expression -> expression SMALLER_THAN expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    AND             reduce using rule 17 (expression -> expression SMALLER_THAN expression .)
+    OR              reduce using rule 17 (expression -> expression SMALLER_THAN expression .)
+    XOR             reduce using rule 17 (expression -> expression SMALLER_THAN expression .)
+    EQUALS          reduce using rule 17 (expression -> expression SMALLER_THAN expression .)
+    UNEQUALS        reduce using rule 17 (expression -> expression SMALLER_THAN expression .)
+    END             reduce using rule 17 (expression -> expression SMALLER_THAN expression .)
+    SEMICOLON       reduce using rule 17 (expression -> expression SMALLER_THAN expression .)
+    RPAREN          reduce using rule 17 (expression -> expression SMALLER_THAN expression .)
+    PLUS            shift and go to state 15
+    MINUS           shift and go to state 16
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    DIVIDE_CEIL     shift and go to state 19
+    DIVIDE_FLOOR    shift and go to state 20
+    MOD             shift and go to state 21
+    EXP             shift and go to state 22
+    IMAG            shift and go to state 33
+    GREATER_THAN    shift and go to state 26
+    SMALLER_THAN    shift and go to state 27
+    SMALLER_EQUALS  shift and go to state 28
+    GREATER_EQUALS  shift and go to state 29
+
+  ! PLUS            [ reduce using rule 17 (expression -> expression SMALLER_THAN expression .) ]
+  ! MINUS           [ reduce using rule 17 (expression -> expression SMALLER_THAN expression .) ]
+  ! TIMES           [ reduce using rule 17 (expression -> expression SMALLER_THAN expression .) ]
+  ! DIVIDE          [ reduce using rule 17 (expression -> expression SMALLER_THAN expression .) ]
+  ! DIVIDE_CEIL     [ reduce using rule 17 (expression -> expression SMALLER_THAN expression .) ]
+  ! DIVIDE_FLOOR    [ reduce using rule 17 (expression -> expression SMALLER_THAN expression .) ]
+  ! MOD             [ reduce using rule 17 (expression -> expression SMALLER_THAN expression .) ]
+  ! EXP             [ reduce using rule 17 (expression -> expression SMALLER_THAN expression .) ]
+  ! GREATER_THAN    [ reduce using rule 17 (expression -> expression SMALLER_THAN expression .) ]
+  ! SMALLER_THAN    [ reduce using rule 17 (expression -> expression SMALLER_THAN expression .) ]
+  ! SMALLER_EQUALS  [ reduce using rule 17 (expression -> expression SMALLER_THAN expression .) ]
+  ! GREATER_EQUALS  [ reduce using rule 17 (expression -> expression SMALLER_THAN expression .) ]
+  ! IMAG            [ reduce using rule 17 (expression -> expression SMALLER_THAN expression .) ]
+  ! AND             [ shift and go to state 23 ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! UNEQUALS        [ shift and go to state 31 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 58
+
+    (18) expression -> expression SMALLER_EQUALS expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    AND             reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .)
+    OR              reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .)
+    XOR             reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .)
+    EQUALS          reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .)
+    UNEQUALS        reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .)
+    END             reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .)
+    SEMICOLON       reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .)
+    RPAREN          reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .)
+    PLUS            shift and go to state 15
+    MINUS           shift and go to state 16
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    DIVIDE_CEIL     shift and go to state 19
+    DIVIDE_FLOOR    shift and go to state 20
+    MOD             shift and go to state 21
+    EXP             shift and go to state 22
+    IMAG            shift and go to state 33
+    GREATER_THAN    shift and go to state 26
+    SMALLER_THAN    shift and go to state 27
+    SMALLER_EQUALS  shift and go to state 28
+    GREATER_EQUALS  shift and go to state 29
+
+  ! PLUS            [ reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .) ]
+  ! MINUS           [ reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .) ]
+  ! TIMES           [ reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .) ]
+  ! DIVIDE          [ reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .) ]
+  ! DIVIDE_CEIL     [ reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .) ]
+  ! DIVIDE_FLOOR    [ reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .) ]
+  ! MOD             [ reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .) ]
+  ! EXP             [ reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .) ]
+  ! GREATER_THAN    [ reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .) ]
+  ! SMALLER_THAN    [ reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .) ]
+  ! SMALLER_EQUALS  [ reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .) ]
+  ! GREATER_EQUALS  [ reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .) ]
+  ! IMAG            [ reduce using rule 18 (expression -> expression SMALLER_EQUALS expression .) ]
+  ! AND             [ shift and go to state 23 ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! UNEQUALS        [ shift and go to state 31 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 59
+
+    (19) expression -> expression GREATER_EQUALS expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    AND             reduce using rule 19 (expression -> expression GREATER_EQUALS expression .)
+    OR              reduce using rule 19 (expression -> expression GREATER_EQUALS expression .)
+    XOR             reduce using rule 19 (expression -> expression GREATER_EQUALS expression .)
+    EQUALS          reduce using rule 19 (expression -> expression GREATER_EQUALS expression .)
+    UNEQUALS        reduce using rule 19 (expression -> expression GREATER_EQUALS expression .)
+    END             reduce using rule 19 (expression -> expression GREATER_EQUALS expression .)
+    SEMICOLON       reduce using rule 19 (expression -> expression GREATER_EQUALS expression .)
+    RPAREN          reduce using rule 19 (expression -> expression GREATER_EQUALS expression .)
+    PLUS            shift and go to state 15
+    MINUS           shift and go to state 16
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    DIVIDE_CEIL     shift and go to state 19
+    DIVIDE_FLOOR    shift and go to state 20
+    MOD             shift and go to state 21
+    EXP             shift and go to state 22
+    IMAG            shift and go to state 33
+    GREATER_THAN    shift and go to state 26
+    SMALLER_THAN    shift and go to state 27
+    SMALLER_EQUALS  shift and go to state 28
+    GREATER_EQUALS  shift and go to state 29
+
+  ! PLUS            [ reduce using rule 19 (expression -> expression GREATER_EQUALS expression .) ]
+  ! MINUS           [ reduce using rule 19 (expression -> expression GREATER_EQUALS expression .) ]
+  ! TIMES           [ reduce using rule 19 (expression -> expression GREATER_EQUALS expression .) ]
+  ! DIVIDE          [ reduce using rule 19 (expression -> expression GREATER_EQUALS expression .) ]
+  ! DIVIDE_CEIL     [ reduce using rule 19 (expression -> expression GREATER_EQUALS expression .) ]
+  ! DIVIDE_FLOOR    [ reduce using rule 19 (expression -> expression GREATER_EQUALS expression .) ]
+  ! MOD             [ reduce using rule 19 (expression -> expression GREATER_EQUALS expression .) ]
+  ! EXP             [ reduce using rule 19 (expression -> expression GREATER_EQUALS expression .) ]
+  ! GREATER_THAN    [ reduce using rule 19 (expression -> expression GREATER_EQUALS expression .) ]
+  ! SMALLER_THAN    [ reduce using rule 19 (expression -> expression GREATER_EQUALS expression .) ]
+  ! SMALLER_EQUALS  [ reduce using rule 19 (expression -> expression GREATER_EQUALS expression .) ]
+  ! GREATER_EQUALS  [ reduce using rule 19 (expression -> expression GREATER_EQUALS expression .) ]
+  ! IMAG            [ reduce using rule 19 (expression -> expression GREATER_EQUALS expression .) ]
+  ! AND             [ shift and go to state 23 ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! UNEQUALS        [ shift and go to state 31 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 60
+
+    (20) expression -> expression EQUALS expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    AND             reduce using rule 20 (expression -> expression EQUALS expression .)
+    OR              reduce using rule 20 (expression -> expression EQUALS expression .)
+    XOR             reduce using rule 20 (expression -> expression EQUALS expression .)
+    EQUALS          reduce using rule 20 (expression -> expression EQUALS expression .)
+    UNEQUALS        reduce using rule 20 (expression -> expression EQUALS expression .)
+    END             reduce using rule 20 (expression -> expression EQUALS expression .)
+    SEMICOLON       reduce using rule 20 (expression -> expression EQUALS expression .)
+    RPAREN          reduce using rule 20 (expression -> expression EQUALS expression .)
+    PLUS            shift and go to state 15
+    MINUS           shift and go to state 16
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    DIVIDE_CEIL     shift and go to state 19
+    DIVIDE_FLOOR    shift and go to state 20
+    MOD             shift and go to state 21
+    EXP             shift and go to state 22
+    GREATER_THAN    shift and go to state 26
+    SMALLER_THAN    shift and go to state 27
+    SMALLER_EQUALS  shift and go to state 28
+    GREATER_EQUALS  shift and go to state 29
+    IMAG            shift and go to state 33
+
+  ! PLUS            [ reduce using rule 20 (expression -> expression EQUALS expression .) ]
+  ! MINUS           [ reduce using rule 20 (expression -> expression EQUALS expression .) ]
+  ! TIMES           [ reduce using rule 20 (expression -> expression EQUALS expression .) ]
+  ! DIVIDE          [ reduce using rule 20 (expression -> expression EQUALS expression .) ]
+  ! DIVIDE_CEIL     [ reduce using rule 20 (expression -> expression EQUALS expression .) ]
+  ! DIVIDE_FLOOR    [ reduce using rule 20 (expression -> expression EQUALS expression .) ]
+  ! MOD             [ reduce using rule 20 (expression -> expression EQUALS expression .) ]
+  ! EXP             [ reduce using rule 20 (expression -> expression EQUALS expression .) ]
+  ! GREATER_THAN    [ reduce using rule 20 (expression -> expression EQUALS expression .) ]
+  ! SMALLER_THAN    [ reduce using rule 20 (expression -> expression EQUALS expression .) ]
+  ! SMALLER_EQUALS  [ reduce using rule 20 (expression -> expression EQUALS expression .) ]
+  ! GREATER_EQUALS  [ reduce using rule 20 (expression -> expression EQUALS expression .) ]
+  ! IMAG            [ reduce using rule 20 (expression -> expression EQUALS expression .) ]
+  ! AND             [ shift and go to state 23 ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! UNEQUALS        [ shift and go to state 31 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 61
+
+    (21) expression -> expression UNEQUALS expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    AND             reduce using rule 21 (expression -> expression UNEQUALS expression .)
+    OR              reduce using rule 21 (expression -> expression UNEQUALS expression .)
+    XOR             reduce using rule 21 (expression -> expression UNEQUALS expression .)
+    EQUALS          reduce using rule 21 (expression -> expression UNEQUALS expression .)
+    UNEQUALS        reduce using rule 21 (expression -> expression UNEQUALS expression .)
+    END             reduce using rule 21 (expression -> expression UNEQUALS expression .)
+    SEMICOLON       reduce using rule 21 (expression -> expression UNEQUALS expression .)
+    RPAREN          reduce using rule 21 (expression -> expression UNEQUALS expression .)
+    PLUS            shift and go to state 15
+    MINUS           shift and go to state 16
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    DIVIDE_CEIL     shift and go to state 19
+    DIVIDE_FLOOR    shift and go to state 20
+    MOD             shift and go to state 21
+    EXP             shift and go to state 22
+    GREATER_THAN    shift and go to state 26
+    SMALLER_THAN    shift and go to state 27
+    SMALLER_EQUALS  shift and go to state 28
+    GREATER_EQUALS  shift and go to state 29
+    IMAG            shift and go to state 33
+
+  ! PLUS            [ reduce using rule 21 (expression -> expression UNEQUALS expression .) ]
+  ! MINUS           [ reduce using rule 21 (expression -> expression UNEQUALS expression .) ]
+  ! TIMES           [ reduce using rule 21 (expression -> expression UNEQUALS expression .) ]
+  ! DIVIDE          [ reduce using rule 21 (expression -> expression UNEQUALS expression .) ]
+  ! DIVIDE_CEIL     [ reduce using rule 21 (expression -> expression UNEQUALS expression .) ]
+  ! DIVIDE_FLOOR    [ reduce using rule 21 (expression -> expression UNEQUALS expression .) ]
+  ! MOD             [ reduce using rule 21 (expression -> expression UNEQUALS expression .) ]
+  ! EXP             [ reduce using rule 21 (expression -> expression UNEQUALS expression .) ]
+  ! GREATER_THAN    [ reduce using rule 21 (expression -> expression UNEQUALS expression .) ]
+  ! SMALLER_THAN    [ reduce using rule 21 (expression -> expression UNEQUALS expression .) ]
+  ! SMALLER_EQUALS  [ reduce using rule 21 (expression -> expression UNEQUALS expression .) ]
+  ! GREATER_EQUALS  [ reduce using rule 21 (expression -> expression UNEQUALS expression .) ]
+  ! IMAG            [ reduce using rule 21 (expression -> expression UNEQUALS expression .) ]
+  ! AND             [ shift and go to state 23 ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! UNEQUALS        [ shift and go to state 31 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 62
+
+    (30) comparator -> comparator comparator .
+    (30) comparator -> comparator . comparator
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+  ! shift/reduce conflict for GREATER_THAN resolved as shift
+  ! shift/reduce conflict for SMALLER_THAN resolved as shift
+  ! shift/reduce conflict for SMALLER_EQUALS resolved as shift
+  ! shift/reduce conflict for GREATER_EQUALS resolved as shift
+  ! shift/reduce conflict for EQUALS resolved as shift
+  ! shift/reduce conflict for UNEQUALS resolved as shift
+    PLUS            reduce using rule 30 (comparator -> comparator comparator .)
+    MINUS           reduce using rule 30 (comparator -> comparator comparator .)
+    TIMES           reduce using rule 30 (comparator -> comparator comparator .)
+    DIVIDE          reduce using rule 30 (comparator -> comparator comparator .)
+    DIVIDE_CEIL     reduce using rule 30 (comparator -> comparator comparator .)
+    DIVIDE_FLOOR    reduce using rule 30 (comparator -> comparator comparator .)
+    MOD             reduce using rule 30 (comparator -> comparator comparator .)
+    EXP             reduce using rule 30 (comparator -> comparator comparator .)
+    AND             reduce using rule 30 (comparator -> comparator comparator .)
+    OR              reduce using rule 30 (comparator -> comparator comparator .)
+    XOR             reduce using rule 30 (comparator -> comparator comparator .)
+    IMAG            reduce using rule 30 (comparator -> comparator comparator .)
+    END             reduce using rule 30 (comparator -> comparator comparator .)
+    SEMICOLON       reduce using rule 30 (comparator -> comparator comparator .)
+    RPAREN          reduce using rule 30 (comparator -> comparator comparator .)
+    GREATER_THAN    shift and go to state 63
+    SMALLER_THAN    shift and go to state 64
+    SMALLER_EQUALS  shift and go to state 65
+    GREATER_EQUALS  shift and go to state 66
+    EQUALS          shift and go to state 67
+    UNEQUALS        shift and go to state 68
+
+  ! GREATER_THAN    [ reduce using rule 30 (comparator -> comparator comparator .) ]
+  ! SMALLER_THAN    [ reduce using rule 30 (comparator -> comparator comparator .) ]
+  ! SMALLER_EQUALS  [ reduce using rule 30 (comparator -> comparator comparator .) ]
+  ! GREATER_EQUALS  [ reduce using rule 30 (comparator -> comparator comparator .) ]
+  ! EQUALS          [ reduce using rule 30 (comparator -> comparator comparator .) ]
+  ! UNEQUALS        [ reduce using rule 30 (comparator -> comparator comparator .) ]
+
+    comparator                     shift and go to state 62
+    cmp                            shift and go to state 34
+
+state 63
+
+    (24) cmp -> GREATER_THAN .
+
+    NOT             reduce using rule 24 (cmp -> GREATER_THAN .)
+    MINUS           reduce using rule 24 (cmp -> GREATER_THAN .)
+    PLUS            reduce using rule 24 (cmp -> GREATER_THAN .)
+    IDENTIFIER      reduce using rule 24 (cmp -> GREATER_THAN .)
+    NUMBER          reduce using rule 24 (cmp -> GREATER_THAN .)
+    FLOAT           reduce using rule 24 (cmp -> GREATER_THAN .)
+    LPAREN          reduce using rule 24 (cmp -> GREATER_THAN .)
+
+
+state 64
+
+    (25) cmp -> SMALLER_THAN .
+
+    NOT             reduce using rule 25 (cmp -> SMALLER_THAN .)
+    MINUS           reduce using rule 25 (cmp -> SMALLER_THAN .)
+    PLUS            reduce using rule 25 (cmp -> SMALLER_THAN .)
+    IDENTIFIER      reduce using rule 25 (cmp -> SMALLER_THAN .)
+    NUMBER          reduce using rule 25 (cmp -> SMALLER_THAN .)
+    FLOAT           reduce using rule 25 (cmp -> SMALLER_THAN .)
+    LPAREN          reduce using rule 25 (cmp -> SMALLER_THAN .)
+
+
+state 65
+
+    (26) cmp -> SMALLER_EQUALS .
+
+    NOT             reduce using rule 26 (cmp -> SMALLER_EQUALS .)
+    MINUS           reduce using rule 26 (cmp -> SMALLER_EQUALS .)
+    PLUS            reduce using rule 26 (cmp -> SMALLER_EQUALS .)
+    IDENTIFIER      reduce using rule 26 (cmp -> SMALLER_EQUALS .)
+    NUMBER          reduce using rule 26 (cmp -> SMALLER_EQUALS .)
+    FLOAT           reduce using rule 26 (cmp -> SMALLER_EQUALS .)
+    LPAREN          reduce using rule 26 (cmp -> SMALLER_EQUALS .)
+
+
+state 66
+
+    (27) cmp -> GREATER_EQUALS .
+
+    NOT             reduce using rule 27 (cmp -> GREATER_EQUALS .)
+    MINUS           reduce using rule 27 (cmp -> GREATER_EQUALS .)
+    PLUS            reduce using rule 27 (cmp -> GREATER_EQUALS .)
+    IDENTIFIER      reduce using rule 27 (cmp -> GREATER_EQUALS .)
+    NUMBER          reduce using rule 27 (cmp -> GREATER_EQUALS .)
+    FLOAT           reduce using rule 27 (cmp -> GREATER_EQUALS .)
+    LPAREN          reduce using rule 27 (cmp -> GREATER_EQUALS .)
+
+
+state 67
+
+    (28) cmp -> EQUALS .
+
+    NOT             reduce using rule 28 (cmp -> EQUALS .)
+    MINUS           reduce using rule 28 (cmp -> EQUALS .)
+    PLUS            reduce using rule 28 (cmp -> EQUALS .)
+    IDENTIFIER      reduce using rule 28 (cmp -> EQUALS .)
+    NUMBER          reduce using rule 28 (cmp -> EQUALS .)
+    FLOAT           reduce using rule 28 (cmp -> EQUALS .)
+    LPAREN          reduce using rule 28 (cmp -> EQUALS .)
+
+
+state 68
+
+    (29) cmp -> UNEQUALS .
+
+    NOT             reduce using rule 29 (cmp -> UNEQUALS .)
+    MINUS           reduce using rule 29 (cmp -> UNEQUALS .)
+    PLUS            reduce using rule 29 (cmp -> UNEQUALS .)
+    IDENTIFIER      reduce using rule 29 (cmp -> UNEQUALS .)
+    NUMBER          reduce using rule 29 (cmp -> UNEQUALS .)
+    FLOAT           reduce using rule 29 (cmp -> UNEQUALS .)
+    LPAREN          reduce using rule 29 (cmp -> UNEQUALS .)
+
+
+state 69
+
+    (23) comparator -> cmp expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+  ! shift/reduce conflict for DIVIDE_CEIL resolved as shift
+  ! shift/reduce conflict for DIVIDE_FLOOR resolved as shift
+  ! shift/reduce conflict for MOD resolved as shift
+  ! shift/reduce conflict for EXP resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+  ! shift/reduce conflict for XOR resolved as shift
+  ! shift/reduce conflict for GREATER_THAN resolved as shift
+  ! shift/reduce conflict for SMALLER_THAN resolved as shift
+  ! shift/reduce conflict for SMALLER_EQUALS resolved as shift
+  ! shift/reduce conflict for GREATER_EQUALS resolved as shift
+  ! shift/reduce conflict for EQUALS resolved as shift
+  ! shift/reduce conflict for UNEQUALS resolved as shift
+  ! shift/reduce conflict for IMAG resolved as shift
+    END             reduce using rule 23 (comparator -> cmp expression .)
+    SEMICOLON       reduce using rule 23 (comparator -> cmp expression .)
+    RPAREN          reduce using rule 23 (comparator -> cmp expression .)
+    PLUS            shift and go to state 15
+    MINUS           shift and go to state 16
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    DIVIDE_CEIL     shift and go to state 19
+    DIVIDE_FLOOR    shift and go to state 20
+    MOD             shift and go to state 21
+    EXP             shift and go to state 22
+    AND             shift and go to state 23
+    OR              shift and go to state 24
+    XOR             shift and go to state 25
+    GREATER_THAN    shift and go to state 26
+    SMALLER_THAN    shift and go to state 27
+    SMALLER_EQUALS  shift and go to state 28
+    GREATER_EQUALS  shift and go to state 29
+    EQUALS          shift and go to state 30
+    UNEQUALS        shift and go to state 31
+    IMAG            shift and go to state 33
+
+  ! GREATER_THAN    [ reduce using rule 23 (comparator -> cmp expression .) ]
+  ! SMALLER_THAN    [ reduce using rule 23 (comparator -> cmp expression .) ]
+  ! SMALLER_EQUALS  [ reduce using rule 23 (comparator -> cmp expression .) ]
+  ! GREATER_EQUALS  [ reduce using rule 23 (comparator -> cmp expression .) ]
+  ! EQUALS          [ reduce using rule 23 (comparator -> cmp expression .) ]
+  ! UNEQUALS        [ reduce using rule 23 (comparator -> cmp expression .) ]
+  ! PLUS            [ reduce using rule 23 (comparator -> cmp expression .) ]
+  ! MINUS           [ reduce using rule 23 (comparator -> cmp expression .) ]
+  ! TIMES           [ reduce using rule 23 (comparator -> cmp expression .) ]
+  ! DIVIDE          [ reduce using rule 23 (comparator -> cmp expression .) ]
+  ! DIVIDE_CEIL     [ reduce using rule 23 (comparator -> cmp expression .) ]
+  ! DIVIDE_FLOOR    [ reduce using rule 23 (comparator -> cmp expression .) ]
+  ! MOD             [ reduce using rule 23 (comparator -> cmp expression .) ]
+  ! EXP             [ reduce using rule 23 (comparator -> cmp expression .) ]
+  ! AND             [ reduce using rule 23 (comparator -> cmp expression .) ]
+  ! OR              [ reduce using rule 23 (comparator -> cmp expression .) ]
+  ! XOR             [ reduce using rule 23 (comparator -> cmp expression .) ]
+  ! IMAG            [ reduce using rule 23 (comparator -> cmp expression .) ]
+
+    cmp                            shift and go to state 34
+    comparator                     shift and go to state 32
+
+state 70
+
+    (39) expression -> IDENTIFIER ASSIGN expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    END             reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .)
+    SEMICOLON       reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .)
+    RPAREN          reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .)
+    PLUS            shift and go to state 15
+    MINUS           shift and go to state 16
+    TIMES           shift and go to state 17
+    DIVIDE          shift and go to state 18
+    DIVIDE_CEIL     shift and go to state 19
+    DIVIDE_FLOOR    shift and go to state 20
+    MOD             shift and go to state 21
+    EXP             shift and go to state 22
+    AND             shift and go to state 23
+    OR              shift and go to state 24
+    XOR             shift and go to state 25
+    GREATER_THAN    shift and go to state 26
+    SMALLER_THAN    shift and go to state 27
+    SMALLER_EQUALS  shift and go to state 28
+    GREATER_EQUALS  shift and go to state 29
+    EQUALS          shift and go to state 30
+    UNEQUALS        shift and go to state 31
+    IMAG            shift and go to state 33
+
+  ! PLUS            [ reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .) ]
+  ! MINUS           [ reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .) ]
+  ! TIMES           [ reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .) ]
+  ! DIVIDE          [ reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .) ]
+  ! DIVIDE_CEIL     [ reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .) ]
+  ! DIVIDE_FLOOR    [ reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .) ]
+  ! MOD             [ reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .) ]
+  ! EXP             [ reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .) ]
+  ! AND             [ reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .) ]
+  ! OR              [ reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .) ]
+  ! XOR             [ reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .) ]
+  ! GREATER_THAN    [ reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .) ]
+  ! SMALLER_THAN    [ reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .) ]
+  ! SMALLER_EQUALS  [ reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .) ]
+  ! GREATER_EQUALS  [ reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .) ]
+  ! EQUALS          [ reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .) ]
+  ! UNEQUALS        [ reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .) ]
+  ! IMAG            [ reduce using rule 39 (expression -> IDENTIFIER ASSIGN expression .) ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+
+state 71
+
+    (4) atomar -> LPAREN expression RPAREN .
+
+    PLUS            reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    TIMES           reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    DIVIDE_CEIL     reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    DIVIDE_FLOOR    reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    MOD             reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    EXP             reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    AND             reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    OR              reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    XOR             reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    GREATER_THAN    reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    SMALLER_THAN    reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    SMALLER_EQUALS  reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    GREATER_EQUALS  reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    EQUALS          reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    UNEQUALS        reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    IMAG            reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    END             reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    SEMICOLON       reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 4 (atomar -> LPAREN expression RPAREN .)
+
+
+state 72
+
+    (34) expression -> expression TIMES TIMES expression .
+    (5) expression -> expression . PLUS expression
+    (6) expression -> expression . MINUS expression
+    (7) expression -> expression . TIMES expression
+    (8) expression -> expression . DIVIDE expression
+    (9) expression -> expression . DIVIDE_CEIL expression
+    (10) expression -> expression . DIVIDE_FLOOR expression
+    (11) expression -> expression . MOD expression
+    (12) expression -> expression . EXP expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (16) expression -> expression . GREATER_THAN expression
+    (17) expression -> expression . SMALLER_THAN expression
+    (18) expression -> expression . SMALLER_EQUALS expression
+    (19) expression -> expression . GREATER_EQUALS expression
+    (20) expression -> expression . EQUALS expression
+    (21) expression -> expression . UNEQUALS expression
+    (31) expression -> expression . comparator
+    (32) expression -> expression . PLUS PLUS
+    (33) expression -> expression . MINUS MINUS
+    (34) expression -> expression . TIMES TIMES expression
+    (38) expression -> expression . IMAG
+    (23) comparator -> . cmp expression
+    (30) comparator -> . comparator comparator
+    (24) cmp -> . GREATER_THAN
+    (25) cmp -> . SMALLER_THAN
+    (26) cmp -> . SMALLER_EQUALS
+    (27) cmp -> . GREATER_EQUALS
+    (28) cmp -> . EQUALS
+    (29) cmp -> . UNEQUALS
+
+    PLUS            reduce using rule 34 (expression -> expression TIMES TIMES expression .)
+    MINUS           reduce using rule 34 (expression -> expression TIMES TIMES expression .)
+    TIMES           reduce using rule 34 (expression -> expression TIMES TIMES expression .)
+    DIVIDE          reduce using rule 34 (expression -> expression TIMES TIMES expression .)
+    DIVIDE_CEIL     reduce using rule 34 (expression -> expression TIMES TIMES expression .)
+    DIVIDE_FLOOR    reduce using rule 34 (expression -> expression TIMES TIMES expression .)
+    MOD             reduce using rule 34 (expression -> expression TIMES TIMES expression .)
+    AND             reduce using rule 34 (expression -> expression TIMES TIMES expression .)
+    OR              reduce using rule 34 (expression -> expression TIMES TIMES expression .)
+    XOR             reduce using rule 34 (expression -> expression TIMES TIMES expression .)
+    GREATER_THAN    reduce using rule 34 (expression -> expression TIMES TIMES expression .)
+    SMALLER_THAN    reduce using rule 34 (expression -> expression TIMES TIMES expression .)
+    SMALLER_EQUALS  reduce using rule 34 (expression -> expression TIMES TIMES expression .)
+    GREATER_EQUALS  reduce using rule 34 (expression -> expression TIMES TIMES expression .)
+    EQUALS          reduce using rule 34 (expression -> expression TIMES TIMES expression .)
+    UNEQUALS        reduce using rule 34 (expression -> expression TIMES TIMES expression .)
+    END             reduce using rule 34 (expression -> expression TIMES TIMES expression .)
+    SEMICOLON       reduce using rule 34 (expression -> expression TIMES TIMES expression .)
+    RPAREN          reduce using rule 34 (expression -> expression TIMES TIMES expression .)
+    EXP             shift and go to state 22
+    IMAG            shift and go to state 33
+
+  ! EXP             [ reduce using rule 34 (expression -> expression TIMES TIMES expression .) ]
+  ! IMAG            [ reduce using rule 34 (expression -> expression TIMES TIMES expression .) ]
+  ! PLUS            [ shift and go to state 15 ]
+  ! MINUS           [ shift and go to state 16 ]
+  ! TIMES           [ shift and go to state 17 ]
+  ! DIVIDE          [ shift and go to state 18 ]
+  ! DIVIDE_CEIL     [ shift and go to state 19 ]
+  ! DIVIDE_FLOOR    [ shift and go to state 20 ]
+  ! MOD             [ shift and go to state 21 ]
+  ! AND             [ shift and go to state 23 ]
+  ! OR              [ shift and go to state 24 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! GREATER_THAN    [ shift and go to state 26 ]
+  ! SMALLER_THAN    [ shift and go to state 27 ]
+  ! SMALLER_EQUALS  [ shift and go to state 28 ]
+  ! GREATER_EQUALS  [ shift and go to state 29 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! UNEQUALS        [ shift and go to state 31 ]
+
+    comparator                     shift and go to state 32
+    cmp                            shift and go to state 34
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for GREATER_THAN in state 32 resolved as shift
+WARNING: shift/reduce conflict for SMALLER_THAN in state 32 resolved as shift
+WARNING: shift/reduce conflict for SMALLER_EQUALS in state 32 resolved as shift
+WARNING: shift/reduce conflict for GREATER_EQUALS in state 32 resolved as shift
+WARNING: shift/reduce conflict for EQUALS in state 32 resolved as shift
+WARNING: shift/reduce conflict for UNEQUALS in state 32 resolved as shift
+WARNING: shift/reduce conflict for GREATER_THAN in state 62 resolved as shift
+WARNING: shift/reduce conflict for SMALLER_THAN in state 62 resolved as shift
+WARNING: shift/reduce conflict for SMALLER_EQUALS in state 62 resolved as shift
+WARNING: shift/reduce conflict for GREATER_EQUALS in state 62 resolved as shift
+WARNING: shift/reduce conflict for EQUALS in state 62 resolved as shift
+WARNING: shift/reduce conflict for UNEQUALS in state 62 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 69 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 69 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 69 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 69 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE_CEIL in state 69 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE_FLOOR in state 69 resolved as shift
+WARNING: shift/reduce conflict for MOD in state 69 resolved as shift
+WARNING: shift/reduce conflict for EXP in state 69 resolved as shift
+WARNING: shift/reduce conflict for AND in state 69 resolved as shift
+WARNING: shift/reduce conflict for OR in state 69 resolved as shift
+WARNING: shift/reduce conflict for XOR in state 69 resolved as shift
+WARNING: shift/reduce conflict for GREATER_THAN in state 69 resolved as shift
+WARNING: shift/reduce conflict for SMALLER_THAN in state 69 resolved as shift
+WARNING: shift/reduce conflict for SMALLER_EQUALS in state 69 resolved as shift
+WARNING: shift/reduce conflict for GREATER_EQUALS in state 69 resolved as shift
+WARNING: shift/reduce conflict for EQUALS in state 69 resolved as shift
+WARNING: shift/reduce conflict for UNEQUALS in state 69 resolved as shift
+WARNING: shift/reduce conflict for IMAG in state 69 resolved as shift

@@ -1,6 +1,14 @@
 from ply.lex import Lexer, lex
 
-operations = ["PLUS", "MINUS", "TIMES", "DIVIDE_CEIL", "DIVIDE_FLOOR", "DIVIDE"]
+operations = [
+    "PLUS",
+    "MINUS",
+    "TIMES",
+    "POWER",
+    "DIVIDE_CEIL",
+    "DIVIDE_FLOOR",
+    "DIVIDE",
+]
 comparators = [
     "GREATER_THAN",
     "SMALLER_THAN",
@@ -10,15 +18,29 @@ comparators = [
     "GREATER_EQUALS",
 ]
 
+assigns = [i + "ASSIGN" for i in operations + comparators]
+
 keywords = {
     "and": "AND",
     "or": "OR",
     "xor": "XOR",
-    "not": "NOT",
     "mod": "MOD",
     "e": "EXP",  # als Operator
+    "not": "NOT",
     "imag": "IMAG",  # als Operator
+    "wenn": "IF",
+    "gilt,": "THEN",
+    ",aber": "ELIF",
+    "sonst": "ELSE",
+    "solange": "WHILE",
+    "für": "LOOP",
+    "wiederhole": "LOOPTHEN",
+    "in": "LOOPIN",
+    ".": "ENDCOND",
 }
+
+assigns += [x + "ASSIGN" for x in ["AND", "OR", "XOR", "MOD", "EXP"]]
+
 
 tokens = (
     [
@@ -35,25 +57,40 @@ tokens = (
     + operations
     + comparators
     + list(keywords.values())
+    + assigns
 )
-
-t_LPAREN = r"\("
-t_RPAREN = r"\)"
-t_ASSIGN = r":="
 
 t_PLUS = r"\+"
 t_MINUS = r"-"
 t_TIMES = r"\*"
+t_POWER = r"\*\*"
 t_DIVIDE_CEIL = r"/"
 t_DIVIDE = r"\|"
 t_DIVIDE_FLOOR = r"\\"
-
 t_GREATER_THAN = r">"
 t_SMALLER_THAN = r"<"
 t_UNEQUALS = r"!="
 t_EQUALS = r"="
 t_GREATER_EQUALS = r">="
 t_SMALLER_EQUALS = r"<="
+
+t_PLUSASSIGN = r"\+:="
+t_MINUSASSIGN = r"-:="
+t_TIMESASSIGN = r"\*:="
+t_POWERASSIGN = r"\*\*:="
+t_DIVIDE_CEILASSIGN = r"/:="
+t_DIVIDEASSIGN = r"\|:="
+t_DIVIDE_FLOORASSIGN = r"\\:="
+t_GREATER_THANASSIGN = r">:="
+t_SMALLER_THANASSIGN = r"<:="
+t_UNEQUALSASSIGN = r"!=:="
+t_EQUALSASSIGN = r"=:="
+t_GREATER_EQUALSASSIGN = r">=:="
+t_SMALLER_EQUALSASSIGN = r"<=:="
+
+t_LPAREN = r"\("
+t_RPAREN = r"\)"
+t_ASSIGN = r":="
 
 t_SEMICOLON = r";"
 t_BEGIN = r"\{"
@@ -70,6 +107,26 @@ def t_FLOAT(t):
 
 def t_NUMBER(t):
     r"0x[0-9a-fA-F]+|0b(0|1[01]*)|\d+"
+    return t
+
+
+def t_MODASSIGN(t):
+    r"mod:="
+    return t
+
+
+def t_ANDASSIGN(t):
+    r"and:="
+    return t
+
+
+def t_ORASSIGN(t):
+    r"or:="
+    return t
+
+
+def t_XORASSIGN(t):
+    r"xor:="
     return t
 
 
@@ -117,40 +174,8 @@ def t_error(t):
 lexer: Lexer = lex()
 
 if __name__ == "__main__":
-    # Eigene Cases
-    lexer.input(r"name_von_😆_😎 := ((3 / 5)+1)|2\2")
-    print(lexer.lexdata)
-    for token in lexer:
-        print(token)
-    lexer.input(r"25/(3*40) + (300-20) -16.5")
-    print(lexer.lexdata)
-    for token in lexer:
-        print(token)
-    lexer.input(r"(300-250)<(400-500)")
-    print(lexer.lexdata)
-    for token in lexer:
-        print(token)
-    lexer.input(r"20 and 30 or 50")
-    print(lexer.lexdata)
-    for token in lexer:
-        print(token)
-    lexer.input(r"x0 mod 5 \ 4 e 10 ** 4 | 2 + 3 / 5")
-    print(lexer.lexdata)
-    for token in lexer:
-        print(token)
+    while (i := input(">>> ")) != "q":
+        lexer.input(i)
 
-    code = r"""
-    x := 0xff + 0b11 - 5 e 10
-    #
-    Kommentar
-    #
-    + 3
-    """
-    lexer.input(code)
-    for tok in lexer:
-        print(tok)
-
-    # Commandzeile
-    lexer.input(input())
-    for token in lexer:
-        print(token)
+        for token in lexer:
+            print(token)

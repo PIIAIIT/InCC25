@@ -1,13 +1,8 @@
 {
-für i in ]0, n] wiederhole
-  wenn i mod 3 = 0 and i mod 5 = 0 gilt,
-    print "FizzBuzz"
-  ,aber wenn i mod 3 = 0 gilt,
-    print "Fizz"
-  ,aber wenn i mod 5 = 0 gilt,
-    print "Buzz"
-  sonst
-    print i
-  .
+# factorial function #
+n:=20;
+x:=1;
+für i in [1 ,n] wiederhole
+  x := x * i
 .
 }

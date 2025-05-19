@@ -51,6 +51,9 @@ tokens = (
         "RPAREN",
         "ASSIGN",
         "SEMICOLON",
+        "COMMA",
+        "CLOSED_BRACKETS",
+        "OPEN_BRACKETS",
         "BEGIN",  # Sequence Begin
         "END",  # Sequence End
     ]
@@ -95,6 +98,9 @@ t_ASSIGN = r":="
 t_SEMICOLON = r";"
 t_BEGIN = r"\{"
 t_END = r"\}"
+t_CLOSED_BRACKETS = r"\]"
+t_OPEN_BRACKETS = r"\["
+t_COMMA = r"\,"
 
 t_ignore = " \t"
 t_ignore_comment = r"\#[^\#]*\#"
@@ -127,6 +133,21 @@ def t_ORASSIGN(t):
 
 def t_XORASSIGN(t):
     r"xor:="
+    return t
+
+
+def t_ENDCOND(t):
+    r"\."
+    return t
+
+
+def t_THEN(t):
+    r"gilt,"
+    return t
+
+
+def t_ELIF(t):
+    r",aber"
     return t
 
 
@@ -169,13 +190,24 @@ def print_error_with_caret(text, lineno, lexpos):
 def t_error(t):
     print_error_with_caret(t.lexer.lexdata, t.lineno, t.lexpos)
     t.lexer.skip(1)
+    return t
 
 
 lexer: Lexer = lex()
 
 if __name__ == "__main__":
-    while (i := input(">>> ")) != "q":
-        lexer.input(i)
+    while True:
+        try:
+            s = input(">>> ")
+        except EOFError:
+            break
+
+        if not s or s.lower() == "\n":
+            continue
+        if s.lower() == "q":
+            break
+
+        lexer.input(s)
 
         for token in lexer:
             print(token)

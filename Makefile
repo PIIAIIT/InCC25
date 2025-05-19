@@ -1,10 +1,20 @@
-python_env = python3
+PYTHON_ENV = python3
+
+main_file = main.py
+lexer_file = lexer.py
+parser_file = parser.py
 
 default:
-	$(python_env) main.py
+	$(PYTHON_ENV) $(main_file)
 
-test: 
-	$(python_env) -m test.test
+lexer::
+	$(PYTHON_ENV) $(lexer_file)
+
+parser::
+	$(PYTHON_ENV) $(parser_file)
+
+test::
+	$(PYTHON_ENV) -m test.test
 
 clean:
 	rm -f parsertab.py parser.out

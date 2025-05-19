@@ -1,0 +1,45 @@
+{
+# TEST WHILE STATEMENTS #
+# DECREMENT FUNCTION #
+# PROCEDUR: x0 = DEC(x1): #
+x1 := 5; # PARAMETER #
+x0 := 0;
+x2 := 1;
+solange x2 < x1 gilt,
+  x0:=x0+1;
+  x2:=x2+1
+.;
+x0;
+
+# DIVISION FUNCTION #
+# PROCEDUR: x0 = div(x1, x2): #
+x1:=10; x2:=5; # PARAMETER #
+x0:=0;
+solange x1 >= x2 gilt,
+    x1:=x1-x2;
+    x0:=x0+1
+.;
+x0;
+
+# MODULO FUNCTION #
+# PROCEDUR: x1 = mod(x1, x2): #
+x1:=10; x2:=5; # PARAMETER #
+x0:=0;
+solange x1 >= x2 gilt,
+    x1:=x1-x2;
+    x0:=x0+1
+.;
+x1;
+
+# CANTOR FUNCTION #
+# PROCEDUR: x0 = cantor(x, y): #
+x:=2; y:=3; # PARAMETER #
+i:=0;
+s:=i;
+z:=x+y;
+solange i < z gilt,
+    i:=i+1;
+    s:=s+i
+.;
+x0:=x+s
+}

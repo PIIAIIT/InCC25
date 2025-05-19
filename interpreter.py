@@ -86,48 +86,53 @@ def eval(expression, env):
             return eval(body[-1], env)
 
         case ("if", condition, then_body, else_body):
-            if else_body is None:
+            if else_body is None:  # Fall kein else
                 if eval(condition, env) == 1:
-                    return eval(then_body, env)
+                    # statements handling
+                    for expr in then_body[:-1]:
+                        eval(expr, env)
+                    return eval(then_body[-1], env)
                 else:
                     return None
-            elif isinstance(else_body[0], tuple):
-                if eval(condition, env) == 1:
-                    return eval(then_body, env)
-                for cond, statements in else_body:
-                    if eval(cond, env) == 1:
-                        return eval(statements, env)
             else:
-                if eval(condition, env) == 1:
-                    return eval(then_body, env)
-                return eval(else_body, env)
+                for cond, statement in else_body:
+                    if cond == "None":
+                        for expr in statement[:-1]:
+                            eval(expr, env)
+                        return eval(statement[-1], env)
+                    if eval(cond, env):
+                        for expr in statement[:-1]:
+                            eval(expr, env)
+                        return eval(statement[-1], env)
+                return None
 
-            # Sem(if expr0: expr1 else expr2, U;S) = (x, S'')
-            # wobei (b,S')=Sem(expr0, U;S)
-            #
-            # (x,S") = Sem(expr1, U;S') falls b=true
-            #           Sem(expr2, U;S') sonst
+        # Sem(if expr0: expr1 else expr2, U;S) = (x, S'')
+        # wobei (b,S')=Sem(expr0, U;S)
+        #
+        # (x,S") = Sem(expr1, U;S') falls b=true
+        #           Sem(expr2, U;S') sonst
 
         case ("while", condition, body):
             result = None
             while eval(condition, env):
-                result = eval(body, env)
-                return result
+                for b in body:
+                    result = eval(b, env)
+            return result
 
-            # Sem(while cond: expr, U;S) = (x,S")     ,falls n!=0
-            #                            = (None,S")  ,sonst
-            # (x,S') = Sem(begin cond; expr end, U)^n(S)
-            # (t,S") = Sem(cond, U;S') , t=False und n die kleinste Zahl mit dieser Eigenschaft
-            # (n,S') = Sem(expr1, U;S)
+        # Sem(while cond: expr, U;S) = (x,S")     ,falls n!=0
+        #                            = (None,S")  ,sonst
+        # (x,S') = Sem(begin cond; expr end, U)^n(S)
+        # (t,S") = Sem(cond, U;S') , t=False und n die kleinste Zahl mit dieser Eigenschaft
+        # (n,S') = Sem(expr1, U;S)
 
         case ("loop", counter, interval, body):
-            i = env[counter] = 0  # assign a new variable
+            env[counter] = 0  # assign a new variable auf 0
 
             links, a, b, rechts = interval
-            a, b = eval(a, env), eval(b, env)  # als Zahl evaluieren
-            # als nartürliche Zahl evaluieren
-            a = a // 1
-            b = b // 1
+            a = eval(a, env)  # als Zahl evaluieren
+            b = eval(b, env)  # als Zahl evaluieren
+            if isinstance(a, float) or isinstance(b, float):
+                raise Exception("Float Typ is invalid for interval.")
             a += 1 if links == "]" else 0
             b -= 1 if rechts == "[" else 0
             # a=0, b=5
@@ -137,13 +142,15 @@ def eval(expression, env):
             # ]a,b[ == [1,..,4]
 
             result = None
-            for i in range(a, b):
-                i += 1
-                result = eval(body, env)
+            env[counter] = a
+            while env[counter] < b:
+                env[counter] += 1
+                for _b in body:
+                    result = eval(_b, env)
             return result
 
-            # Sem(loop expr1: expr2, U;S) = (None, S')          falls n=0
-            #                             = Sem(expr2, U)^n(S') sonst
+        # Sem(loop expr1: expr2, U;S) = (None, S')          falls n=0
+        #                             = Sem(expr2, U)^n(S') sonst
 
         case _:
             print(f"unknown expression {expression}")

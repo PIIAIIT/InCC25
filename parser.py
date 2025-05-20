@@ -286,6 +286,61 @@ def p_interval(p):
     p[0] = (p[1], p[2], p[4], p[5])
 
 
+######################### LAMBDA #########################
+
+
+def p_lambda(p):
+    "expression : LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression %prec LAMBDA"
+    # TODO: schauen, ob das so funktioniert
+    p[0] = ("lambda", p[3], p[6])
+
+
+def p_parameter1(p):
+    """
+    parameter : expression COMMA parameter
+              | expression
+              | parameter_keywords
+    """
+    # TODO: schauen, ob das so funktioniert
+    if len(p) == 4:
+        p[0] = [p[1]] + p[3]
+    elif len(p) == 2:
+        p[0] = p[1]
+
+
+def p_parameter2(p):
+    """
+    parameter_keywords : expression COLON expression COMMA parameter_keywords
+                       | expression COLON expression
+                       | parameter_infty
+    """
+    # TODO: schauen, ob das so funktioniert
+    if len(p) == 6:
+        p[0] = [(p[1], p[3])] + p[3]
+    elif len(p) == 4:
+        p[0] = [(p[1], p[3])]
+    else:
+        p[0] = p[1]
+
+
+def p_parameter3(p):
+    """
+    parameter_infty : expression DOTS
+                    |
+    """
+    # TODO: schauen, ob das so funktioniert
+    if len(p) == 2:
+        p[0] = ("parameter_infty", p[1])
+    else:
+        p[0] = None
+
+
+def p_call(p):
+    "expression : expression LPAREN expression RPAREN"
+    # TODO: schauen, ob das so funktioniert
+    p[0] = ("call", p[3], p[6])
+
+
 ########################################################
 
 
@@ -301,6 +356,7 @@ def p_error(p):
 
 precedence = (
     tuple(["right", "ASSIGN"] + [a for a in assigns]),
+    ("left", "LAMBDA"),
     ("left", "OR"),
     ("left", "XOR"),
     ("left", "AND"),

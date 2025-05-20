@@ -1,4 +1,6 @@
 import numpy as np
+from environment import Environment
+# TODO: Environment umschreiben
 
 bin_operations = {
     "plus": lambda x, y: x + y,
@@ -30,7 +32,7 @@ unary_operations = {
 }
 
 
-def eval(expression, env):
+def eval(expression, env: Environment):
     match expression:
         case ("num", n):
             if n.startswith("0b"):
@@ -140,17 +142,29 @@ def eval(expression, env):
             # ]a,b] == [1,..,5]
             # [a,b[ == [0,..,4]
             # ]a,b[ == [1,..,4]
+            # TODO: Scope definieren
 
             result = None
             env[counter] = a
             while env[counter] < b:
-                env[counter] += 1
+                # env[counter] += 1
                 for _b in body:
                     result = eval(_b, env)
             return result
 
         # Sem(loop expr1: expr2, U;S) = (None, S')          falls n=0
         #                             = Sem(expr2, U)^n(S') sonst
+        case ("lambda", variable, body):
+            # TODO: lambda definieren
+            return (env, variable, body)
+
+        case ("call", func, parameter):
+            # TODO: lambda calls definieren
+            env, x_f, expr_f = eval(func, env)
+            env_f = Environment(parent=env)
+            env_f.put(x_f)
+            env_f[x_f] = eval(parameter, env)
+            return eval(expr_f, env_f)
 
         case _:
             print(f"unknown expression {expression}")

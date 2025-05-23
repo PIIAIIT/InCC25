@@ -1,6 +1,5 @@
 import numpy as np
 from environment import Environment
-# TODO: Environment umschreiben
 
 bin_operations = {
     "plus": lambda x, y: x + y,
@@ -128,43 +127,108 @@ def eval(expression, env: Environment):
         # (n,S') = Sem(expr1, U;S)
 
         case ("loop", counter, interval, body):
-            env[counter] = 0  # assign a new variable auf 0
+            left_interval, expr1, expr2, right_interval = interval
 
-            links, a, b, rechts = interval
-            a = eval(a, env)  # als Zahl evaluieren
-            b = eval(b, env)  # als Zahl evaluieren
+            a = eval(expr1, env)
+            b = eval(expr2, env)
             if isinstance(a, float) or isinstance(b, float):
-                raise Exception("Float Typ is invalid for interval.")
-            a += 1 if links == "]" else 0
-            b -= 1 if rechts == "[" else 0
-            # a=0, b=5
-            # [a,b] == [0,..,5]
-            # ]a,b] == [1,..,5]
-            # [a,b[ == [0,..,4]
-            # ]a,b[ == [1,..,4]
-            # TODO: Scope definieren
+                raise TypeError("Float Type is not supported!")
+            a += 1 if left_interval == "]" else 0
+            b -= 1 if right_interval == "[" else 0
+
+            local_env = Environment(parent=env)
+            local_env.put(counter)
+            local_env[counter] = a
 
             result = None
-            env[counter] = a
-            while env[counter] < b:
-                # env[counter] += 1
+            while local_env[counter] < b:
+                local_env[counter] += 1
                 for _b in body:
-                    result = eval(_b, env)
+                    result = eval(_b, local_env)
             return result
 
         # Sem(loop expr1: expr2, U;S) = (None, S')          falls n=0
         #                             = Sem(expr2, U)^n(S') sonst
-        case ("lambda", variable, body):
-            # TODO: lambda definieren
-            return (env, variable, body)
+        case ("lambda", parameter, body):
 
-        case ("call", func, parameter):
-            # TODO: lambda calls definieren
-            env, x_f, expr_f = eval(func, env)
-            env_f = Environment(parent=env)
-            env_f.put(x_f)
-            env_f[x_f] = eval(parameter, env)
-            return eval(expr_f, env_f)
+            def extract_params(params):
+                names = []
+                defaults = {}
+                for item in params:
+                    if isinstance(item, tuple) and item[0] == "var":
+                        names.append(item[1])
+                    elif isinstance(item, list):
+                        for i in range(0, len(item), 2):
+                            var = item[i][1]
+                            val = item[i + 1]
+                            names.append(var)
+                            defaults[var] = val
+                return names, defaults
+
+            names, defaults = extract_params(parameter)
+            return (env, names, defaults, body)
+
+        # ('parameter', [('var', 'x'), [('var', 'y'), ('num', '3'), ('var', 'z'), ('num', '5'), ('infty', ('var', 'c'))]]),
+        case ("call", func, args):
+            func_val = eval(func, env)
+
+            if func_val[0] != "lambda_closure":
+                raise ValueError("Cannot call non-lambda.")
+
+            _, param_names, default_map, body, closure_env = func_val
+
+            given_args = [eval(arg, env) for arg in args]
+            total_params = len(param_names)
+            total_given = len(given_args)
+
+            if total_given < total_params:
+                # Underfitting: gib Closure mit verbleibenden Parametern zurück
+                remaining_param_names = param_names[total_given:]
+                remaining_defaults = {
+                    k: v for k, v in default_map.items() if k in remaining_param_names
+                }
+
+                # Übergib gebundene Parameter in Closure
+                new_env = Environment(parent=closure_env)
+                for i in range(total_given):
+                    new_env[param_names[i]] = given_args[i]
+
+                return (
+                    "lambda_closure",
+                    remaining_param_names,
+                    remaining_defaults,
+                    body,
+                    new_env,
+                )
+
+            else:
+                # Overfitting: überzählige ignorieren
+                local_env = Environment(parent=closure_env)
+
+                for i in range(total_params):
+                    if i < total_given:
+                        local_env[param_names[i]] = given_args[i]
+                    elif param_names[i] in default_map:
+                        local_env[param_names[i]] = eval(
+                            default_map[param_names[i]], closure_env
+                        )
+                    else:
+                        raise TypeError(f"Missing required argument: {param_names[i]}")
+
+                return eval(body, local_env)
+
+        case ("print", expr):
+            a = eval(expr, env)
+            if a is not None:
+                print(eval(expr, env))
+                return 1
+            return 0
+
+        case ("length", expr):
+            a = eval(expr, env)
+            if a is not None:
+                return len(a)
+            return None
 
         case _:
             print(f"unknown expression {expression}")

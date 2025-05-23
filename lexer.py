@@ -34,10 +34,11 @@ keywords = {
     "sonst": "ELSE",
     "solange": "WHILE",
     "für": "LOOP",
-    ",wiederhole": "LOOPTHEN",
+    "wiederhole": "LOOPTHEN",
     "in": "LOOPIN",
-    ".": "ENDCOND",
     "lambda": "LAMBDA",
+    "echo": "ECHO",
+    "länge": "LENGTH",
 }
 
 assigns += [x + "ASSIGN" for x in ["AND", "OR", "XOR", "MOD", "EXP"]]
@@ -59,6 +60,7 @@ tokens = (
         "BEGIN",  # Sequence Begin
         "END",  # Sequence End
         "LAMBDA_ARROW",
+        "ENDCOND",
         "DOTS",
     ]
     + operations
@@ -107,7 +109,6 @@ t_OPEN_BRACKETS = r"\["
 t_COMMA = r"\,"
 
 t_COLON = r"\:"
-t_DOTS = r"\.\.\."
 t_LAMBDA_ARROW = r"->"
 
 t_ignore = " \t"
@@ -141,6 +142,11 @@ def t_ORASSIGN(t):
 
 def t_XORASSIGN(t):
     r"xor:="
+    return t
+
+
+def t_DOTS(t):
+    r"\.\.\."
     return t
 
 

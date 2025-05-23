@@ -12,5 +12,6 @@ für i in ]0, n] wiederhole
   sonst
     y +:= 1
   .
-.
+.;
+y;
 }

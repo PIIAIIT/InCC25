@@ -23,9 +23,9 @@ look_up_table = {
     "<=": "smaller_equals",
     "!=": "unequals",
 }
-look_up_table2 = {}
+look_up_assignments = {}
 for k, v in look_up_table.items():
-    look_up_table2[k + ":="] = v
+    look_up_assignments[k + ":="] = v
 unary = {
     "not": "not",
     "-": "uminus",
@@ -51,14 +51,7 @@ def p_var(p):
 
 
 ################ EXPRESSION ################
-# def p_paran1(p):
-#     """
-#     expression : LPAREN expression RPAREN
-#     """
-#     p[0] = p[2]
-
-
-def p_paran2(p):
+def p_paran(p):
     """
     arithmetic_expression : LPAREN expression RPAREN
     """
@@ -180,7 +173,7 @@ def p_assignment2(p):
                | IDENTIFIER EXPASSIGN expression
                | IDENTIFIER MODASSIGN expression
     """
-    p[0] = ("assign", look_up_table2[p[2]], p[1], p[3])
+    p[0] = ("assign", look_up_assignments[p[2]], p[1], p[3])
 
 
 ################ SEQUENCE ################
@@ -204,8 +197,16 @@ def p_statement0(p):
               | if_statement
               | while_statement
               | loop_statement
+              | function
     """
     p[0] = p[1]
+
+
+def p_statements0(p):
+    """
+    statements : statements SEMICOLON statement
+    """
+    p[0] = p[1] + [p[3]]
 
 
 def p_statements1(p):
@@ -215,20 +216,13 @@ def p_statements1(p):
     p[0] = [p[1]]
 
 
-def p_statements2(p):
-    """
-    statements : statements SEMICOLON statement
-    """
-    p[0] = p[1] + [p[3]]
-
-
-def p_statements3(p):
-    """
-    statements : if_statement statement
-               | while_statement statement
-               | loop_statement statement
-    """
-    p[0] = [p[1]] + [p[2]]
+# def p_statements2(p):
+#     """
+#     statements : statements if_statement
+#                | statements while_statement
+#                | statements loop_statement
+#     """
+#     p[0] = [p[1], p[2]]
 
 
 ######################### IF #########################
@@ -291,21 +285,29 @@ def p_interval(p):
 
 def p_lambda(p):
     "expression : LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression %prec LAMBDA"
-    # TODO: schauen, ob das so funktioniert
     p[0] = ("lambda", p[3], p[6])
+
+
+def p_parameter0(p):
+    """
+    parameter : parameter_list
+    """
+    p[0] = ("parameter", p[1])
 
 
 def p_parameter1(p):
     """
-    parameter : expression COMMA parameter
-              | expression
-              | parameter_keywords
+    parameter_list : expression COMMA parameter_list
+                    | expression
+                    | parameter_keywords
+                    |
     """
-    # TODO: schauen, ob das so funktioniert
     if len(p) == 4:
         p[0] = [p[1]] + p[3]
     elif len(p) == 2:
-        p[0] = p[1]
+        p[0] = [p[1]]
+    else:
+        p[0] = []
 
 
 def p_parameter2(p):
@@ -314,31 +316,37 @@ def p_parameter2(p):
                        | expression COLON expression
                        | parameter_infty
     """
-    # TODO: schauen, ob das so funktioniert
     if len(p) == 6:
-        p[0] = [(p[1], p[3])] + p[3]
+        p[0] = [(p[1], p[3])] + p[5]
     elif len(p) == 4:
         p[0] = [(p[1], p[3])]
     else:
-        p[0] = p[1]
+        p[0] = [p[1]]
 
 
 def p_parameter3(p):
     """
     parameter_infty : expression DOTS
-                    |
     """
-    # TODO: schauen, ob das so funktioniert
-    if len(p) == 2:
-        p[0] = ("parameter_infty", p[1])
-    else:
-        p[0] = None
+    p[0] = ("infty", p[1])
 
 
 def p_call(p):
-    "expression : expression LPAREN expression RPAREN"
-    # TODO: schauen, ob das so funktioniert
-    p[0] = ("call", p[3], p[6])
+    "expression : expression LPAREN parameter RPAREN"
+    p[0] = ("call", p[1], p[3])
+
+
+######################### BUILTIN #########################
+
+
+def p_echo(p):
+    "function : ECHO LPAREN expression RPAREN"
+    p[0] = ("print", p[3])
+
+
+def p_length(p):
+    "function : LENGTH LPAREN expression RPAREN"
+    p[0] = ("length", p[3])
 
 
 ########################################################

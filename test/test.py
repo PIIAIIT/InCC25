@@ -1,11 +1,13 @@
 from lexer import lexer
 from parser import parser
 from interpreter import eval
+from environment import Environment
 import math
 import os
 import sys
 
-env = {"x": 0}
+env = Environment()
+env.put(["x"])
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 path = os.path.abspath(".") + "/test/"
@@ -48,7 +50,7 @@ def test_interpreter(input_string, env=None, verbose=False):
         input_string = "{\n" + input_string + "\n}"
 
     if env is None:
-        env = {}
+        env = Environment()
 
     ast = parser.parse(input_string, debug=verbose)
     print(ast, end=" === ") if verbose else ""
@@ -160,18 +162,22 @@ assert test_interpreter(test_code) == 420.69
 ################### FILE TEST ###################
 
 ################### LEXER TEST ###################
-assert test_lexer(read_file("test1.incc25"))
-assert test_lexer(read_file("test2.incc25"))
-assert test_lexer(read_file("test3.incc25"))
+v = False
+assert test_lexer(read_file("fizzbuzz.incc25"), verbose=v)
+assert test_lexer(read_file("test2.incc25"), verbose=v)
+assert test_lexer(read_file("test3.incc25"), verbose=v)
+# test_lexer(read_file("test6.incc25"), verbose=verbose)
 
 ################### PARSER TEST ###################
-assert test_parser(read_file("test1.incc25"))
-assert test_parser(read_file("test2.incc25"))
-assert test_parser(read_file("test3.incc25"))
+assert test_parser(read_file("fizzbuzz.incc25"), verbose=v)
+assert test_parser(read_file("test2.incc25"), verbose=v)
+assert test_parser(read_file("test3.incc25"), verbose=v)
+# test_parser(read_file("test6.incc25"), verbose=verbose)
 
 ################### INTERPRETER TEST ###################
-assert test_interpreter(read_file("test1.incc25")) == 23
-assert test_interpreter(read_file("test2.incc25")) == 2432902008176640000
-assert test_interpreter(read_file("test3.incc25")) == 50 / 4
-assert test_interpreter(read_file("test4.incc25")) == 17
-assert test_interpreter(read_file("test5.incc25")) == 17
+assert test_interpreter(read_file("fizzbuzz.incc25"), verbose=v) == 23
+assert test_interpreter(read_file("test2.incc25"), verbose=v) == 2432902008176640000
+assert test_interpreter(read_file("test3.incc25"), verbose=v) == 50 / 4
+assert test_interpreter(read_file("test4.incc25"), verbose=v) == 17
+assert test_interpreter(read_file("test5.incc25"), verbose=v)
+# test_interpreter(read_file("test6.incc25"))

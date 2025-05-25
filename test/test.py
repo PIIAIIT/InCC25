@@ -163,19 +163,19 @@ assert test_interpreter(test_code) == 420.69
 
 ################### LEXER TEST ###################
 v = False
-assert test_lexer(read_file("fizzbuzz.incc25"), verbose=v)
+assert test_lexer(read_file("test1.incc25"), verbose=v)
 assert test_lexer(read_file("test2.incc25"), verbose=v)
 assert test_lexer(read_file("test3.incc25"), verbose=v)
 # test_lexer(read_file("test6.incc25"), verbose=verbose)
 
 ################### PARSER TEST ###################
-assert test_parser(read_file("fizzbuzz.incc25"), verbose=v)
+assert test_parser(read_file("test1.incc25"), verbose=v)
 assert test_parser(read_file("test2.incc25"), verbose=v)
 assert test_parser(read_file("test3.incc25"), verbose=v)
 # test_parser(read_file("test6.incc25"), verbose=verbose)
 
 ################### INTERPRETER TEST ###################
-assert test_interpreter(read_file("fizzbuzz.incc25"), verbose=v) == 23
+assert test_interpreter(read_file("test1.incc25"), verbose=v) == 23
 assert test_interpreter(read_file("test2.incc25"), verbose=v) == 2432902008176640000
 assert test_interpreter(read_file("test3.incc25"), verbose=v) == 50 / 4
 assert test_interpreter(read_file("test4.incc25"), verbose=v) == 17

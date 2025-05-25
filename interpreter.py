@@ -11,7 +11,6 @@ bin_operations = {
     "divide_ceil": lambda x, y: -(-x // y),
     "mod": lambda x, y: x % y,
     "exp": lambda x, y: x * 10**y,
-    # booleans
     "and": lambda x, y: bool(x) * bool(y),
     "or": lambda x, y: bool(x) + bool(y),
     "xor": lambda x, y: +bool(bool(x) - bool(y)),
@@ -26,7 +25,7 @@ bin_operations = {
 unary_operations = {
     "not": lambda x: int(not x),
     "uplus": lambda x: np.abs(x),
-    "uminus": lambda x: -x if x > 0 else x,
+    "uminus": lambda x: -x,
     "imag": lambda x: np.complex64(0, x),
 }
 
@@ -150,72 +149,70 @@ def eval(expression, env: Environment):
         # Sem(loop expr1: expr2, U;S) = (None, S')          falls n=0
         #                             = Sem(expr2, U)^n(S') sonst
         case ("lambda", parameter, body):
+            local_env = Environment(env)
+            params = []
+            match parameter:
+                case "parameter", param:
+                    for x in param:
+                        if isinstance(x, list):
+                            tmp = {}
+                            for i in x:
+                                local_env.put(i[1])
+                                if i[0] == "keyword":
+                                    local_env[i[1]] = eval(i[2], env)
+                                    tmp[i[1]] = local_env[i[1]]
+                            params.append(tmp)
+                            break
+                        local_env.put(x)
+                        params.append(x)
+            return (local_env, params, body)
+        # ('parameter', ['x', [('keyword', 'y', ('num', '3')), ('keyword', 'z', ('num', '5')), ('infty', 'c')]])
+        # -> (Global: {'x': None, 'y': None, 'z': None}, Scope Level 0: {'x': None, 'y': 3, 'z': 5, 'c': None}, ['x', {"y" : 3, "z" : 5}], ('parameter_expr', [('num', '2'), [('keyword', ('var', 'x'), ('num', '3'))]]))
 
-            def extract_params(params):
-                names = []
-                defaults = {}
-                for item in params:
-                    if isinstance(item, tuple) and item[0] == "var":
-                        names.append(item[1])
-                    elif isinstance(item, list):
-                        for i in range(0, len(item), 2):
-                            var = item[i][1]
-                            val = item[i + 1]
-                            names.append(var)
-                            defaults[var] = val
-                return names, defaults
+        case ("call", func, args_expr):
+            lambda_env, param_list, lbd_body = eval(
+                func, env
+            )  # f(x,y:3,z:5,c...) = x+y-z
+            # lambda_env:   Global: {'x': None, 'y': None, 'z': None}, Scope Level 0: {'x': None, 'y': 3, 'z': 5, 'c': None}
+            # param_list: ['x', {"y" : 3, "z" : 5}]
+            # lbd_body: ('binop', 'minus', ('binop', 'plus', ('var', 'x'), ('var', 'y')), ('var', 'z'))
 
-            names, defaults = extract_params(parameter)
-            return (env, names, defaults, body)
+            # args_expr: ('parameter_expr', [('num', '2'), [('keyword', ('var', 'x'), ('num', '3'))]]) f(2,x:3)
 
-        # ('parameter', [('var', 'x'), [('var', 'y'), ('num', '3'), ('var', 'z'), ('num', '5'), ('infty', ('var', 'c'))]]),
-        case ("call", func, args):
-            func_val = eval(func, env)
-
-            if func_val[0] != "lambda_closure":
-                raise ValueError("Cannot call non-lambda.")
-
-            _, param_names, default_map, body, closure_env = func_val
-
-            given_args = [eval(arg, env) for arg in args]
-            total_params = len(param_names)
-            total_given = len(given_args)
-
-            if total_given < total_params:
-                # Underfitting: gib Closure mit verbleibenden Parametern zurück
-                remaining_param_names = param_names[total_given:]
-                remaining_defaults = {
-                    k: v for k, v in default_map.items() if k in remaining_param_names
-                }
-
-                # Übergib gebundene Parameter in Closure
-                new_env = Environment(parent=closure_env)
-                for i in range(total_given):
-                    new_env[param_names[i]] = given_args[i]
-
-                return (
-                    "lambda_closure",
-                    remaining_param_names,
-                    remaining_defaults,
-                    body,
-                    new_env,
-                )
-
+            # keywords argumente sind angegeben
+            if isinstance(args_expr[-1], list):
+                for _, var, val in args_expr[-1]:
+                    k = eval(var, lambda_env)
+                    v = eval(val, lambda_env)
+                    lambda_env[k] = v
             else:
-                # Overfitting: überzählige ignorieren
-                local_env = Environment(parent=closure_env)
+                # nur pos_args abarbeiten
+                pass
 
-                for i in range(total_params):
-                    if i < total_given:
-                        local_env[param_names[i]] = given_args[i]
-                    elif param_names[i] in default_map:
-                        local_env[param_names[i]] = eval(
-                            default_map[param_names[i]], closure_env
-                        )
-                    else:
-                        raise TypeError(f"Missing required argument: {param_names[i]}")
-
-                return eval(body, local_env)
+        #     lambda_env, def_parameter, lbd_body = eval(func, env)
+        #
+        #     # eval Argumente -> bekomme (pos, benannte, rest) getrennt
+        #     pos_args, kw_args = [], {}
+        #     # ('parameter',
+        #     # [('var', 'x'), ('var', 'y'),
+        #     # [(('var', 'z'), ('num', '3')),
+        #     # ('infty', ('var', 'c'))]])
+        #     if not isinstance(args[-1], list):
+        #         for arg in args:
+        #             pos_args.append(arg)
+        #     else:
+        #
+        #     # find list
+        #     single, keywords, rest = eval(args, env)
+        #     local_env = Environment(parent=env)
+        #     local_env.put(keywords.keys())
+        #     # assign keywords
+        #     for k, v in keywords:
+        #         local_env[k] = v
+        #     local_env.put(single)
+        #     # TODO: Hier weiter machen noch nicht fertig!
+        #
+        #     return 0
 
         case ("print", expr):
             a = eval(expr, env)

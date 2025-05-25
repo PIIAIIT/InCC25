@@ -290,49 +290,97 @@ def p_lambda(p):
 
 def p_parameter0(p):
     """
-    parameter : parameter_list
+    parameter : parameter_pos
+              | empty
     """
     p[0] = ("parameter", p[1])
 
 
 def p_parameter1(p):
     """
-    parameter_list : expression COMMA parameter_list
-                    | expression
-                    | parameter_keywords
-                    |
+    parameter_pos : parameter_pos_list
     """
-    if len(p) == 4:
-        p[0] = [p[1]] + p[3]
-    elif len(p) == 2:
-        p[0] = [p[1]]
-    else:
-        p[0] = []
+    p[0] = p[1]
 
 
 def p_parameter2(p):
     """
-    parameter_keywords : expression COLON expression COMMA parameter_keywords
-                       | expression COLON expression
-                       | parameter_infty
+    parameter_pos_list : IDENTIFIER COMMA parameter_pos_list
+                       | IDENTIFIER
+                       | parameter_keywords
     """
-    if len(p) == 6:
-        p[0] = [(p[1], p[3])] + p[5]
-    elif len(p) == 4:
-        p[0] = [(p[1], p[3])]
+    if len(p) == 4:
+        p[0] = [p[1]] + p[3]
     else:
         p[0] = [p[1]]
 
 
 def p_parameter3(p):
     """
-    parameter_infty : expression DOTS
+    parameter_keywords : parameter_kw_list
     """
-    p[0] = ("infty", p[1])
+    p[0] = p[1]
+
+
+def p_parameter4(p):
+    """
+    parameter_kw_list : IDENTIFIER COLON expression COMMA parameter_kw_list
+                      | IDENTIFIER COLON expression
+                      | parameter_infty
+    """
+    if len(p) == 6:
+        p[0] = [("keyword", p[1], p[3])] + p[5]
+    elif len(p) == 4:
+        p[0] = [("keyword", p[1], p[3])]
+    else:
+        p[0] = p[1]
+
+
+def p_parameter5(p):
+    """
+    parameter_infty : IDENTIFIER DOTS
+    """
+    p[0] = [("infty", p[1])]
+
+
+def p_parameter6(p):
+    """
+    parameter_expr : parameter_pos_expr
+                   | empty
+    """
+    p[0] = ("parameter_expr", p[1])
+
+
+def p_parameter7(p):
+    """
+    parameter_pos_expr : expression COMMA parameter_pos_expr
+                       | expression
+                       | parameter_keywords_expr
+    """
+    if len(p) == 4:
+        p[0] = [p[1]] + p[3]
+    else:
+        p[0] = [p[1]]
+
+
+def p_parameter8(p):
+    """
+    parameter_keywords_expr : expression COLON expression COMMA parameter_keywords_expr
+                            | expression COLON expression
+    """
+    if len(p) == 6:
+        p[0] = [("keyword", p[1], p[3])] + p[5]
+    elif len(p) == 4:
+        p[0] = [("keyword", p[1], p[3])]
+
+
+def p_empty(p):
+    "empty :"
+    p[0] = []
 
 
 def p_call(p):
-    "expression : expression LPAREN parameter RPAREN"
+    "expression : expression LPAREN parameter_expr RPAREN"
     p[0] = ("call", p[1], p[3])
 
 
@@ -400,5 +448,5 @@ if __name__ == "__main__":
         if s.lower() == "q":
             break
 
-        res = parser.parse("{" + s + "}")
+        res = parser.parse("{" + s + "}", debug=True)
         print(res)

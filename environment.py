@@ -1,4 +1,4 @@
-class Environment:
+class Environment(dict):
     def __init__(self, parent=None):
         self.parent = parent
         self.vars = {}

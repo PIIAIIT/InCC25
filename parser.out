@@ -76,18 +76,28 @@ Rule 70    interval -> CLOSED_BRACKETS expression COMMA expression CLOSED_BRACKE
 Rule 71    interval -> OPEN_BRACKETS expression COMMA expression OPEN_BRACKETS
 Rule 72    interval -> CLOSED_BRACKETS expression COMMA expression OPEN_BRACKETS
 Rule 73    expression -> LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-Rule 74    parameter -> parameter_list
-Rule 75    parameter_list -> expression COMMA parameter_list
-Rule 76    parameter_list -> expression
-Rule 77    parameter_list -> parameter_keywords
-Rule 78    parameter_list -> <empty>
-Rule 79    parameter_keywords -> expression COLON expression COMMA parameter_keywords
-Rule 80    parameter_keywords -> expression COLON expression
-Rule 81    parameter_keywords -> parameter_infty
-Rule 82    parameter_infty -> expression DOTS
-Rule 83    expression -> expression LPAREN parameter RPAREN
-Rule 84    function -> ECHO LPAREN expression RPAREN
-Rule 85    function -> LENGTH LPAREN expression RPAREN
+Rule 74    parameter -> parameter_pos
+Rule 75    parameter -> empty
+Rule 76    parameter_pos -> parameter_pos_list
+Rule 77    parameter_pos_list -> IDENTIFIER COMMA parameter_pos_list
+Rule 78    parameter_pos_list -> IDENTIFIER
+Rule 79    parameter_pos_list -> parameter_keywords
+Rule 80    parameter_keywords -> parameter_kw_list
+Rule 81    parameter_kw_list -> IDENTIFIER COLON expression COMMA parameter_kw_list
+Rule 82    parameter_kw_list -> IDENTIFIER COLON expression
+Rule 83    parameter_kw_list -> parameter_infty
+Rule 84    parameter_infty -> IDENTIFIER DOTS
+Rule 85    parameter_expr -> parameter_pos_expr
+Rule 86    parameter_expr -> empty
+Rule 87    parameter_pos_expr -> expression COMMA parameter_pos_expr
+Rule 88    parameter_pos_expr -> expression
+Rule 89    parameter_pos_expr -> parameter_keywords_expr
+Rule 90    parameter_keywords_expr -> expression COLON expression COMMA parameter_keywords_expr
+Rule 91    parameter_keywords_expr -> expression COLON expression
+Rule 92    empty -> <empty>
+Rule 93    expression -> expression LPAREN parameter_expr RPAREN
+Rule 94    function -> ECHO LPAREN expression RPAREN
+Rule 95    function -> LENGTH LPAREN expression RPAREN
 
 Terminals, with rules where they appear
 
@@ -96,16 +106,16 @@ ANDASSIGN            : 48
 ASSIGN               : 34
 BEGIN                : 53 54
 CLOSED_BRACKETS      : 69 70 70 72
-COLON                : 79 80
-COMMA                : 69 70 71 72 75 79
+COLON                : 81 82 90 91
+COMMA                : 69 70 71 72 77 81 87 90
 DIVIDE               : 10
 DIVIDEASSIGN         : 39
 DIVIDE_CEIL          : 11
 DIVIDE_CEILASSIGN    : 41
 DIVIDE_FLOOR         : 12
 DIVIDE_FLOORASSIGN   : 40
-DOTS                 : 82
-ECHO                 : 84
+DOTS                 : 84
+ECHO                 : 94
 ELIF                 : 65
 ELSE                 : 66
 END                  : 53 54
@@ -119,16 +129,16 @@ GREATER_EQUALS       : 33
 GREATER_EQUALSASSIGN : 44
 GREATER_THAN         : 28
 GREATER_THANASSIGN   : 42
-IDENTIFIER           : 3 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 68
+IDENTIFIER           : 3 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 68 77 78 81 82 84
 IF                   : 63 64 65
 IMAG                 : 22
 LAMBDA               : 73
 LAMBDA_ARROW         : 73
-LENGTH               : 85
+LENGTH               : 95
 LOOP                 : 68
 LOOPIN               : 68
 LOOPTHEN             : 68
-LPAREN               : 4 73 83 84 85
+LPAREN               : 4 73 93 94 95
 MINUS                : 8 20
 MINUSASSIGN          : 36
 MOD                  : 13
@@ -142,7 +152,7 @@ PLUS                 : 7 21
 PLUSASSIGN           : 35
 POWER                : 18
 POWERASSIGN          : 38
-RPAREN               : 4 73 83 84 85
+RPAREN               : 4 73 93 94 95
 SEMICOLON            : 54 61
 SMALLER_EQUALS       : 32
 SMALLER_EQUALSASSIGN : 45
@@ -166,15 +176,21 @@ comparison           : 6
 comparison_chain     : 24 26
 comparison_op        : 24 25 26 27
 else_elif_body       : 64 65
-expression           : 4 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 55 63 64 65 67 69 69 70 70 71 71 72 72 73 75 76 79 79 80 80 82 83 84 85
+empty                : 75 86
+expression           : 4 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 55 63 64 65 67 69 69 70 70 71 71 72 72 73 81 82 87 88 90 90 91 91 93 94 95
 function             : 60
 if_statement         : 57
 interval             : 68
 loop_statement       : 59
-parameter            : 73 83
-parameter_infty      : 81
-parameter_keywords   : 77 79
-parameter_list       : 74 75
+parameter            : 73
+parameter_expr       : 93
+parameter_infty      : 83
+parameter_keywords   : 79
+parameter_keywords_expr : 89 90
+parameter_kw_list    : 80 81
+parameter_pos        : 74
+parameter_pos_expr   : 85 87
+parameter_pos_list   : 76 77
 sequence             : 56 0
 statement            : 61 62
 statements           : 53 54 61 63 64 65 66 67 68
@@ -232,15 +248,15 @@ state 2
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (53) sequence -> . BEGIN statements END
     (54) sequence -> . BEGIN statements SEMICOLON END
     (63) if_statement -> . IF expression THEN statements ENDCOND
     (64) if_statement -> . IF expression THEN statements else_elif_body ENDCOND
     (67) while_statement -> . WHILE expression THEN statements ENDCOND
     (68) loop_statement -> . LOOP IDENTIFIER LOOPIN interval LOOPTHEN statements ENDCOND
-    (84) function -> . ECHO LPAREN expression RPAREN
-    (85) function -> . LENGTH LPAREN expression RPAREN
+    (94) function -> . ECHO LPAREN expression RPAREN
+    (95) function -> . LENGTH LPAREN expression RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -316,7 +332,7 @@ state 4
 state 5
 
     (55) statement -> expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     END             reduce using rule 55 (statement -> expression .)
     SEMICOLON       reduce using rule 55 (statement -> expression .)
@@ -413,7 +429,6 @@ state 11
     THEN            reduce using rule 5 (expression -> arithmetic_expression .)
     COMMA           reduce using rule 5 (expression -> arithmetic_expression .)
     COLON           reduce using rule 5 (expression -> arithmetic_expression .)
-    DOTS            reduce using rule 5 (expression -> arithmetic_expression .)
     ENDCOND         reduce using rule 5 (expression -> arithmetic_expression .)
     ELIF            reduce using rule 5 (expression -> arithmetic_expression .)
     ELSE            reduce using rule 5 (expression -> arithmetic_expression .)
@@ -452,7 +467,6 @@ state 12
     THEN            reduce using rule 6 (expression -> comparison .)
     COMMA           reduce using rule 6 (expression -> comparison .)
     COLON           reduce using rule 6 (expression -> comparison .)
-    DOTS            reduce using rule 6 (expression -> comparison .)
     ENDCOND         reduce using rule 6 (expression -> comparison .)
     ELIF            reduce using rule 6 (expression -> comparison .)
     ELSE            reduce using rule 6 (expression -> comparison .)
@@ -528,7 +542,6 @@ state 13
     THEN            reduce using rule 3 (atomar -> IDENTIFIER .)
     COMMA           reduce using rule 3 (atomar -> IDENTIFIER .)
     COLON           reduce using rule 3 (atomar -> IDENTIFIER .)
-    DOTS            reduce using rule 3 (atomar -> IDENTIFIER .)
     ENDCOND         reduce using rule 3 (atomar -> IDENTIFIER .)
     ELIF            reduce using rule 3 (atomar -> IDENTIFIER .)
     ELSE            reduce using rule 3 (atomar -> IDENTIFIER .)
@@ -568,7 +581,7 @@ state 15
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -633,7 +646,7 @@ state 16
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -697,7 +710,7 @@ state 17
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -745,14 +758,14 @@ state 18
 
 state 19
 
-    (84) function -> ECHO . LPAREN expression RPAREN
+    (94) function -> ECHO . LPAREN expression RPAREN
 
     LPAREN          shift and go to state 74
 
 
 state 20
 
-    (85) function -> LENGTH . LPAREN expression RPAREN
+    (95) function -> LENGTH . LPAREN expression RPAREN
 
     LPAREN          shift and go to state 75
 
@@ -895,7 +908,6 @@ state 24
     THEN            reduce using rule 23 (arithmetic_expression -> atomar .)
     COMMA           reduce using rule 23 (arithmetic_expression -> atomar .)
     COLON           reduce using rule 23 (arithmetic_expression -> atomar .)
-    DOTS            reduce using rule 23 (arithmetic_expression -> atomar .)
     ENDCOND         reduce using rule 23 (arithmetic_expression -> atomar .)
     ELIF            reduce using rule 23 (arithmetic_expression -> atomar .)
     ELSE            reduce using rule 23 (arithmetic_expression -> atomar .)
@@ -933,7 +945,6 @@ state 25
     THEN            reduce using rule 1 (atomar -> NUMBER .)
     COMMA           reduce using rule 1 (atomar -> NUMBER .)
     COLON           reduce using rule 1 (atomar -> NUMBER .)
-    DOTS            reduce using rule 1 (atomar -> NUMBER .)
     ENDCOND         reduce using rule 1 (atomar -> NUMBER .)
     ELIF            reduce using rule 1 (atomar -> NUMBER .)
     ELSE            reduce using rule 1 (atomar -> NUMBER .)
@@ -971,7 +982,6 @@ state 26
     THEN            reduce using rule 2 (atomar -> FLOAT .)
     COMMA           reduce using rule 2 (atomar -> FLOAT .)
     COLON           reduce using rule 2 (atomar -> FLOAT .)
-    DOTS            reduce using rule 2 (atomar -> FLOAT .)
     ENDCOND         reduce using rule 2 (atomar -> FLOAT .)
     ELIF            reduce using rule 2 (atomar -> FLOAT .)
     ELSE            reduce using rule 2 (atomar -> FLOAT .)
@@ -1023,15 +1033,15 @@ state 28
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (53) sequence -> . BEGIN statements END
     (54) sequence -> . BEGIN statements SEMICOLON END
     (63) if_statement -> . IF expression THEN statements ENDCOND
     (64) if_statement -> . IF expression THEN statements else_elif_body ENDCOND
     (67) while_statement -> . WHILE expression THEN statements ENDCOND
     (68) loop_statement -> . LOOP IDENTIFIER LOOPIN interval LOOPTHEN statements ENDCOND
-    (84) function -> . ECHO LPAREN expression RPAREN
-    (85) function -> . LENGTH LPAREN expression RPAREN
+    (94) function -> . ECHO LPAREN expression RPAREN
+    (95) function -> . LENGTH LPAREN expression RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -1085,12 +1095,13 @@ state 28
 
 state 29
 
-    (83) expression -> expression LPAREN . parameter RPAREN
-    (74) parameter -> . parameter_list
-    (75) parameter_list -> . expression COMMA parameter_list
-    (76) parameter_list -> . expression
-    (77) parameter_list -> . parameter_keywords
-    (78) parameter_list -> .
+    (93) expression -> expression LPAREN . parameter_expr RPAREN
+    (85) parameter_expr -> . parameter_pos_expr
+    (86) parameter_expr -> . empty
+    (87) parameter_pos_expr -> . expression COMMA parameter_pos_expr
+    (88) parameter_pos_expr -> . expression
+    (89) parameter_pos_expr -> . parameter_keywords_expr
+    (92) empty -> .
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
@@ -1113,10 +1124,9 @@ state 29
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
-    (79) parameter_keywords -> . expression COLON expression COMMA parameter_keywords
-    (80) parameter_keywords -> . expression COLON expression
-    (81) parameter_keywords -> . parameter_infty
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
+    (90) parameter_keywords_expr -> . expression COLON expression COMMA parameter_keywords_expr
+    (91) parameter_keywords_expr -> . expression COLON expression
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -1137,12 +1147,11 @@ state 29
     (23) arithmetic_expression -> . atomar
     (24) comparison -> . arithmetic_expression comparison_op arithmetic_expression comparison_chain
     (25) comparison -> . arithmetic_expression comparison_op arithmetic_expression
-    (82) parameter_infty -> . expression DOTS
     (1) atomar -> . NUMBER
     (2) atomar -> . FLOAT
     (3) atomar -> . IDENTIFIER
 
-    RPAREN          reduce using rule 78 (parameter_list -> .)
+    RPAREN          reduce using rule 92 (empty -> .)
     IDENTIFIER      shift and go to state 13
     LAMBDA          shift and go to state 14
     LPAREN          shift and go to state 15
@@ -1153,12 +1162,12 @@ state 29
     FLOAT           shift and go to state 26
 
     expression                     shift and go to state 82
-    parameter                      shift and go to state 83
-    parameter_list                 shift and go to state 84
-    parameter_keywords             shift and go to state 85
+    parameter_expr                 shift and go to state 83
+    parameter_pos_expr             shift and go to state 84
+    empty                          shift and go to state 85
+    parameter_keywords_expr        shift and go to state 86
     arithmetic_expression          shift and go to state 11
     comparison                     shift and go to state 12
-    parameter_infty                shift and go to state 86
     atomar                         shift and go to state 24
 
 state 30
@@ -1623,7 +1632,6 @@ state 42
     THEN            reduce using rule 22 (arithmetic_expression -> arithmetic_expression IMAG .)
     COMMA           reduce using rule 22 (arithmetic_expression -> arithmetic_expression IMAG .)
     COLON           reduce using rule 22 (arithmetic_expression -> arithmetic_expression IMAG .)
-    DOTS            reduce using rule 22 (arithmetic_expression -> arithmetic_expression IMAG .)
     ENDCOND         reduce using rule 22 (arithmetic_expression -> arithmetic_expression IMAG .)
     ELIF            reduce using rule 22 (arithmetic_expression -> arithmetic_expression IMAG .)
     ELSE            reduce using rule 22 (arithmetic_expression -> arithmetic_expression IMAG .)
@@ -1771,7 +1779,7 @@ state 50
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -1835,7 +1843,7 @@ state 51
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -1899,7 +1907,7 @@ state 52
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -1963,7 +1971,7 @@ state 53
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -2027,7 +2035,7 @@ state 54
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -2091,7 +2099,7 @@ state 55
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -2155,7 +2163,7 @@ state 56
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -2219,7 +2227,7 @@ state 57
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -2283,7 +2291,7 @@ state 58
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -2347,7 +2355,7 @@ state 59
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -2411,7 +2419,7 @@ state 60
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -2475,7 +2483,7 @@ state 61
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -2539,7 +2547,7 @@ state 62
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -2603,7 +2611,7 @@ state 63
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -2667,7 +2675,7 @@ state 64
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -2731,7 +2739,7 @@ state 65
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -2795,7 +2803,7 @@ state 66
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -2859,7 +2867,7 @@ state 67
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -2923,7 +2931,7 @@ state 68
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -2965,87 +2973,36 @@ state 68
 state 69
 
     (73) expression -> LAMBDA LPAREN . parameter RPAREN LAMBDA_ARROW expression
-    (74) parameter -> . parameter_list
-    (75) parameter_list -> . expression COMMA parameter_list
-    (76) parameter_list -> . expression
-    (77) parameter_list -> . parameter_keywords
-    (78) parameter_list -> .
-    (5) expression -> . arithmetic_expression
-    (6) expression -> . comparison
-    (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
-    (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
-    (79) parameter_keywords -> . expression COLON expression COMMA parameter_keywords
-    (80) parameter_keywords -> . expression COLON expression
-    (81) parameter_keywords -> . parameter_infty
-    (4) arithmetic_expression -> . LPAREN expression RPAREN
-    (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
-    (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
-    (9) arithmetic_expression -> . arithmetic_expression TIMES arithmetic_expression
-    (10) arithmetic_expression -> . arithmetic_expression DIVIDE arithmetic_expression
-    (11) arithmetic_expression -> . arithmetic_expression DIVIDE_CEIL arithmetic_expression
-    (12) arithmetic_expression -> . arithmetic_expression DIVIDE_FLOOR arithmetic_expression
-    (13) arithmetic_expression -> . arithmetic_expression MOD arithmetic_expression
-    (14) arithmetic_expression -> . arithmetic_expression EXP arithmetic_expression
-    (15) arithmetic_expression -> . arithmetic_expression AND arithmetic_expression
-    (16) arithmetic_expression -> . arithmetic_expression OR arithmetic_expression
-    (17) arithmetic_expression -> . arithmetic_expression XOR arithmetic_expression
-    (18) arithmetic_expression -> . arithmetic_expression POWER arithmetic_expression
-    (19) arithmetic_expression -> . NOT arithmetic_expression
-    (20) arithmetic_expression -> . MINUS arithmetic_expression
-    (21) arithmetic_expression -> . PLUS arithmetic_expression
-    (22) arithmetic_expression -> . arithmetic_expression IMAG
-    (23) arithmetic_expression -> . atomar
-    (24) comparison -> . arithmetic_expression comparison_op arithmetic_expression comparison_chain
-    (25) comparison -> . arithmetic_expression comparison_op arithmetic_expression
-    (82) parameter_infty -> . expression DOTS
-    (1) atomar -> . NUMBER
-    (2) atomar -> . FLOAT
-    (3) atomar -> . IDENTIFIER
+    (74) parameter -> . parameter_pos
+    (75) parameter -> . empty
+    (76) parameter_pos -> . parameter_pos_list
+    (92) empty -> .
+    (77) parameter_pos_list -> . IDENTIFIER COMMA parameter_pos_list
+    (78) parameter_pos_list -> . IDENTIFIER
+    (79) parameter_pos_list -> . parameter_keywords
+    (80) parameter_keywords -> . parameter_kw_list
+    (81) parameter_kw_list -> . IDENTIFIER COLON expression COMMA parameter_kw_list
+    (82) parameter_kw_list -> . IDENTIFIER COLON expression
+    (83) parameter_kw_list -> . parameter_infty
+    (84) parameter_infty -> . IDENTIFIER DOTS
 
-    RPAREN          reduce using rule 78 (parameter_list -> .)
-    IDENTIFIER      shift and go to state 13
-    LAMBDA          shift and go to state 14
-    LPAREN          shift and go to state 15
-    NOT             shift and go to state 23
-    MINUS           shift and go to state 22
-    PLUS            shift and go to state 21
-    NUMBER          shift and go to state 25
-    FLOAT           shift and go to state 26
+    RPAREN          reduce using rule 92 (empty -> .)
+    IDENTIFIER      shift and go to state 123
 
     parameter                      shift and go to state 119
-    expression                     shift and go to state 82
-    parameter_list                 shift and go to state 84
-    parameter_keywords             shift and go to state 85
-    arithmetic_expression          shift and go to state 11
-    comparison                     shift and go to state 12
-    parameter_infty                shift and go to state 86
-    atomar                         shift and go to state 24
+    parameter_pos                  shift and go to state 120
+    empty                          shift and go to state 121
+    parameter_pos_list             shift and go to state 122
+    parameter_keywords             shift and go to state 124
+    parameter_kw_list              shift and go to state 125
+    parameter_infty                shift and go to state 126
 
 state 70
 
     (4) arithmetic_expression -> LPAREN expression . RPAREN
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    RPAREN          shift and go to state 120
+    RPAREN          shift and go to state 127
     LPAREN          shift and go to state 29
 
 
@@ -3053,18 +3010,18 @@ state 71
 
     (63) if_statement -> IF expression . THEN statements ENDCOND
     (64) if_statement -> IF expression . THEN statements else_elif_body ENDCOND
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    THEN            shift and go to state 121
+    THEN            shift and go to state 128
     LPAREN          shift and go to state 29
 
 
 state 72
 
     (67) while_statement -> WHILE expression . THEN statements ENDCOND
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    THEN            shift and go to state 122
+    THEN            shift and go to state 129
     LPAREN          shift and go to state 29
 
 
@@ -3072,12 +3029,12 @@ state 73
 
     (68) loop_statement -> LOOP IDENTIFIER . LOOPIN interval LOOPTHEN statements ENDCOND
 
-    LOOPIN          shift and go to state 123
+    LOOPIN          shift and go to state 130
 
 
 state 74
 
-    (84) function -> ECHO LPAREN . expression RPAREN
+    (94) function -> ECHO LPAREN . expression RPAREN
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
@@ -3100,7 +3057,7 @@ state 74
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -3134,14 +3091,14 @@ state 74
     NUMBER          shift and go to state 25
     FLOAT           shift and go to state 26
 
-    expression                     shift and go to state 124
+    expression                     shift and go to state 131
     arithmetic_expression          shift and go to state 11
     comparison                     shift and go to state 12
     atomar                         shift and go to state 24
 
 state 75
 
-    (85) function -> LENGTH LPAREN . expression RPAREN
+    (95) function -> LENGTH LPAREN . expression RPAREN
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
@@ -3164,7 +3121,7 @@ state 75
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -3198,7 +3155,7 @@ state 75
     NUMBER          shift and go to state 25
     FLOAT           shift and go to state 26
 
-    expression                     shift and go to state 125
+    expression                     shift and go to state 132
     arithmetic_expression          shift and go to state 11
     comparison                     shift and go to state 12
     atomar                         shift and go to state 24
@@ -3246,7 +3203,6 @@ state 76
     THEN            reduce using rule 21 (arithmetic_expression -> PLUS arithmetic_expression .)
     COMMA           reduce using rule 21 (arithmetic_expression -> PLUS arithmetic_expression .)
     COLON           reduce using rule 21 (arithmetic_expression -> PLUS arithmetic_expression .)
-    DOTS            reduce using rule 21 (arithmetic_expression -> PLUS arithmetic_expression .)
     ENDCOND         reduce using rule 21 (arithmetic_expression -> PLUS arithmetic_expression .)
     ELIF            reduce using rule 21 (arithmetic_expression -> PLUS arithmetic_expression .)
     ELSE            reduce using rule 21 (arithmetic_expression -> PLUS arithmetic_expression .)
@@ -3298,7 +3254,6 @@ state 77
     THEN            reduce using rule 3 (atomar -> IDENTIFIER .)
     COMMA           reduce using rule 3 (atomar -> IDENTIFIER .)
     COLON           reduce using rule 3 (atomar -> IDENTIFIER .)
-    DOTS            reduce using rule 3 (atomar -> IDENTIFIER .)
     ENDCOND         reduce using rule 3 (atomar -> IDENTIFIER .)
     ELIF            reduce using rule 3 (atomar -> IDENTIFIER .)
     ELSE            reduce using rule 3 (atomar -> IDENTIFIER .)
@@ -3349,7 +3304,6 @@ state 78
     THEN            reduce using rule 20 (arithmetic_expression -> MINUS arithmetic_expression .)
     COMMA           reduce using rule 20 (arithmetic_expression -> MINUS arithmetic_expression .)
     COLON           reduce using rule 20 (arithmetic_expression -> MINUS arithmetic_expression .)
-    DOTS            reduce using rule 20 (arithmetic_expression -> MINUS arithmetic_expression .)
     ENDCOND         reduce using rule 20 (arithmetic_expression -> MINUS arithmetic_expression .)
     ELIF            reduce using rule 20 (arithmetic_expression -> MINUS arithmetic_expression .)
     ELSE            reduce using rule 20 (arithmetic_expression -> MINUS arithmetic_expression .)
@@ -3414,7 +3368,6 @@ state 79
     THEN            reduce using rule 19 (arithmetic_expression -> NOT arithmetic_expression .)
     COMMA           reduce using rule 19 (arithmetic_expression -> NOT arithmetic_expression .)
     COLON           reduce using rule 19 (arithmetic_expression -> NOT arithmetic_expression .)
-    DOTS            reduce using rule 19 (arithmetic_expression -> NOT arithmetic_expression .)
     ENDCOND         reduce using rule 19 (arithmetic_expression -> NOT arithmetic_expression .)
     ELIF            reduce using rule 19 (arithmetic_expression -> NOT arithmetic_expression .)
     ELSE            reduce using rule 19 (arithmetic_expression -> NOT arithmetic_expression .)
@@ -3461,46 +3414,44 @@ state 81
 
 state 82
 
-    (75) parameter_list -> expression . COMMA parameter_list
-    (76) parameter_list -> expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
-    (79) parameter_keywords -> expression . COLON expression COMMA parameter_keywords
-    (80) parameter_keywords -> expression . COLON expression
-    (82) parameter_infty -> expression . DOTS
+    (87) parameter_pos_expr -> expression . COMMA parameter_pos_expr
+    (88) parameter_pos_expr -> expression .
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
+    (90) parameter_keywords_expr -> expression . COLON expression COMMA parameter_keywords_expr
+    (91) parameter_keywords_expr -> expression . COLON expression
 
-    COMMA           shift and go to state 126
-    RPAREN          reduce using rule 76 (parameter_list -> expression .)
+    COMMA           shift and go to state 133
+    RPAREN          reduce using rule 88 (parameter_pos_expr -> expression .)
     LPAREN          shift and go to state 29
-    COLON           shift and go to state 127
-    DOTS            shift and go to state 128
+    COLON           shift and go to state 134
 
 
 state 83
 
-    (83) expression -> expression LPAREN parameter . RPAREN
+    (93) expression -> expression LPAREN parameter_expr . RPAREN
 
-    RPAREN          shift and go to state 129
+    RPAREN          shift and go to state 135
 
 
 state 84
 
-    (74) parameter -> parameter_list .
+    (85) parameter_expr -> parameter_pos_expr .
 
-    RPAREN          reduce using rule 74 (parameter -> parameter_list .)
+    RPAREN          reduce using rule 85 (parameter_expr -> parameter_pos_expr .)
 
 
 state 85
 
-    (77) parameter_list -> parameter_keywords .
+    (86) parameter_expr -> empty .
 
-    RPAREN          reduce using rule 77 (parameter_list -> parameter_keywords .)
+    RPAREN          reduce using rule 86 (parameter_expr -> empty .)
 
 
 state 86
 
-    (81) parameter_keywords -> parameter_infty .
+    (89) parameter_pos_expr -> parameter_keywords_expr .
 
-    RPAREN          reduce using rule 81 (parameter_keywords -> parameter_infty .)
+    RPAREN          reduce using rule 89 (parameter_pos_expr -> parameter_keywords_expr .)
 
 
 state 87
@@ -3538,7 +3489,6 @@ state 87
     THEN            reduce using rule 7 (arithmetic_expression -> arithmetic_expression PLUS arithmetic_expression .)
     COMMA           reduce using rule 7 (arithmetic_expression -> arithmetic_expression PLUS arithmetic_expression .)
     COLON           reduce using rule 7 (arithmetic_expression -> arithmetic_expression PLUS arithmetic_expression .)
-    DOTS            reduce using rule 7 (arithmetic_expression -> arithmetic_expression PLUS arithmetic_expression .)
     ENDCOND         reduce using rule 7 (arithmetic_expression -> arithmetic_expression PLUS arithmetic_expression .)
     ELIF            reduce using rule 7 (arithmetic_expression -> arithmetic_expression PLUS arithmetic_expression .)
     ELSE            reduce using rule 7 (arithmetic_expression -> arithmetic_expression PLUS arithmetic_expression .)
@@ -3603,7 +3553,6 @@ state 88
     THEN            reduce using rule 8 (arithmetic_expression -> arithmetic_expression MINUS arithmetic_expression .)
     COMMA           reduce using rule 8 (arithmetic_expression -> arithmetic_expression MINUS arithmetic_expression .)
     COLON           reduce using rule 8 (arithmetic_expression -> arithmetic_expression MINUS arithmetic_expression .)
-    DOTS            reduce using rule 8 (arithmetic_expression -> arithmetic_expression MINUS arithmetic_expression .)
     ENDCOND         reduce using rule 8 (arithmetic_expression -> arithmetic_expression MINUS arithmetic_expression .)
     ELIF            reduce using rule 8 (arithmetic_expression -> arithmetic_expression MINUS arithmetic_expression .)
     ELSE            reduce using rule 8 (arithmetic_expression -> arithmetic_expression MINUS arithmetic_expression .)
@@ -3673,7 +3622,6 @@ state 89
     THEN            reduce using rule 9 (arithmetic_expression -> arithmetic_expression TIMES arithmetic_expression .)
     COMMA           reduce using rule 9 (arithmetic_expression -> arithmetic_expression TIMES arithmetic_expression .)
     COLON           reduce using rule 9 (arithmetic_expression -> arithmetic_expression TIMES arithmetic_expression .)
-    DOTS            reduce using rule 9 (arithmetic_expression -> arithmetic_expression TIMES arithmetic_expression .)
     ENDCOND         reduce using rule 9 (arithmetic_expression -> arithmetic_expression TIMES arithmetic_expression .)
     ELIF            reduce using rule 9 (arithmetic_expression -> arithmetic_expression TIMES arithmetic_expression .)
     ELSE            reduce using rule 9 (arithmetic_expression -> arithmetic_expression TIMES arithmetic_expression .)
@@ -3738,7 +3686,6 @@ state 90
     THEN            reduce using rule 10 (arithmetic_expression -> arithmetic_expression DIVIDE arithmetic_expression .)
     COMMA           reduce using rule 10 (arithmetic_expression -> arithmetic_expression DIVIDE arithmetic_expression .)
     COLON           reduce using rule 10 (arithmetic_expression -> arithmetic_expression DIVIDE arithmetic_expression .)
-    DOTS            reduce using rule 10 (arithmetic_expression -> arithmetic_expression DIVIDE arithmetic_expression .)
     ENDCOND         reduce using rule 10 (arithmetic_expression -> arithmetic_expression DIVIDE arithmetic_expression .)
     ELIF            reduce using rule 10 (arithmetic_expression -> arithmetic_expression DIVIDE arithmetic_expression .)
     ELSE            reduce using rule 10 (arithmetic_expression -> arithmetic_expression DIVIDE arithmetic_expression .)
@@ -3803,7 +3750,6 @@ state 91
     THEN            reduce using rule 11 (arithmetic_expression -> arithmetic_expression DIVIDE_CEIL arithmetic_expression .)
     COMMA           reduce using rule 11 (arithmetic_expression -> arithmetic_expression DIVIDE_CEIL arithmetic_expression .)
     COLON           reduce using rule 11 (arithmetic_expression -> arithmetic_expression DIVIDE_CEIL arithmetic_expression .)
-    DOTS            reduce using rule 11 (arithmetic_expression -> arithmetic_expression DIVIDE_CEIL arithmetic_expression .)
     ENDCOND         reduce using rule 11 (arithmetic_expression -> arithmetic_expression DIVIDE_CEIL arithmetic_expression .)
     ELIF            reduce using rule 11 (arithmetic_expression -> arithmetic_expression DIVIDE_CEIL arithmetic_expression .)
     ELSE            reduce using rule 11 (arithmetic_expression -> arithmetic_expression DIVIDE_CEIL arithmetic_expression .)
@@ -3868,7 +3814,6 @@ state 92
     THEN            reduce using rule 12 (arithmetic_expression -> arithmetic_expression DIVIDE_FLOOR arithmetic_expression .)
     COMMA           reduce using rule 12 (arithmetic_expression -> arithmetic_expression DIVIDE_FLOOR arithmetic_expression .)
     COLON           reduce using rule 12 (arithmetic_expression -> arithmetic_expression DIVIDE_FLOOR arithmetic_expression .)
-    DOTS            reduce using rule 12 (arithmetic_expression -> arithmetic_expression DIVIDE_FLOOR arithmetic_expression .)
     ENDCOND         reduce using rule 12 (arithmetic_expression -> arithmetic_expression DIVIDE_FLOOR arithmetic_expression .)
     ELIF            reduce using rule 12 (arithmetic_expression -> arithmetic_expression DIVIDE_FLOOR arithmetic_expression .)
     ELSE            reduce using rule 12 (arithmetic_expression -> arithmetic_expression DIVIDE_FLOOR arithmetic_expression .)
@@ -3933,7 +3878,6 @@ state 93
     THEN            reduce using rule 13 (arithmetic_expression -> arithmetic_expression MOD arithmetic_expression .)
     COMMA           reduce using rule 13 (arithmetic_expression -> arithmetic_expression MOD arithmetic_expression .)
     COLON           reduce using rule 13 (arithmetic_expression -> arithmetic_expression MOD arithmetic_expression .)
-    DOTS            reduce using rule 13 (arithmetic_expression -> arithmetic_expression MOD arithmetic_expression .)
     ENDCOND         reduce using rule 13 (arithmetic_expression -> arithmetic_expression MOD arithmetic_expression .)
     ELIF            reduce using rule 13 (arithmetic_expression -> arithmetic_expression MOD arithmetic_expression .)
     ELSE            reduce using rule 13 (arithmetic_expression -> arithmetic_expression MOD arithmetic_expression .)
@@ -3998,7 +3942,6 @@ state 94
     THEN            reduce using rule 14 (arithmetic_expression -> arithmetic_expression EXP arithmetic_expression .)
     COMMA           reduce using rule 14 (arithmetic_expression -> arithmetic_expression EXP arithmetic_expression .)
     COLON           reduce using rule 14 (arithmetic_expression -> arithmetic_expression EXP arithmetic_expression .)
-    DOTS            reduce using rule 14 (arithmetic_expression -> arithmetic_expression EXP arithmetic_expression .)
     ENDCOND         reduce using rule 14 (arithmetic_expression -> arithmetic_expression EXP arithmetic_expression .)
     ELIF            reduce using rule 14 (arithmetic_expression -> arithmetic_expression EXP arithmetic_expression .)
     ELSE            reduce using rule 14 (arithmetic_expression -> arithmetic_expression EXP arithmetic_expression .)
@@ -4056,7 +3999,6 @@ state 95
     THEN            reduce using rule 15 (arithmetic_expression -> arithmetic_expression AND arithmetic_expression .)
     COMMA           reduce using rule 15 (arithmetic_expression -> arithmetic_expression AND arithmetic_expression .)
     COLON           reduce using rule 15 (arithmetic_expression -> arithmetic_expression AND arithmetic_expression .)
-    DOTS            reduce using rule 15 (arithmetic_expression -> arithmetic_expression AND arithmetic_expression .)
     ENDCOND         reduce using rule 15 (arithmetic_expression -> arithmetic_expression AND arithmetic_expression .)
     ELIF            reduce using rule 15 (arithmetic_expression -> arithmetic_expression AND arithmetic_expression .)
     ELSE            reduce using rule 15 (arithmetic_expression -> arithmetic_expression AND arithmetic_expression .)
@@ -4119,7 +4061,6 @@ state 96
     THEN            reduce using rule 16 (arithmetic_expression -> arithmetic_expression OR arithmetic_expression .)
     COMMA           reduce using rule 16 (arithmetic_expression -> arithmetic_expression OR arithmetic_expression .)
     COLON           reduce using rule 16 (arithmetic_expression -> arithmetic_expression OR arithmetic_expression .)
-    DOTS            reduce using rule 16 (arithmetic_expression -> arithmetic_expression OR arithmetic_expression .)
     ENDCOND         reduce using rule 16 (arithmetic_expression -> arithmetic_expression OR arithmetic_expression .)
     ELIF            reduce using rule 16 (arithmetic_expression -> arithmetic_expression OR arithmetic_expression .)
     ELSE            reduce using rule 16 (arithmetic_expression -> arithmetic_expression OR arithmetic_expression .)
@@ -4185,7 +4126,6 @@ state 97
     THEN            reduce using rule 17 (arithmetic_expression -> arithmetic_expression XOR arithmetic_expression .)
     COMMA           reduce using rule 17 (arithmetic_expression -> arithmetic_expression XOR arithmetic_expression .)
     COLON           reduce using rule 17 (arithmetic_expression -> arithmetic_expression XOR arithmetic_expression .)
-    DOTS            reduce using rule 17 (arithmetic_expression -> arithmetic_expression XOR arithmetic_expression .)
     ENDCOND         reduce using rule 17 (arithmetic_expression -> arithmetic_expression XOR arithmetic_expression .)
     ELIF            reduce using rule 17 (arithmetic_expression -> arithmetic_expression XOR arithmetic_expression .)
     ELSE            reduce using rule 17 (arithmetic_expression -> arithmetic_expression XOR arithmetic_expression .)
@@ -4258,7 +4198,6 @@ state 98
     THEN            reduce using rule 18 (arithmetic_expression -> arithmetic_expression POWER arithmetic_expression .)
     COMMA           reduce using rule 18 (arithmetic_expression -> arithmetic_expression POWER arithmetic_expression .)
     COLON           reduce using rule 18 (arithmetic_expression -> arithmetic_expression POWER arithmetic_expression .)
-    DOTS            reduce using rule 18 (arithmetic_expression -> arithmetic_expression POWER arithmetic_expression .)
     ENDCOND         reduce using rule 18 (arithmetic_expression -> arithmetic_expression POWER arithmetic_expression .)
     ELIF            reduce using rule 18 (arithmetic_expression -> arithmetic_expression POWER arithmetic_expression .)
     ELSE            reduce using rule 18 (arithmetic_expression -> arithmetic_expression POWER arithmetic_expression .)
@@ -4316,7 +4255,6 @@ state 99
     THEN            reduce using rule 25 (comparison -> arithmetic_expression comparison_op arithmetic_expression .)
     COMMA           reduce using rule 25 (comparison -> arithmetic_expression comparison_op arithmetic_expression .)
     COLON           reduce using rule 25 (comparison -> arithmetic_expression comparison_op arithmetic_expression .)
-    DOTS            reduce using rule 25 (comparison -> arithmetic_expression comparison_op arithmetic_expression .)
     ENDCOND         reduce using rule 25 (comparison -> arithmetic_expression comparison_op arithmetic_expression .)
     ELIF            reduce using rule 25 (comparison -> arithmetic_expression comparison_op arithmetic_expression .)
     ELSE            reduce using rule 25 (comparison -> arithmetic_expression comparison_op arithmetic_expression .)
@@ -4342,13 +4280,13 @@ state 99
     SMALLER_EQUALS  shift and go to state 48
     GREATER_EQUALS  shift and go to state 49
 
-    comparison_op                  shift and go to state 130
-    comparison_chain               shift and go to state 131
+    comparison_op                  shift and go to state 136
+    comparison_chain               shift and go to state 137
 
 state 100
 
     (34) expression -> IDENTIFIER ASSIGN expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 34 (expression -> IDENTIFIER ASSIGN expression .)
     END             reduce using rule 34 (expression -> IDENTIFIER ASSIGN expression .)
@@ -4357,7 +4295,6 @@ state 100
     THEN            reduce using rule 34 (expression -> IDENTIFIER ASSIGN expression .)
     COMMA           reduce using rule 34 (expression -> IDENTIFIER ASSIGN expression .)
     COLON           reduce using rule 34 (expression -> IDENTIFIER ASSIGN expression .)
-    DOTS            reduce using rule 34 (expression -> IDENTIFIER ASSIGN expression .)
     ENDCOND         reduce using rule 34 (expression -> IDENTIFIER ASSIGN expression .)
     ELIF            reduce using rule 34 (expression -> IDENTIFIER ASSIGN expression .)
     ELSE            reduce using rule 34 (expression -> IDENTIFIER ASSIGN expression .)
@@ -4370,7 +4307,7 @@ state 100
 state 101
 
     (35) expression -> IDENTIFIER PLUSASSIGN expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
     END             reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
@@ -4379,7 +4316,6 @@ state 101
     THEN            reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
     COMMA           reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
     COLON           reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
-    DOTS            reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
     ENDCOND         reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
     ELIF            reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
     ELSE            reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
@@ -4392,7 +4328,7 @@ state 101
 state 102
 
     (36) expression -> IDENTIFIER MINUSASSIGN expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
     END             reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
@@ -4401,7 +4337,6 @@ state 102
     THEN            reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
     COMMA           reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
     COLON           reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
-    DOTS            reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
     ENDCOND         reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
     ELIF            reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
     ELSE            reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
@@ -4414,7 +4349,7 @@ state 102
 state 103
 
     (37) expression -> IDENTIFIER TIMESASSIGN expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
     END             reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
@@ -4423,7 +4358,6 @@ state 103
     THEN            reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
     COMMA           reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
     COLON           reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
-    DOTS            reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
     ENDCOND         reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
     ELIF            reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
     ELSE            reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
@@ -4436,7 +4370,7 @@ state 103
 state 104
 
     (38) expression -> IDENTIFIER POWERASSIGN expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
     END             reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
@@ -4445,7 +4379,6 @@ state 104
     THEN            reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
     COMMA           reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
     COLON           reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
-    DOTS            reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
     ENDCOND         reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
     ELIF            reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
     ELSE            reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
@@ -4458,7 +4391,7 @@ state 104
 state 105
 
     (39) expression -> IDENTIFIER DIVIDEASSIGN expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
     END             reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
@@ -4467,7 +4400,6 @@ state 105
     THEN            reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
     COMMA           reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
     COLON           reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
-    DOTS            reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
     ENDCOND         reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
     ELIF            reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
     ELSE            reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
@@ -4480,7 +4412,7 @@ state 105
 state 106
 
     (40) expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
     END             reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
@@ -4489,7 +4421,6 @@ state 106
     THEN            reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
     COMMA           reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
     COLON           reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
-    DOTS            reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
     ENDCOND         reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
     ELIF            reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
     ELSE            reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
@@ -4502,7 +4433,7 @@ state 106
 state 107
 
     (41) expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
     END             reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
@@ -4511,7 +4442,6 @@ state 107
     THEN            reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
     COMMA           reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
     COLON           reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
-    DOTS            reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
     ENDCOND         reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
     ELIF            reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
     ELSE            reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
@@ -4524,7 +4454,7 @@ state 107
 state 108
 
     (42) expression -> IDENTIFIER GREATER_THANASSIGN expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
     END             reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
@@ -4533,7 +4463,6 @@ state 108
     THEN            reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
     COMMA           reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
     COLON           reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
-    DOTS            reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
     ENDCOND         reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
     ELIF            reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
     ELSE            reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
@@ -4546,7 +4475,7 @@ state 108
 state 109
 
     (43) expression -> IDENTIFIER SMALLER_THANASSIGN expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
     END             reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
@@ -4555,7 +4484,6 @@ state 109
     THEN            reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
     COMMA           reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
     COLON           reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
-    DOTS            reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
     ENDCOND         reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
     ELIF            reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
     ELSE            reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
@@ -4568,7 +4496,7 @@ state 109
 state 110
 
     (44) expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
     END             reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
@@ -4577,7 +4505,6 @@ state 110
     THEN            reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
     COMMA           reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
     COLON           reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
-    DOTS            reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
     ENDCOND         reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
     ELIF            reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
     ELSE            reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
@@ -4590,7 +4517,7 @@ state 110
 state 111
 
     (45) expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
     END             reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
@@ -4599,7 +4526,6 @@ state 111
     THEN            reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
     COMMA           reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
     COLON           reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
-    DOTS            reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
     ENDCOND         reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
     ELIF            reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
     ELSE            reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
@@ -4612,7 +4538,7 @@ state 111
 state 112
 
     (46) expression -> IDENTIFIER EQUALSASSIGN expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
     END             reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
@@ -4621,7 +4547,6 @@ state 112
     THEN            reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
     COMMA           reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
     COLON           reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
-    DOTS            reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
     ENDCOND         reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
     ELIF            reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
     ELSE            reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
@@ -4634,7 +4559,7 @@ state 112
 state 113
 
     (47) expression -> IDENTIFIER UNEQUALSASSIGN expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
     END             reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
@@ -4643,7 +4568,6 @@ state 113
     THEN            reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
     COMMA           reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
     COLON           reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
-    DOTS            reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
     ENDCOND         reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
     ELIF            reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
     ELSE            reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
@@ -4656,7 +4580,7 @@ state 113
 state 114
 
     (48) expression -> IDENTIFIER ANDASSIGN expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
     END             reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
@@ -4665,7 +4589,6 @@ state 114
     THEN            reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
     COMMA           reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
     COLON           reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
-    DOTS            reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
     ENDCOND         reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
     ELIF            reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
     ELSE            reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
@@ -4678,7 +4601,7 @@ state 114
 state 115
 
     (49) expression -> IDENTIFIER ORASSIGN expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
     END             reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
@@ -4687,7 +4610,6 @@ state 115
     THEN            reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
     COMMA           reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
     COLON           reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
-    DOTS            reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
     ENDCOND         reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
     ELIF            reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
     ELSE            reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
@@ -4700,7 +4622,7 @@ state 115
 state 116
 
     (50) expression -> IDENTIFIER XORASSIGN expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
     END             reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
@@ -4709,7 +4631,6 @@ state 116
     THEN            reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
     COMMA           reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
     COLON           reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
-    DOTS            reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
     ENDCOND         reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
     ELIF            reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
     ELSE            reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
@@ -4722,7 +4643,7 @@ state 116
 state 117
 
     (51) expression -> IDENTIFIER EXPASSIGN expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
     END             reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
@@ -4731,7 +4652,6 @@ state 117
     THEN            reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
     COMMA           reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
     COLON           reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
-    DOTS            reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
     ENDCOND         reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
     ELIF            reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
     ELSE            reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
@@ -4744,7 +4664,7 @@ state 117
 state 118
 
     (52) expression -> IDENTIFIER MODASSIGN expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
     END             reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
@@ -4753,7 +4673,6 @@ state 118
     THEN            reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
     COMMA           reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
     COLON           reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
-    DOTS            reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
     ENDCOND         reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
     ELIF            reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
     ELSE            reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
@@ -4767,10 +4686,66 @@ state 119
 
     (73) expression -> LAMBDA LPAREN parameter . RPAREN LAMBDA_ARROW expression
 
-    RPAREN          shift and go to state 132
+    RPAREN          shift and go to state 138
 
 
 state 120
+
+    (74) parameter -> parameter_pos .
+
+    RPAREN          reduce using rule 74 (parameter -> parameter_pos .)
+
+
+state 121
+
+    (75) parameter -> empty .
+
+    RPAREN          reduce using rule 75 (parameter -> empty .)
+
+
+state 122
+
+    (76) parameter_pos -> parameter_pos_list .
+
+    RPAREN          reduce using rule 76 (parameter_pos -> parameter_pos_list .)
+
+
+state 123
+
+    (77) parameter_pos_list -> IDENTIFIER . COMMA parameter_pos_list
+    (78) parameter_pos_list -> IDENTIFIER .
+    (81) parameter_kw_list -> IDENTIFIER . COLON expression COMMA parameter_kw_list
+    (82) parameter_kw_list -> IDENTIFIER . COLON expression
+    (84) parameter_infty -> IDENTIFIER . DOTS
+
+    COMMA           shift and go to state 139
+    RPAREN          reduce using rule 78 (parameter_pos_list -> IDENTIFIER .)
+    COLON           shift and go to state 140
+    DOTS            shift and go to state 141
+
+
+state 124
+
+    (79) parameter_pos_list -> parameter_keywords .
+
+    RPAREN          reduce using rule 79 (parameter_pos_list -> parameter_keywords .)
+
+
+state 125
+
+    (80) parameter_keywords -> parameter_kw_list .
+
+    RPAREN          reduce using rule 80 (parameter_keywords -> parameter_kw_list .)
+
+
+state 126
+
+    (83) parameter_kw_list -> parameter_infty .
+
+    RPAREN          reduce using rule 83 (parameter_kw_list -> parameter_infty .)
+
+
+state 127
 
     (4) arithmetic_expression -> LPAREN expression RPAREN .
 
@@ -4800,7 +4775,6 @@ state 120
     THEN            reduce using rule 4 (arithmetic_expression -> LPAREN expression RPAREN .)
     COMMA           reduce using rule 4 (arithmetic_expression -> LPAREN expression RPAREN .)
     COLON           reduce using rule 4 (arithmetic_expression -> LPAREN expression RPAREN .)
-    DOTS            reduce using rule 4 (arithmetic_expression -> LPAREN expression RPAREN .)
     ENDCOND         reduce using rule 4 (arithmetic_expression -> LPAREN expression RPAREN .)
     ELIF            reduce using rule 4 (arithmetic_expression -> LPAREN expression RPAREN .)
     ELSE            reduce using rule 4 (arithmetic_expression -> LPAREN expression RPAREN .)
@@ -4808,7 +4782,7 @@ state 120
     OPEN_BRACKETS   reduce using rule 4 (arithmetic_expression -> LPAREN expression RPAREN .)
 
 
-state 121
+state 128
 
     (63) if_statement -> IF expression THEN . statements ENDCOND
     (64) if_statement -> IF expression THEN . statements else_elif_body ENDCOND
@@ -4842,15 +4816,15 @@ state 121
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (53) sequence -> . BEGIN statements END
     (54) sequence -> . BEGIN statements SEMICOLON END
     (63) if_statement -> . IF expression THEN statements ENDCOND
     (64) if_statement -> . IF expression THEN statements else_elif_body ENDCOND
     (67) while_statement -> . WHILE expression THEN statements ENDCOND
     (68) loop_statement -> . LOOP IDENTIFIER LOOPIN interval LOOPTHEN statements ENDCOND
-    (84) function -> . ECHO LPAREN expression RPAREN
-    (85) function -> . LENGTH LPAREN expression RPAREN
+    (94) function -> . ECHO LPAREN expression RPAREN
+    (95) function -> . LENGTH LPAREN expression RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -4891,7 +4865,7 @@ state 121
     FLOAT           shift and go to state 26
 
     expression                     shift and go to state 5
-    statements                     shift and go to state 133
+    statements                     shift and go to state 142
     statement                      shift and go to state 4
     sequence                       shift and go to state 6
     if_statement                   shift and go to state 7
@@ -4902,7 +4876,7 @@ state 121
     comparison                     shift and go to state 12
     atomar                         shift and go to state 24
 
-state 122
+state 129
 
     (67) while_statement -> WHILE expression THEN . statements ENDCOND
     (61) statements -> . statements SEMICOLON statement
@@ -4935,15 +4909,15 @@ state 122
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (53) sequence -> . BEGIN statements END
     (54) sequence -> . BEGIN statements SEMICOLON END
     (63) if_statement -> . IF expression THEN statements ENDCOND
     (64) if_statement -> . IF expression THEN statements else_elif_body ENDCOND
     (67) while_statement -> . WHILE expression THEN statements ENDCOND
     (68) loop_statement -> . LOOP IDENTIFIER LOOPIN interval LOOPTHEN statements ENDCOND
-    (84) function -> . ECHO LPAREN expression RPAREN
-    (85) function -> . LENGTH LPAREN expression RPAREN
+    (94) function -> . ECHO LPAREN expression RPAREN
+    (95) function -> . LENGTH LPAREN expression RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -4984,7 +4958,7 @@ state 122
     FLOAT           shift and go to state 26
 
     expression                     shift and go to state 5
-    statements                     shift and go to state 134
+    statements                     shift and go to state 143
     statement                      shift and go to state 4
     sequence                       shift and go to state 6
     if_statement                   shift and go to state 7
@@ -4995,7 +4969,7 @@ state 122
     comparison                     shift and go to state 12
     atomar                         shift and go to state 24
 
-state 123
+state 130
 
     (68) loop_statement -> LOOP IDENTIFIER LOOPIN . interval LOOPTHEN statements ENDCOND
     (69) interval -> . OPEN_BRACKETS expression COMMA expression CLOSED_BRACKETS
@@ -5003,36 +4977,35 @@ state 123
     (71) interval -> . OPEN_BRACKETS expression COMMA expression OPEN_BRACKETS
     (72) interval -> . CLOSED_BRACKETS expression COMMA expression OPEN_BRACKETS
 
-    OPEN_BRACKETS   shift and go to state 136
-    CLOSED_BRACKETS shift and go to state 137
+    OPEN_BRACKETS   shift and go to state 145
+    CLOSED_BRACKETS shift and go to state 146
 
-    interval                       shift and go to state 135
+    interval                       shift and go to state 144
 
-state 124
+state 131
 
-    (84) function -> ECHO LPAREN expression . RPAREN
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (94) function -> ECHO LPAREN expression . RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    RPAREN          shift and go to state 138
+    RPAREN          shift and go to state 147
     LPAREN          shift and go to state 29
 
 
-state 125
+state 132
 
-    (85) function -> LENGTH LPAREN expression . RPAREN
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (95) function -> LENGTH LPAREN expression . RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    RPAREN          shift and go to state 139
+    RPAREN          shift and go to state 148
     LPAREN          shift and go to state 29
 
 
-state 126
+state 133
 
-    (75) parameter_list -> expression COMMA . parameter_list
-    (75) parameter_list -> . expression COMMA parameter_list
-    (76) parameter_list -> . expression
-    (77) parameter_list -> . parameter_keywords
-    (78) parameter_list -> .
+    (87) parameter_pos_expr -> expression COMMA . parameter_pos_expr
+    (87) parameter_pos_expr -> . expression COMMA parameter_pos_expr
+    (88) parameter_pos_expr -> . expression
+    (89) parameter_pos_expr -> . parameter_keywords_expr
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
@@ -5055,10 +5028,9 @@ state 126
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
-    (79) parameter_keywords -> . expression COLON expression COMMA parameter_keywords
-    (80) parameter_keywords -> . expression COLON expression
-    (81) parameter_keywords -> . parameter_infty
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
+    (90) parameter_keywords_expr -> . expression COLON expression COMMA parameter_keywords_expr
+    (91) parameter_keywords_expr -> . expression COLON expression
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -5079,12 +5051,10 @@ state 126
     (23) arithmetic_expression -> . atomar
     (24) comparison -> . arithmetic_expression comparison_op arithmetic_expression comparison_chain
     (25) comparison -> . arithmetic_expression comparison_op arithmetic_expression
-    (82) parameter_infty -> . expression DOTS
     (1) atomar -> . NUMBER
     (2) atomar -> . FLOAT
     (3) atomar -> . IDENTIFIER
 
-    RPAREN          reduce using rule 78 (parameter_list -> .)
     IDENTIFIER      shift and go to state 13
     LAMBDA          shift and go to state 14
     LPAREN          shift and go to state 15
@@ -5095,17 +5065,16 @@ state 126
     FLOAT           shift and go to state 26
 
     expression                     shift and go to state 82
-    parameter_list                 shift and go to state 140
-    parameter_keywords             shift and go to state 85
+    parameter_pos_expr             shift and go to state 149
+    parameter_keywords_expr        shift and go to state 86
     arithmetic_expression          shift and go to state 11
     comparison                     shift and go to state 12
-    parameter_infty                shift and go to state 86
     atomar                         shift and go to state 24
 
-state 127
+state 134
 
-    (79) parameter_keywords -> expression COLON . expression COMMA parameter_keywords
-    (80) parameter_keywords -> expression COLON . expression
+    (90) parameter_keywords_expr -> expression COLON . expression COMMA parameter_keywords_expr
+    (91) parameter_keywords_expr -> expression COLON . expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
@@ -5128,7 +5097,7 @@ state 127
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -5162,38 +5131,30 @@ state 127
     NUMBER          shift and go to state 25
     FLOAT           shift and go to state 26
 
-    expression                     shift and go to state 141
+    expression                     shift and go to state 150
     arithmetic_expression          shift and go to state 11
     comparison                     shift and go to state 12
     atomar                         shift and go to state 24
 
-state 128
+state 135
 
-    (82) parameter_infty -> expression DOTS .
+    (93) expression -> expression LPAREN parameter_expr RPAREN .
 
-    RPAREN          reduce using rule 82 (parameter_infty -> expression DOTS .)
-
-
-state 129
-
-    (83) expression -> expression LPAREN parameter RPAREN .
-
-    LPAREN          reduce using rule 83 (expression -> expression LPAREN parameter RPAREN .)
-    END             reduce using rule 83 (expression -> expression LPAREN parameter RPAREN .)
-    SEMICOLON       reduce using rule 83 (expression -> expression LPAREN parameter RPAREN .)
-    RPAREN          reduce using rule 83 (expression -> expression LPAREN parameter RPAREN .)
-    THEN            reduce using rule 83 (expression -> expression LPAREN parameter RPAREN .)
-    COMMA           reduce using rule 83 (expression -> expression LPAREN parameter RPAREN .)
-    COLON           reduce using rule 83 (expression -> expression LPAREN parameter RPAREN .)
-    DOTS            reduce using rule 83 (expression -> expression LPAREN parameter RPAREN .)
-    ENDCOND         reduce using rule 83 (expression -> expression LPAREN parameter RPAREN .)
-    ELIF            reduce using rule 83 (expression -> expression LPAREN parameter RPAREN .)
-    ELSE            reduce using rule 83 (expression -> expression LPAREN parameter RPAREN .)
-    CLOSED_BRACKETS reduce using rule 83 (expression -> expression LPAREN parameter RPAREN .)
-    OPEN_BRACKETS   reduce using rule 83 (expression -> expression LPAREN parameter RPAREN .)
+    LPAREN          reduce using rule 93 (expression -> expression LPAREN parameter_expr RPAREN .)
+    END             reduce using rule 93 (expression -> expression LPAREN parameter_expr RPAREN .)
+    SEMICOLON       reduce using rule 93 (expression -> expression LPAREN parameter_expr RPAREN .)
+    RPAREN          reduce using rule 93 (expression -> expression LPAREN parameter_expr RPAREN .)
+    THEN            reduce using rule 93 (expression -> expression LPAREN parameter_expr RPAREN .)
+    COMMA           reduce using rule 93 (expression -> expression LPAREN parameter_expr RPAREN .)
+    COLON           reduce using rule 93 (expression -> expression LPAREN parameter_expr RPAREN .)
+    ENDCOND         reduce using rule 93 (expression -> expression LPAREN parameter_expr RPAREN .)
+    ELIF            reduce using rule 93 (expression -> expression LPAREN parameter_expr RPAREN .)
+    ELSE            reduce using rule 93 (expression -> expression LPAREN parameter_expr RPAREN .)
+    CLOSED_BRACKETS reduce using rule 93 (expression -> expression LPAREN parameter_expr RPAREN .)
+    OPEN_BRACKETS   reduce using rule 93 (expression -> expression LPAREN parameter_expr RPAREN .)
 
 
-state 130
+state 136
 
     (26) comparison_chain -> comparison_op . arithmetic_expression comparison_chain
     (27) comparison_chain -> comparison_op . arithmetic_expression
@@ -5227,10 +5188,10 @@ state 130
     FLOAT           shift and go to state 26
     IDENTIFIER      shift and go to state 77
 
-    arithmetic_expression          shift and go to state 142
+    arithmetic_expression          shift and go to state 151
     atomar                         shift and go to state 24
 
-state 131
+state 137
 
     (24) comparison -> arithmetic_expression comparison_op arithmetic_expression comparison_chain .
 
@@ -5241,7 +5202,6 @@ state 131
     THEN            reduce using rule 24 (comparison -> arithmetic_expression comparison_op arithmetic_expression comparison_chain .)
     COMMA           reduce using rule 24 (comparison -> arithmetic_expression comparison_op arithmetic_expression comparison_chain .)
     COLON           reduce using rule 24 (comparison -> arithmetic_expression comparison_op arithmetic_expression comparison_chain .)
-    DOTS            reduce using rule 24 (comparison -> arithmetic_expression comparison_op arithmetic_expression comparison_chain .)
     ENDCOND         reduce using rule 24 (comparison -> arithmetic_expression comparison_op arithmetic_expression comparison_chain .)
     ELIF            reduce using rule 24 (comparison -> arithmetic_expression comparison_op arithmetic_expression comparison_chain .)
     ELSE            reduce using rule 24 (comparison -> arithmetic_expression comparison_op arithmetic_expression comparison_chain .)
@@ -5249,14 +5209,105 @@ state 131
     OPEN_BRACKETS   reduce using rule 24 (comparison -> arithmetic_expression comparison_op arithmetic_expression comparison_chain .)
 
 
-state 132
+state 138
 
     (73) expression -> LAMBDA LPAREN parameter RPAREN . LAMBDA_ARROW expression
 
-    LAMBDA_ARROW    shift and go to state 143
+    LAMBDA_ARROW    shift and go to state 152
 
 
-state 133
+state 139
+
+    (77) parameter_pos_list -> IDENTIFIER COMMA . parameter_pos_list
+    (77) parameter_pos_list -> . IDENTIFIER COMMA parameter_pos_list
+    (78) parameter_pos_list -> . IDENTIFIER
+    (79) parameter_pos_list -> . parameter_keywords
+    (80) parameter_keywords -> . parameter_kw_list
+    (81) parameter_kw_list -> . IDENTIFIER COLON expression COMMA parameter_kw_list
+    (82) parameter_kw_list -> . IDENTIFIER COLON expression
+    (83) parameter_kw_list -> . parameter_infty
+    (84) parameter_infty -> . IDENTIFIER DOTS
+
+    IDENTIFIER      shift and go to state 123
+
+    parameter_pos_list             shift and go to state 153
+    parameter_keywords             shift and go to state 124
+    parameter_kw_list              shift and go to state 125
+    parameter_infty                shift and go to state 126
+
+state 140
+
+    (81) parameter_kw_list -> IDENTIFIER COLON . expression COMMA parameter_kw_list
+    (82) parameter_kw_list -> IDENTIFIER COLON . expression
+    (5) expression -> . arithmetic_expression
+    (6) expression -> . comparison
+    (34) expression -> . IDENTIFIER ASSIGN expression
+    (35) expression -> . IDENTIFIER PLUSASSIGN expression
+    (36) expression -> . IDENTIFIER MINUSASSIGN expression
+    (37) expression -> . IDENTIFIER TIMESASSIGN expression
+    (38) expression -> . IDENTIFIER POWERASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
+    (48) expression -> . IDENTIFIER ANDASSIGN expression
+    (49) expression -> . IDENTIFIER ORASSIGN expression
+    (50) expression -> . IDENTIFIER XORASSIGN expression
+    (51) expression -> . IDENTIFIER EXPASSIGN expression
+    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
+    (4) arithmetic_expression -> . LPAREN expression RPAREN
+    (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
+    (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
+    (9) arithmetic_expression -> . arithmetic_expression TIMES arithmetic_expression
+    (10) arithmetic_expression -> . arithmetic_expression DIVIDE arithmetic_expression
+    (11) arithmetic_expression -> . arithmetic_expression DIVIDE_CEIL arithmetic_expression
+    (12) arithmetic_expression -> . arithmetic_expression DIVIDE_FLOOR arithmetic_expression
+    (13) arithmetic_expression -> . arithmetic_expression MOD arithmetic_expression
+    (14) arithmetic_expression -> . arithmetic_expression EXP arithmetic_expression
+    (15) arithmetic_expression -> . arithmetic_expression AND arithmetic_expression
+    (16) arithmetic_expression -> . arithmetic_expression OR arithmetic_expression
+    (17) arithmetic_expression -> . arithmetic_expression XOR arithmetic_expression
+    (18) arithmetic_expression -> . arithmetic_expression POWER arithmetic_expression
+    (19) arithmetic_expression -> . NOT arithmetic_expression
+    (20) arithmetic_expression -> . MINUS arithmetic_expression
+    (21) arithmetic_expression -> . PLUS arithmetic_expression
+    (22) arithmetic_expression -> . arithmetic_expression IMAG
+    (23) arithmetic_expression -> . atomar
+    (24) comparison -> . arithmetic_expression comparison_op arithmetic_expression comparison_chain
+    (25) comparison -> . arithmetic_expression comparison_op arithmetic_expression
+    (1) atomar -> . NUMBER
+    (2) atomar -> . FLOAT
+    (3) atomar -> . IDENTIFIER
+
+    IDENTIFIER      shift and go to state 13
+    LAMBDA          shift and go to state 14
+    LPAREN          shift and go to state 15
+    NOT             shift and go to state 23
+    MINUS           shift and go to state 22
+    PLUS            shift and go to state 21
+    NUMBER          shift and go to state 25
+    FLOAT           shift and go to state 26
+
+    expression                     shift and go to state 154
+    arithmetic_expression          shift and go to state 11
+    comparison                     shift and go to state 12
+    atomar                         shift and go to state 24
+
+state 141
+
+    (84) parameter_infty -> IDENTIFIER DOTS .
+
+    RPAREN          reduce using rule 84 (parameter_infty -> IDENTIFIER DOTS .)
+
+
+state 142
 
     (63) if_statement -> IF expression THEN statements . ENDCOND
     (64) if_statement -> IF expression THEN statements . else_elif_body ENDCOND
@@ -5264,30 +5315,30 @@ state 133
     (65) else_elif_body -> . ELIF IF expression THEN statements else_elif_body
     (66) else_elif_body -> . ELSE statements
 
-    ENDCOND         shift and go to state 144
-    SEMICOLON       shift and go to state 146
-    ELIF            shift and go to state 147
-    ELSE            shift and go to state 148
+    ENDCOND         shift and go to state 155
+    SEMICOLON       shift and go to state 157
+    ELIF            shift and go to state 158
+    ELSE            shift and go to state 159
 
-    else_elif_body                 shift and go to state 145
+    else_elif_body                 shift and go to state 156
 
-state 134
+state 143
 
     (67) while_statement -> WHILE expression THEN statements . ENDCOND
     (61) statements -> statements . SEMICOLON statement
 
-    ENDCOND         shift and go to state 149
-    SEMICOLON       shift and go to state 146
+    ENDCOND         shift and go to state 160
+    SEMICOLON       shift and go to state 157
 
 
-state 135
+state 144
 
     (68) loop_statement -> LOOP IDENTIFIER LOOPIN interval . LOOPTHEN statements ENDCOND
 
-    LOOPTHEN        shift and go to state 150
+    LOOPTHEN        shift and go to state 161
 
 
-state 136
+state 145
 
     (69) interval -> OPEN_BRACKETS . expression COMMA expression CLOSED_BRACKETS
     (71) interval -> OPEN_BRACKETS . expression COMMA expression OPEN_BRACKETS
@@ -5313,7 +5364,7 @@ state 136
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -5347,12 +5398,12 @@ state 136
     NUMBER          shift and go to state 25
     FLOAT           shift and go to state 26
 
-    expression                     shift and go to state 151
+    expression                     shift and go to state 162
     arithmetic_expression          shift and go to state 11
     comparison                     shift and go to state 12
     atomar                         shift and go to state 24
 
-state 137
+state 146
 
     (70) interval -> CLOSED_BRACKETS . expression COMMA expression CLOSED_BRACKETS
     (72) interval -> CLOSED_BRACKETS . expression COMMA expression OPEN_BRACKETS
@@ -5378,7 +5429,7 @@ state 137
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -5412,52 +5463,52 @@ state 137
     NUMBER          shift and go to state 25
     FLOAT           shift and go to state 26
 
-    expression                     shift and go to state 152
+    expression                     shift and go to state 163
     arithmetic_expression          shift and go to state 11
     comparison                     shift and go to state 12
     atomar                         shift and go to state 24
 
-state 138
+state 147
 
-    (84) function -> ECHO LPAREN expression RPAREN .
+    (94) function -> ECHO LPAREN expression RPAREN .
 
-    END             reduce using rule 84 (function -> ECHO LPAREN expression RPAREN .)
-    SEMICOLON       reduce using rule 84 (function -> ECHO LPAREN expression RPAREN .)
-    ENDCOND         reduce using rule 84 (function -> ECHO LPAREN expression RPAREN .)
-    ELIF            reduce using rule 84 (function -> ECHO LPAREN expression RPAREN .)
-    ELSE            reduce using rule 84 (function -> ECHO LPAREN expression RPAREN .)
-
-
-state 139
-
-    (85) function -> LENGTH LPAREN expression RPAREN .
-
-    END             reduce using rule 85 (function -> LENGTH LPAREN expression RPAREN .)
-    SEMICOLON       reduce using rule 85 (function -> LENGTH LPAREN expression RPAREN .)
-    ENDCOND         reduce using rule 85 (function -> LENGTH LPAREN expression RPAREN .)
-    ELIF            reduce using rule 85 (function -> LENGTH LPAREN expression RPAREN .)
-    ELSE            reduce using rule 85 (function -> LENGTH LPAREN expression RPAREN .)
+    END             reduce using rule 94 (function -> ECHO LPAREN expression RPAREN .)
+    SEMICOLON       reduce using rule 94 (function -> ECHO LPAREN expression RPAREN .)
+    ENDCOND         reduce using rule 94 (function -> ECHO LPAREN expression RPAREN .)
+    ELIF            reduce using rule 94 (function -> ECHO LPAREN expression RPAREN .)
+    ELSE            reduce using rule 94 (function -> ECHO LPAREN expression RPAREN .)
 
 
-state 140
+state 148
 
-    (75) parameter_list -> expression COMMA parameter_list .
+    (95) function -> LENGTH LPAREN expression RPAREN .
 
-    RPAREN          reduce using rule 75 (parameter_list -> expression COMMA parameter_list .)
+    END             reduce using rule 95 (function -> LENGTH LPAREN expression RPAREN .)
+    SEMICOLON       reduce using rule 95 (function -> LENGTH LPAREN expression RPAREN .)
+    ENDCOND         reduce using rule 95 (function -> LENGTH LPAREN expression RPAREN .)
+    ELIF            reduce using rule 95 (function -> LENGTH LPAREN expression RPAREN .)
+    ELSE            reduce using rule 95 (function -> LENGTH LPAREN expression RPAREN .)
 
 
-state 141
+state 149
 
-    (79) parameter_keywords -> expression COLON expression . COMMA parameter_keywords
-    (80) parameter_keywords -> expression COLON expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (87) parameter_pos_expr -> expression COMMA parameter_pos_expr .
 
-    COMMA           shift and go to state 153
-    RPAREN          reduce using rule 80 (parameter_keywords -> expression COLON expression .)
+    RPAREN          reduce using rule 87 (parameter_pos_expr -> expression COMMA parameter_pos_expr .)
+
+
+state 150
+
+    (90) parameter_keywords_expr -> expression COLON expression . COMMA parameter_keywords_expr
+    (91) parameter_keywords_expr -> expression COLON expression .
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
+
+    COMMA           shift and go to state 164
+    RPAREN          reduce using rule 91 (parameter_keywords_expr -> expression COLON expression .)
     LPAREN          shift and go to state 29
 
 
-state 142
+state 151
 
     (26) comparison_chain -> comparison_op arithmetic_expression . comparison_chain
     (27) comparison_chain -> comparison_op arithmetic_expression .
@@ -5490,7 +5541,6 @@ state 142
     THEN            reduce using rule 27 (comparison_chain -> comparison_op arithmetic_expression .)
     COMMA           reduce using rule 27 (comparison_chain -> comparison_op arithmetic_expression .)
     COLON           reduce using rule 27 (comparison_chain -> comparison_op arithmetic_expression .)
-    DOTS            reduce using rule 27 (comparison_chain -> comparison_op arithmetic_expression .)
     ENDCOND         reduce using rule 27 (comparison_chain -> comparison_op arithmetic_expression .)
     ELIF            reduce using rule 27 (comparison_chain -> comparison_op arithmetic_expression .)
     ELSE            reduce using rule 27 (comparison_chain -> comparison_op arithmetic_expression .)
@@ -5516,10 +5566,10 @@ state 142
     SMALLER_EQUALS  shift and go to state 48
     GREATER_EQUALS  shift and go to state 49
 
-    comparison_op                  shift and go to state 130
-    comparison_chain               shift and go to state 154
+    comparison_op                  shift and go to state 136
+    comparison_chain               shift and go to state 165
 
-state 143
+state 152
 
     (73) expression -> LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW . expression
     (5) expression -> . arithmetic_expression
@@ -5544,7 +5594,7 @@ state 143
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -5578,12 +5628,30 @@ state 143
     NUMBER          shift and go to state 25
     FLOAT           shift and go to state 26
 
-    expression                     shift and go to state 155
+    expression                     shift and go to state 166
     arithmetic_expression          shift and go to state 11
     comparison                     shift and go to state 12
     atomar                         shift and go to state 24
 
-state 144
+state 153
+
+    (77) parameter_pos_list -> IDENTIFIER COMMA parameter_pos_list .
+
+    RPAREN          reduce using rule 77 (parameter_pos_list -> IDENTIFIER COMMA parameter_pos_list .)
+
+
+state 154
+
+    (81) parameter_kw_list -> IDENTIFIER COLON expression . COMMA parameter_kw_list
+    (82) parameter_kw_list -> IDENTIFIER COLON expression .
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
+
+    COMMA           shift and go to state 167
+    RPAREN          reduce using rule 82 (parameter_kw_list -> IDENTIFIER COLON expression .)
+    LPAREN          shift and go to state 29
+
+
+state 155
 
     (63) if_statement -> IF expression THEN statements ENDCOND .
 
@@ -5594,14 +5662,14 @@ state 144
     ELSE            reduce using rule 63 (if_statement -> IF expression THEN statements ENDCOND .)
 
 
-state 145
+state 156
 
     (64) if_statement -> IF expression THEN statements else_elif_body . ENDCOND
 
-    ENDCOND         shift and go to state 156
+    ENDCOND         shift and go to state 168
 
 
-state 146
+state 157
 
     (61) statements -> statements SEMICOLON . statement
     (55) statement -> . expression
@@ -5632,15 +5700,15 @@ state 146
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (53) sequence -> . BEGIN statements END
     (54) sequence -> . BEGIN statements SEMICOLON END
     (63) if_statement -> . IF expression THEN statements ENDCOND
     (64) if_statement -> . IF expression THEN statements else_elif_body ENDCOND
     (67) while_statement -> . WHILE expression THEN statements ENDCOND
     (68) loop_statement -> . LOOP IDENTIFIER LOOPIN interval LOOPTHEN statements ENDCOND
-    (84) function -> . ECHO LPAREN expression RPAREN
-    (85) function -> . LENGTH LPAREN expression RPAREN
+    (94) function -> . ECHO LPAREN expression RPAREN
+    (95) function -> . LENGTH LPAREN expression RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -5691,14 +5759,14 @@ state 146
     comparison                     shift and go to state 12
     atomar                         shift and go to state 24
 
-state 147
+state 158
 
     (65) else_elif_body -> ELIF . IF expression THEN statements else_elif_body
 
-    IF              shift and go to state 157
+    IF              shift and go to state 169
 
 
-state 148
+state 159
 
     (66) else_elif_body -> ELSE . statements
     (61) statements -> . statements SEMICOLON statement
@@ -5731,15 +5799,15 @@ state 148
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (53) sequence -> . BEGIN statements END
     (54) sequence -> . BEGIN statements SEMICOLON END
     (63) if_statement -> . IF expression THEN statements ENDCOND
     (64) if_statement -> . IF expression THEN statements else_elif_body ENDCOND
     (67) while_statement -> . WHILE expression THEN statements ENDCOND
     (68) loop_statement -> . LOOP IDENTIFIER LOOPIN interval LOOPTHEN statements ENDCOND
-    (84) function -> . ECHO LPAREN expression RPAREN
-    (85) function -> . LENGTH LPAREN expression RPAREN
+    (94) function -> . ECHO LPAREN expression RPAREN
+    (95) function -> . LENGTH LPAREN expression RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -5779,7 +5847,7 @@ state 148
     NUMBER          shift and go to state 25
     FLOAT           shift and go to state 26
 
-    statements                     shift and go to state 158
+    statements                     shift and go to state 170
     statement                      shift and go to state 4
     expression                     shift and go to state 5
     sequence                       shift and go to state 6
@@ -5791,7 +5859,7 @@ state 148
     comparison                     shift and go to state 12
     atomar                         shift and go to state 24
 
-state 149
+state 160
 
     (67) while_statement -> WHILE expression THEN statements ENDCOND .
 
@@ -5802,7 +5870,7 @@ state 149
     ELSE            reduce using rule 67 (while_statement -> WHILE expression THEN statements ENDCOND .)
 
 
-state 150
+state 161
 
     (68) loop_statement -> LOOP IDENTIFIER LOOPIN interval LOOPTHEN . statements ENDCOND
     (61) statements -> . statements SEMICOLON statement
@@ -5835,15 +5903,15 @@ state 150
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (53) sequence -> . BEGIN statements END
     (54) sequence -> . BEGIN statements SEMICOLON END
     (63) if_statement -> . IF expression THEN statements ENDCOND
     (64) if_statement -> . IF expression THEN statements else_elif_body ENDCOND
     (67) while_statement -> . WHILE expression THEN statements ENDCOND
     (68) loop_statement -> . LOOP IDENTIFIER LOOPIN interval LOOPTHEN statements ENDCOND
-    (84) function -> . ECHO LPAREN expression RPAREN
-    (85) function -> . LENGTH LPAREN expression RPAREN
+    (94) function -> . ECHO LPAREN expression RPAREN
+    (95) function -> . LENGTH LPAREN expression RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -5883,7 +5951,7 @@ state 150
     NUMBER          shift and go to state 25
     FLOAT           shift and go to state 26
 
-    statements                     shift and go to state 159
+    statements                     shift and go to state 171
     statement                      shift and go to state 4
     expression                     shift and go to state 5
     sequence                       shift and go to state 6
@@ -5895,32 +5963,31 @@ state 150
     comparison                     shift and go to state 12
     atomar                         shift and go to state 24
 
-state 151
+state 162
 
     (69) interval -> OPEN_BRACKETS expression . COMMA expression CLOSED_BRACKETS
     (71) interval -> OPEN_BRACKETS expression . COMMA expression OPEN_BRACKETS
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    COMMA           shift and go to state 160
+    COMMA           shift and go to state 172
     LPAREN          shift and go to state 29
 
 
-state 152
+state 163
 
     (70) interval -> CLOSED_BRACKETS expression . COMMA expression CLOSED_BRACKETS
     (72) interval -> CLOSED_BRACKETS expression . COMMA expression OPEN_BRACKETS
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    COMMA           shift and go to state 161
+    COMMA           shift and go to state 173
     LPAREN          shift and go to state 29
 
 
-state 153
+state 164
 
-    (79) parameter_keywords -> expression COLON expression COMMA . parameter_keywords
-    (79) parameter_keywords -> . expression COLON expression COMMA parameter_keywords
-    (80) parameter_keywords -> . expression COLON expression
-    (81) parameter_keywords -> . parameter_infty
+    (90) parameter_keywords_expr -> expression COLON expression COMMA . parameter_keywords_expr
+    (90) parameter_keywords_expr -> . expression COLON expression COMMA parameter_keywords_expr
+    (91) parameter_keywords_expr -> . expression COLON expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
@@ -5943,8 +6010,7 @@ state 153
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
-    (82) parameter_infty -> . expression DOTS
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -5978,14 +6044,13 @@ state 153
     NUMBER          shift and go to state 25
     FLOAT           shift and go to state 26
 
-    expression                     shift and go to state 162
-    parameter_keywords             shift and go to state 163
-    parameter_infty                shift and go to state 86
+    expression                     shift and go to state 174
+    parameter_keywords_expr        shift and go to state 175
     arithmetic_expression          shift and go to state 11
     comparison                     shift and go to state 12
     atomar                         shift and go to state 24
 
-state 154
+state 165
 
     (26) comparison_chain -> comparison_op arithmetic_expression comparison_chain .
 
@@ -5996,7 +6061,6 @@ state 154
     THEN            reduce using rule 26 (comparison_chain -> comparison_op arithmetic_expression comparison_chain .)
     COMMA           reduce using rule 26 (comparison_chain -> comparison_op arithmetic_expression comparison_chain .)
     COLON           reduce using rule 26 (comparison_chain -> comparison_op arithmetic_expression comparison_chain .)
-    DOTS            reduce using rule 26 (comparison_chain -> comparison_op arithmetic_expression comparison_chain .)
     ENDCOND         reduce using rule 26 (comparison_chain -> comparison_op arithmetic_expression comparison_chain .)
     ELIF            reduce using rule 26 (comparison_chain -> comparison_op arithmetic_expression comparison_chain .)
     ELSE            reduce using rule 26 (comparison_chain -> comparison_op arithmetic_expression comparison_chain .)
@@ -6004,10 +6068,10 @@ state 154
     OPEN_BRACKETS   reduce using rule 26 (comparison_chain -> comparison_op arithmetic_expression comparison_chain .)
 
 
-state 155
+state 166
 
     (73) expression -> LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression .
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
     LPAREN          reduce using rule 73 (expression -> LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression .)
     END             reduce using rule 73 (expression -> LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression .)
@@ -6016,7 +6080,6 @@ state 155
     THEN            reduce using rule 73 (expression -> LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression .)
     COMMA           reduce using rule 73 (expression -> LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression .)
     COLON           reduce using rule 73 (expression -> LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression .)
-    DOTS            reduce using rule 73 (expression -> LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression .)
     ENDCOND         reduce using rule 73 (expression -> LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression .)
     ELIF            reduce using rule 73 (expression -> LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression .)
     ELSE            reduce using rule 73 (expression -> LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression .)
@@ -6026,7 +6089,20 @@ state 155
   ! LPAREN          [ shift and go to state 29 ]
 
 
-state 156
+state 167
+
+    (81) parameter_kw_list -> IDENTIFIER COLON expression COMMA . parameter_kw_list
+    (81) parameter_kw_list -> . IDENTIFIER COLON expression COMMA parameter_kw_list
+    (82) parameter_kw_list -> . IDENTIFIER COLON expression
+    (83) parameter_kw_list -> . parameter_infty
+    (84) parameter_infty -> . IDENTIFIER DOTS
+
+    IDENTIFIER      shift and go to state 176
+
+    parameter_kw_list              shift and go to state 177
+    parameter_infty                shift and go to state 126
+
+state 168
 
     (64) if_statement -> IF expression THEN statements else_elif_body ENDCOND .
 
@@ -6037,7 +6113,7 @@ state 156
     ELSE            reduce using rule 64 (if_statement -> IF expression THEN statements else_elif_body ENDCOND .)
 
 
-state 157
+state 169
 
     (65) else_elif_body -> ELIF IF . expression THEN statements else_elif_body
     (5) expression -> . arithmetic_expression
@@ -6062,7 +6138,7 @@ state 157
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -6096,30 +6172,30 @@ state 157
     NUMBER          shift and go to state 25
     FLOAT           shift and go to state 26
 
-    expression                     shift and go to state 164
+    expression                     shift and go to state 178
     arithmetic_expression          shift and go to state 11
     comparison                     shift and go to state 12
     atomar                         shift and go to state 24
 
-state 158
+state 170
 
     (66) else_elif_body -> ELSE statements .
     (61) statements -> statements . SEMICOLON statement
 
     ENDCOND         reduce using rule 66 (else_elif_body -> ELSE statements .)
-    SEMICOLON       shift and go to state 146
+    SEMICOLON       shift and go to state 157
 
 
-state 159
+state 171
 
     (68) loop_statement -> LOOP IDENTIFIER LOOPIN interval LOOPTHEN statements . ENDCOND
     (61) statements -> statements . SEMICOLON statement
 
-    ENDCOND         shift and go to state 165
-    SEMICOLON       shift and go to state 146
+    ENDCOND         shift and go to state 179
+    SEMICOLON       shift and go to state 157
 
 
-state 160
+state 172
 
     (69) interval -> OPEN_BRACKETS expression COMMA . expression CLOSED_BRACKETS
     (71) interval -> OPEN_BRACKETS expression COMMA . expression OPEN_BRACKETS
@@ -6145,7 +6221,7 @@ state 160
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -6179,12 +6255,12 @@ state 160
     NUMBER          shift and go to state 25
     FLOAT           shift and go to state 26
 
-    expression                     shift and go to state 166
+    expression                     shift and go to state 180
     arithmetic_expression          shift and go to state 11
     comparison                     shift and go to state 12
     atomar                         shift and go to state 24
 
-state 161
+state 173
 
     (70) interval -> CLOSED_BRACKETS expression COMMA . expression CLOSED_BRACKETS
     (72) interval -> CLOSED_BRACKETS expression COMMA . expression OPEN_BRACKETS
@@ -6210,7 +6286,7 @@ state 161
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -6244,40 +6320,55 @@ state 161
     NUMBER          shift and go to state 25
     FLOAT           shift and go to state 26
 
-    expression                     shift and go to state 167
+    expression                     shift and go to state 181
     arithmetic_expression          shift and go to state 11
     comparison                     shift and go to state 12
     atomar                         shift and go to state 24
 
-state 162
+state 174
 
-    (79) parameter_keywords -> expression . COLON expression COMMA parameter_keywords
-    (80) parameter_keywords -> expression . COLON expression
-    (83) expression -> expression . LPAREN parameter RPAREN
-    (82) parameter_infty -> expression . DOTS
+    (90) parameter_keywords_expr -> expression . COLON expression COMMA parameter_keywords_expr
+    (91) parameter_keywords_expr -> expression . COLON expression
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    COLON           shift and go to state 127
+    COLON           shift and go to state 134
     LPAREN          shift and go to state 29
-    DOTS            shift and go to state 128
 
 
-state 163
+state 175
 
-    (79) parameter_keywords -> expression COLON expression COMMA parameter_keywords .
+    (90) parameter_keywords_expr -> expression COLON expression COMMA parameter_keywords_expr .
 
-    RPAREN          reduce using rule 79 (parameter_keywords -> expression COLON expression COMMA parameter_keywords .)
+    RPAREN          reduce using rule 90 (parameter_keywords_expr -> expression COLON expression COMMA parameter_keywords_expr .)
 
 
-state 164
+state 176
+
+    (81) parameter_kw_list -> IDENTIFIER . COLON expression COMMA parameter_kw_list
+    (82) parameter_kw_list -> IDENTIFIER . COLON expression
+    (84) parameter_infty -> IDENTIFIER . DOTS
+
+    COLON           shift and go to state 140
+    DOTS            shift and go to state 141
+
+
+state 177
+
+    (81) parameter_kw_list -> IDENTIFIER COLON expression COMMA parameter_kw_list .
+
+    RPAREN          reduce using rule 81 (parameter_kw_list -> IDENTIFIER COLON expression COMMA parameter_kw_list .)
+
+
+state 178
 
     (65) else_elif_body -> ELIF IF expression . THEN statements else_elif_body
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    THEN            shift and go to state 168
+    THEN            shift and go to state 182
     LPAREN          shift and go to state 29
 
 
-state 165
+state 179
 
     (68) loop_statement -> LOOP IDENTIFIER LOOPIN interval LOOPTHEN statements ENDCOND .
 
@@ -6288,29 +6379,29 @@ state 165
     ELSE            reduce using rule 68 (loop_statement -> LOOP IDENTIFIER LOOPIN interval LOOPTHEN statements ENDCOND .)
 
 
-state 166
+state 180
 
     (69) interval -> OPEN_BRACKETS expression COMMA expression . CLOSED_BRACKETS
     (71) interval -> OPEN_BRACKETS expression COMMA expression . OPEN_BRACKETS
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    CLOSED_BRACKETS shift and go to state 170
-    OPEN_BRACKETS   shift and go to state 169
+    CLOSED_BRACKETS shift and go to state 184
+    OPEN_BRACKETS   shift and go to state 183
     LPAREN          shift and go to state 29
 
 
-state 167
+state 181
 
     (70) interval -> CLOSED_BRACKETS expression COMMA expression . CLOSED_BRACKETS
     (72) interval -> CLOSED_BRACKETS expression COMMA expression . OPEN_BRACKETS
-    (83) expression -> expression . LPAREN parameter RPAREN
+    (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    CLOSED_BRACKETS shift and go to state 171
-    OPEN_BRACKETS   shift and go to state 172
+    CLOSED_BRACKETS shift and go to state 185
+    OPEN_BRACKETS   shift and go to state 186
     LPAREN          shift and go to state 29
 
 
-state 168
+state 182
 
     (65) else_elif_body -> ELIF IF expression THEN . statements else_elif_body
     (61) statements -> . statements SEMICOLON statement
@@ -6343,15 +6434,15 @@ state 168
     (51) expression -> . IDENTIFIER EXPASSIGN expression
     (52) expression -> . IDENTIFIER MODASSIGN expression
     (73) expression -> . LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression
-    (83) expression -> . expression LPAREN parameter RPAREN
+    (93) expression -> . expression LPAREN parameter_expr RPAREN
     (53) sequence -> . BEGIN statements END
     (54) sequence -> . BEGIN statements SEMICOLON END
     (63) if_statement -> . IF expression THEN statements ENDCOND
     (64) if_statement -> . IF expression THEN statements else_elif_body ENDCOND
     (67) while_statement -> . WHILE expression THEN statements ENDCOND
     (68) loop_statement -> . LOOP IDENTIFIER LOOPIN interval LOOPTHEN statements ENDCOND
-    (84) function -> . ECHO LPAREN expression RPAREN
-    (85) function -> . LENGTH LPAREN expression RPAREN
+    (94) function -> . ECHO LPAREN expression RPAREN
+    (95) function -> . LENGTH LPAREN expression RPAREN
     (4) arithmetic_expression -> . LPAREN expression RPAREN
     (7) arithmetic_expression -> . arithmetic_expression PLUS arithmetic_expression
     (8) arithmetic_expression -> . arithmetic_expression MINUS arithmetic_expression
@@ -6392,7 +6483,7 @@ state 168
     FLOAT           shift and go to state 26
 
     expression                     shift and go to state 5
-    statements                     shift and go to state 173
+    statements                     shift and go to state 187
     statement                      shift and go to state 4
     sequence                       shift and go to state 6
     if_statement                   shift and go to state 7
@@ -6403,48 +6494,48 @@ state 168
     comparison                     shift and go to state 12
     atomar                         shift and go to state 24
 
-state 169
+state 183
 
     (71) interval -> OPEN_BRACKETS expression COMMA expression OPEN_BRACKETS .
 
     LOOPTHEN        reduce using rule 71 (interval -> OPEN_BRACKETS expression COMMA expression OPEN_BRACKETS .)
 
 
-state 170
+state 184
 
     (69) interval -> OPEN_BRACKETS expression COMMA expression CLOSED_BRACKETS .
 
     LOOPTHEN        reduce using rule 69 (interval -> OPEN_BRACKETS expression COMMA expression CLOSED_BRACKETS .)
 
 
-state 171
+state 185
 
     (70) interval -> CLOSED_BRACKETS expression COMMA expression CLOSED_BRACKETS .
 
     LOOPTHEN        reduce using rule 70 (interval -> CLOSED_BRACKETS expression COMMA expression CLOSED_BRACKETS .)
 
 
-state 172
+state 186
 
     (72) interval -> CLOSED_BRACKETS expression COMMA expression OPEN_BRACKETS .
 
     LOOPTHEN        reduce using rule 72 (interval -> CLOSED_BRACKETS expression COMMA expression OPEN_BRACKETS .)
 
 
-state 173
+state 187
 
     (65) else_elif_body -> ELIF IF expression THEN statements . else_elif_body
     (61) statements -> statements . SEMICOLON statement
     (65) else_elif_body -> . ELIF IF expression THEN statements else_elif_body
     (66) else_elif_body -> . ELSE statements
 
-    SEMICOLON       shift and go to state 146
-    ELIF            shift and go to state 147
-    ELSE            shift and go to state 148
+    SEMICOLON       shift and go to state 157
+    ELIF            shift and go to state 158
+    ELSE            shift and go to state 159
 
-    else_elif_body                 shift and go to state 174
+    else_elif_body                 shift and go to state 188
 
-state 174
+state 188
 
     (65) else_elif_body -> ELIF IF expression THEN statements else_elif_body .
 

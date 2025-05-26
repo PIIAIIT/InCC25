@@ -149,29 +149,29 @@ def p_comparison_op(p):
 
 def p_assignment1(p):
     "expression : IDENTIFIER ASSIGN expression"
-    p[0] = ("assign", p[1], p[3])
+    p[0] = ("assign", None, p[1], p[3])
 
 
 def p_assignment2(p):
     """
-    expression : IDENTIFIER PLUSASSIGN expression
-               | IDENTIFIER MINUSASSIGN expression
-               | IDENTIFIER TIMESASSIGN expression
-               | IDENTIFIER POWERASSIGN expression
-               | IDENTIFIER DIVIDEASSIGN expression
-               | IDENTIFIER DIVIDE_FLOORASSIGN expression
-               | IDENTIFIER DIVIDE_CEILASSIGN expression
-               | IDENTIFIER GREATER_THANASSIGN expression
-               | IDENTIFIER SMALLER_THANASSIGN expression
-               | IDENTIFIER GREATER_EQUALSASSIGN expression
-               | IDENTIFIER SMALLER_EQUALSASSIGN expression
-               | IDENTIFIER EQUALSASSIGN expression
-               | IDENTIFIER UNEQUALSASSIGN expression
-               | IDENTIFIER ANDASSIGN expression
-               | IDENTIFIER ORASSIGN expression
-               | IDENTIFIER XORASSIGN expression
-               | IDENTIFIER EXPASSIGN expression
-               | IDENTIFIER MODASSIGN expression
+    expression : IDENTIFIER PLUS_ASSIGN expression
+               | IDENTIFIER MINUS_ASSIGN expression
+               | IDENTIFIER TIMES_ASSIGN expression
+               | IDENTIFIER POWER_ASSIGN expression
+               | IDENTIFIER DIVIDE_ASSIGN expression
+               | IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+               | IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+               | IDENTIFIER GREATER_THAN_ASSIGN expression
+               | IDENTIFIER SMALLER_THAN_ASSIGN expression
+               | IDENTIFIER GREATER_EQUALS_ASSIGN expression
+               | IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+               | IDENTIFIER EQUALS_ASSIGN expression
+               | IDENTIFIER UNEQUALS_ASSIGN expression
+               | IDENTIFIER AND_ASSIGN expression
+               | IDENTIFIER OR_ASSIGN expression
+               | IDENTIFIER XOR_ASSIGN expression
+               | IDENTIFIER EXP_ASSIGN expression
+               | IDENTIFIER MOD_ASSIGN expression
     """
     p[0] = ("assign", look_up_assignments[p[2]], p[1], p[3])
 
@@ -390,10 +390,10 @@ def p_call(p):
 ######################### LET #########################
 
 
-def p_let(p):
-    "expression : LET assignment IN expression ENDCOND"
-    # definiert Letrec
-    p[0] = ("let", p[1], p[3])
+# def p_let(p):
+#     "expression : LET assignment IN expression ENDCOND"
+#     # definiert Letrec
+#     p[0] = ("let", p[1], p[3])
 
 
 ######################### BUILTIN #########################
@@ -419,7 +419,7 @@ def p_error(p):
 ########################################################
 
 precedence = (
-    tuple(["right", "ASSIGN"] + [a for a in assigns]),
+    tuple(["right", "ASSIGN"] + [a for a in assigns.values()]),
     ("right", "LAMBDA"),
     ("right", "CALL"),
     ("left", "OR"),

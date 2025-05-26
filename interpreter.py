@@ -75,13 +75,9 @@ def eval(expression, env: Environment):
             y = eval(expr2, env)
             return bin_operations[op](x, y)
 
-        case ("assign", var, val):
-            env[var] = eval(val, env)
-            return env[var]
-
         case ("assign", op, var, val):
             y = eval(val, env)
-            env[var] = bin_operations[op](env[var], y)
+            env[var] = bin_operations[op](env[var], y) if op is not None else y
             return env[var]
 
         case ("unary", op, expr):

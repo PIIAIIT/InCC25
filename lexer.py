@@ -2,73 +2,51 @@ from ply.lex import Lexer, lex
 
 module = __import__(__name__)
 
-def gen():
-    count = dict()
 
-    def g(name):
-        nonlocal count
-        if name not in count:
-            count[name] = 0
-        else:
-            count[name] += 1
-        return name + str(count[name])
-
-    return g
-unique = gen()
-
-def rule_lexer(doc, name, func):
+def rule_lexer(doc, name):
     def f(t):
-        func()
         return t
 
     f.__doc__ = doc
-    setattr(module, unique(f"t_{name.upper()}"), f)
-
-rule_lexer(r"(?:[^\W\d_]|[\U0001F300-\U0001FAFF_])(?:[^\W_]|[\d_]|[\U0001F300-\U0001FAFF])*",
-           "IDENTIFIER",
-           lambda (t): t.type = keywords.get(t.value.lower(), "IDENTIFIER"))
+    setattr(module, f"t_{name.upper()}", f)
 
 
-def t_IDENTIFIER(t):
-    r"(?:[^\W\d_]|[\U0001F300-\U0001FAFF_])(?:[^\W_]|[\d_]|[\U0001F300-\U0001FAFF])*"
-    # ?:[^\W\d_] : ein Zeichen, das ein Buchstabe ist, aber keine Ziffer und kein Unterstrich.
-    # [\U0001F300-\U0001FAFF_] : Unicode-Zeichen im Bereich von U+1F300 bis U+1FAFF (Emoji- und Symbolbereich) oder der Unterstrich (_)
-    #
-    # ?:[^\W_]|[\d_] : Ein Buchstabe oder eine Ziffer (ohne Unterstrich) oder eine Ziffer oder ein Unterstrich
-    # [\U0001F300-\U0001FAFF_] : Unicode-Zeichen im Bereich von U+1F300 bis U+1FAFF (Emoji- und Symbolbereich) oder der Unterstrich (_)
-    # beliebig oft wiederholt
-    t.type = keywords.get(t.value.lower(), "IDENTIFIER")
-    return t
-
-
-operations = [
-    "PLUS",
-    "MINUS",
-    "TIMES",
-    "POWER",
-    "DIVIDE_CEIL",
-    "DIVIDE_FLOOR",
-    "DIVIDE",
-]
-comparators = [
-    "GREATER_THAN",
-    "SMALLER_THAN",
-    "UNEQUALS",
-    "EQUALS",
-    "SMALLER_EQUALS",
-    "GREATER_EQUALS",
-]
-
-assigns = [i + "ASSIGN" for i in operations + comparators]
-
-keywords = {
+ops = {
+    r"\+": "PLUS",
+    r"-": "MINUS",
+    r"\*\*": "POWER",
+    r"\*": "TIMES",
+    r"/": "DIVIDE_CEIL",
+    r"\\": "DIVIDE_FLOOR",
+    r"\|": "DIVIDE",
+    r"=": "EQUALS",
+    r"!=": "UNEQUALS",
+    r">=": "GREATER_EQUALS",
+    r"<=": "SMALLER_EQUALS",
+    r">": "GREATER_THAN",
+    r"<": "SMALLER_THAN",
     "and": "AND",
     "or": "OR",
     "xor": "XOR",
     "mod": "MOD",
     "e": "EXP",  # als Operator
-    "not": "NOT",
-    "imag": "IMAG",  # als Operator
+}
+
+table = {
+    r"(\d+\.\d*|\.\d+)": "FLOAT",
+    r"0x[0-9a-fA-F]+|0b(0|1[01]*)|\d+": "NUMBER",
+    r"\(": "LPAREN",
+    r"\)": "RPAREN",
+    r":=": "ASSIGN",
+    r";": "SEMICOLON",
+    r":": "COLON",
+    r"\]": "CLOSED_BRACKETS",
+    r"\[": "OPEN_BRACKETS",
+    r"\{": "BEGIN",  # Sequence Begin
+    r"\}": "END",  # Sequence End
+    r"->": "LAMBDA_ARROW",
+    r"\.\.\.": "DOTS",
+    r"\.": "ENDCOND",
     "wenn": "IF",
     "gilt,": "THEN",
     ",aber": "ELIF",
@@ -80,148 +58,29 @@ keywords = {
     "lambda": "LAMBDA",
     "echo": "ECHO",
     "länge": "LENGTH",
-    "sei": "LET" # Ist schon ein Letrec
+    "sei": "LET",  # Ist schon ein Letrec
+    r",": "COMMA",
 }
-
-assigns += [x + "ASSIGN" for x in ["AND", "OR", "XOR", "MOD", "EXP"]]
-
-
-tokens = (
-    [
-        "NUMBER",
-        "FLOAT",
-        "IDENTIFIER",
-        "LPAREN",
-        "RPAREN",
-        "ASSIGN",
-        "SEMICOLON",
-        "COMMA",
-        "COLON",
-        "CLOSED_BRACKETS",
-        "OPEN_BRACKETS",
-        "BEGIN",  # Sequence Begin
-        "END",  # Sequence End
-        "LAMBDA_ARROW",
-        "ENDCOND",
-        "DOTS",
-    ]
-    + operations
-    + comparators
-    + list(keywords.values())
-    + assigns
+table.update(
+    {
+        "not": "NOT",
+        "imag": "IMAG",  # als Operator
+    }
+)
+assigns = {k + ":=": v + "_ASSIGN" for k, v in ops.items()}
+table.update(assigns)
+table.update(ops)
+table.update(
+    {
+        r"(?:[^\W\d_]|[\U0001F300-\U0001FAFF_])(?:[^\W_]|[\d_]|[\U0001F300-\U0001FAFF])*": "IDENTIFIER"
+    }
 )
 
-t_PLUS = r"\+"
-t_MINUS = r"-"
-t_TIMES = r"\*"
-t_POWER = r"\*\*"
-t_DIVIDE_CEIL = r"/"
-t_DIVIDE = r"\|"
-t_DIVIDE_FLOOR = r"\\"
-t_GREATER_THAN = r">"
-t_SMALLER_THAN = r"<"
-t_UNEQUALS = r"!="
-t_EQUALS = r"="
-t_GREATER_EQUALS = r">="
-t_SMALLER_EQUALS = r"<="
 
-t_PLUSASSIGN = r"\+:="
-t_MINUSASSIGN = r"-:="
-t_TIMESASSIGN = r"\*:="
-t_POWERASSIGN = r"\*\*:="
-t_DIVIDE_CEILASSIGN = r"/:="
-t_DIVIDEASSIGN = r"\|:="
-t_DIVIDE_FLOORASSIGN = r"\\:="
-t_GREATER_THANASSIGN = r">:="
-t_SMALLER_THANASSIGN = r"<:="
-t_UNEQUALSASSIGN = r"!=:="
-t_EQUALSASSIGN = r"=:="
-t_GREATER_EQUALSASSIGN = r">=:="
-t_SMALLER_EQUALSASSIGN = r"<=:="
+tokens = list(table.values())
 
-t_LPAREN = r"\("
-t_RPAREN = r"\)"
-t_ASSIGN = r":="
-
-t_SEMICOLON = r";"
-t_BEGIN = r"\{"
-t_END = r"\}"
-t_CLOSED_BRACKETS = r"\]"
-t_OPEN_BRACKETS = r"\["
-t_COMMA = r"\,"
-
-t_COLON = r"\:"
-t_LAMBDA_ARROW = r"->"
-
-t_ignore = " \t"
-t_ignore_comment = r"\#[^\#]*\#"
-
-
-def t_FLOAT(t):
-    r"(\d+\.\d*|\.\d+)"
-    return t
-
-
-def t_NUMBER(t):
-    r"0x[0-9a-fA-F]+|0b(0|1[01]*)|\d+"
-    return t
-
-
-def t_MODASSIGN(t):
-    r"mod:="
-    return t
-
-
-def t_ANDASSIGN(t):
-    r"and:="
-    return t
-
-
-def t_ORASSIGN(t):
-    r"or:="
-    return t
-
-
-def t_XORASSIGN(t):
-    r"xor:="
-    return t
-
-
-def t_DOTS(t):
-    r"\.\.\."
-    return t
-
-
-def t_ENDCOND(t):
-    r"\."
-    return t
-
-
-def t_THEN(t):
-    r"gilt,"
-    return t
-
-
-def t_ELIF(t):
-    r",aber"
-    return t
-
-
-def t_IDENTIFIER(t):
-    r"(?:[^\W\d_]|[\U0001F300-\U0001FAFF_])(?:[^\W_]|[\d_]|[\U0001F300-\U0001FAFF])*"
-    # ?:[^\W\d_] : ein Zeichen, das ein Buchstabe ist, aber keine Ziffer und kein Unterstrich.
-    # [\U0001F300-\U0001FAFF_] : Unicode-Zeichen im Bereich von U+1F300 bis U+1FAFF (Emoji- und Symbolbereich) oder der Unterstrich (_)
-    #
-    # ?:[^\W_]|[\d_] : Ein Buchstabe oder eine Ziffer (ohne Unterstrich) oder eine Ziffer oder ein Unterstrich
-    # [\U0001F300-\U0001FAFF_] : Unicode-Zeichen im Bereich von U+1F300 bis U+1FAFF (Emoji- und Symbolbereich) oder der Unterstrich (_)
-    # beliebig oft wiederholt
-    t.type = keywords.get(t.value.lower(), "IDENTIFIER")
-    return t
-
-
-def t_newline(t):
-    r"\n+"
-    t.lexer.lineno += len(t.value)
+for rule, func_name in table.items():
+    rule_lexer(rule, func_name)
 
 
 def print_error_with_caret(text, lineno, lexpos):
@@ -241,6 +100,15 @@ def print_error_with_caret(text, lineno, lexpos):
     print(f"Syntaxfehler in Zeile {lineno}:")
     print(error_line)
     print(" " * column + "^")
+
+
+t_ignore = " \t"
+t_ignore_comment = r"\#[^\#]*\#"
+
+
+def t_newline(t):
+    r"\n+"
+    t.lineno += 1
 
 
 def t_error(t):

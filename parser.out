@@ -1,5 +1,9 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
+Unused terminals:
+
+    LET
+
 Grammar
 
 Rule 0     S' -> sequence
@@ -37,24 +41,24 @@ Rule 31    comparison_op -> EQUALS
 Rule 32    comparison_op -> SMALLER_EQUALS
 Rule 33    comparison_op -> GREATER_EQUALS
 Rule 34    expression -> IDENTIFIER ASSIGN expression
-Rule 35    expression -> IDENTIFIER PLUSASSIGN expression
-Rule 36    expression -> IDENTIFIER MINUSASSIGN expression
-Rule 37    expression -> IDENTIFIER TIMESASSIGN expression
-Rule 38    expression -> IDENTIFIER POWERASSIGN expression
-Rule 39    expression -> IDENTIFIER DIVIDEASSIGN expression
-Rule 40    expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression
-Rule 41    expression -> IDENTIFIER DIVIDE_CEILASSIGN expression
-Rule 42    expression -> IDENTIFIER GREATER_THANASSIGN expression
-Rule 43    expression -> IDENTIFIER SMALLER_THANASSIGN expression
-Rule 44    expression -> IDENTIFIER GREATER_EQUALSASSIGN expression
-Rule 45    expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression
-Rule 46    expression -> IDENTIFIER EQUALSASSIGN expression
-Rule 47    expression -> IDENTIFIER UNEQUALSASSIGN expression
-Rule 48    expression -> IDENTIFIER ANDASSIGN expression
-Rule 49    expression -> IDENTIFIER ORASSIGN expression
-Rule 50    expression -> IDENTIFIER XORASSIGN expression
-Rule 51    expression -> IDENTIFIER EXPASSIGN expression
-Rule 52    expression -> IDENTIFIER MODASSIGN expression
+Rule 35    expression -> IDENTIFIER PLUS_ASSIGN expression
+Rule 36    expression -> IDENTIFIER MINUS_ASSIGN expression
+Rule 37    expression -> IDENTIFIER TIMES_ASSIGN expression
+Rule 38    expression -> IDENTIFIER POWER_ASSIGN expression
+Rule 39    expression -> IDENTIFIER DIVIDE_ASSIGN expression
+Rule 40    expression -> IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+Rule 41    expression -> IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+Rule 42    expression -> IDENTIFIER GREATER_THAN_ASSIGN expression
+Rule 43    expression -> IDENTIFIER SMALLER_THAN_ASSIGN expression
+Rule 44    expression -> IDENTIFIER GREATER_EQUALS_ASSIGN expression
+Rule 45    expression -> IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+Rule 46    expression -> IDENTIFIER EQUALS_ASSIGN expression
+Rule 47    expression -> IDENTIFIER UNEQUALS_ASSIGN expression
+Rule 48    expression -> IDENTIFIER AND_ASSIGN expression
+Rule 49    expression -> IDENTIFIER OR_ASSIGN expression
+Rule 50    expression -> IDENTIFIER XOR_ASSIGN expression
+Rule 51    expression -> IDENTIFIER EXP_ASSIGN expression
+Rule 52    expression -> IDENTIFIER MOD_ASSIGN expression
 Rule 53    sequence -> BEGIN statements END
 Rule 54    sequence -> BEGIN statements SEMICOLON END
 Rule 55    statement -> expression
@@ -102,18 +106,18 @@ Rule 95    expression -> LENGTH LPAREN expression RPAREN
 Terminals, with rules where they appear
 
 AND                  : 15
-ANDASSIGN            : 48
+AND_ASSIGN           : 48
 ASSIGN               : 34
 BEGIN                : 53 54
 CLOSED_BRACKETS      : 68 69 69 71
 COLON                : 81 82 90 91
 COMMA                : 68 69 70 71 77 81 87 90
 DIVIDE               : 10
-DIVIDEASSIGN         : 39
+DIVIDE_ASSIGN        : 39
 DIVIDE_CEIL          : 11
-DIVIDE_CEILASSIGN    : 41
+DIVIDE_CEIL_ASSIGN   : 41
 DIVIDE_FLOOR         : 12
-DIVIDE_FLOORASSIGN   : 40
+DIVIDE_FLOOR_ASSIGN  : 40
 DOTS                 : 84
 ECHO                 : 94
 ELIF                 : 64
@@ -121,51 +125,52 @@ ELSE                 : 65
 END                  : 53 54
 ENDCOND              : 62 63 66 67
 EQUALS               : 31
-EQUALSASSIGN         : 46
+EQUALS_ASSIGN        : 46
 EXP                  : 14
-EXPASSIGN            : 51
+EXP_ASSIGN           : 51
 FLOAT                : 2
 GREATER_EQUALS       : 33
-GREATER_EQUALSASSIGN : 44
+GREATER_EQUALS_ASSIGN : 44
 GREATER_THAN         : 28
-GREATER_THANASSIGN   : 42
+GREATER_THAN_ASSIGN  : 42
 IDENTIFIER           : 3 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 67 74 77 78 81 82 84
 IF                   : 62 63 64
 IMAG                 : 22
 LAMBDA               : 72
 LAMBDA_ARROW         : 72
 LENGTH               : 95
+LET                  : 
 LOOP                 : 67
 LOOPIN               : 67
 LOOPTHEN             : 67
 LPAREN               : 4 73 93 94 95
 MINUS                : 8 20
-MINUSASSIGN          : 36
+MINUS_ASSIGN         : 36
 MOD                  : 13
-MODASSIGN            : 52
+MOD_ASSIGN           : 52
 NOT                  : 19
 NUMBER               : 1
 OPEN_BRACKETS        : 68 70 70 71
 OR                   : 16
-ORASSIGN             : 49
+OR_ASSIGN            : 49
 PLUS                 : 7 21
-PLUSASSIGN           : 35
+PLUS_ASSIGN          : 35
 POWER                : 18
-POWERASSIGN          : 38
+POWER_ASSIGN         : 38
 RPAREN               : 4 73 93 94 95
 SEMICOLON            : 54 60
 SMALLER_EQUALS       : 32
-SMALLER_EQUALSASSIGN : 45
+SMALLER_EQUALS_ASSIGN : 45
 SMALLER_THAN         : 29
-SMALLER_THANASSIGN   : 43
+SMALLER_THAN_ASSIGN  : 43
 THEN                 : 62 63 64 66
 TIMES                : 9
-TIMESASSIGN          : 37
+TIMES_ASSIGN         : 37
 UNEQUALS             : 30
-UNEQUALSASSIGN       : 47
+UNEQUALS_ASSIGN      : 47
 WHILE                : 66
 XOR                  : 17
-XORASSIGN            : 50
+XOR_ASSIGN           : 50
 error                : 
 
 Nonterminals, with rules where they appear
@@ -227,24 +232,24 @@ state 2
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -463,45 +468,45 @@ state 11
 state 12
 
     (34) expression -> IDENTIFIER . ASSIGN expression
-    (35) expression -> IDENTIFIER . PLUSASSIGN expression
-    (36) expression -> IDENTIFIER . MINUSASSIGN expression
-    (37) expression -> IDENTIFIER . TIMESASSIGN expression
-    (38) expression -> IDENTIFIER . POWERASSIGN expression
-    (39) expression -> IDENTIFIER . DIVIDEASSIGN expression
-    (40) expression -> IDENTIFIER . DIVIDE_FLOORASSIGN expression
-    (41) expression -> IDENTIFIER . DIVIDE_CEILASSIGN expression
-    (42) expression -> IDENTIFIER . GREATER_THANASSIGN expression
-    (43) expression -> IDENTIFIER . SMALLER_THANASSIGN expression
-    (44) expression -> IDENTIFIER . GREATER_EQUALSASSIGN expression
-    (45) expression -> IDENTIFIER . SMALLER_EQUALSASSIGN expression
-    (46) expression -> IDENTIFIER . EQUALSASSIGN expression
-    (47) expression -> IDENTIFIER . UNEQUALSASSIGN expression
-    (48) expression -> IDENTIFIER . ANDASSIGN expression
-    (49) expression -> IDENTIFIER . ORASSIGN expression
-    (50) expression -> IDENTIFIER . XORASSIGN expression
-    (51) expression -> IDENTIFIER . EXPASSIGN expression
-    (52) expression -> IDENTIFIER . MODASSIGN expression
+    (35) expression -> IDENTIFIER . PLUS_ASSIGN expression
+    (36) expression -> IDENTIFIER . MINUS_ASSIGN expression
+    (37) expression -> IDENTIFIER . TIMES_ASSIGN expression
+    (38) expression -> IDENTIFIER . POWER_ASSIGN expression
+    (39) expression -> IDENTIFIER . DIVIDE_ASSIGN expression
+    (40) expression -> IDENTIFIER . DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> IDENTIFIER . DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> IDENTIFIER . GREATER_THAN_ASSIGN expression
+    (43) expression -> IDENTIFIER . SMALLER_THAN_ASSIGN expression
+    (44) expression -> IDENTIFIER . GREATER_EQUALS_ASSIGN expression
+    (45) expression -> IDENTIFIER . SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> IDENTIFIER . EQUALS_ASSIGN expression
+    (47) expression -> IDENTIFIER . UNEQUALS_ASSIGN expression
+    (48) expression -> IDENTIFIER . AND_ASSIGN expression
+    (49) expression -> IDENTIFIER . OR_ASSIGN expression
+    (50) expression -> IDENTIFIER . XOR_ASSIGN expression
+    (51) expression -> IDENTIFIER . EXP_ASSIGN expression
+    (52) expression -> IDENTIFIER . MOD_ASSIGN expression
     (3) atomar -> IDENTIFIER .
 
     ASSIGN          shift and go to state 49
-    PLUSASSIGN      shift and go to state 50
-    MINUSASSIGN     shift and go to state 51
-    TIMESASSIGN     shift and go to state 52
-    POWERASSIGN     shift and go to state 53
-    DIVIDEASSIGN    shift and go to state 54
-    DIVIDE_FLOORASSIGN shift and go to state 55
-    DIVIDE_CEILASSIGN shift and go to state 56
-    GREATER_THANASSIGN shift and go to state 57
-    SMALLER_THANASSIGN shift and go to state 58
-    GREATER_EQUALSASSIGN shift and go to state 59
-    SMALLER_EQUALSASSIGN shift and go to state 60
-    EQUALSASSIGN    shift and go to state 61
-    UNEQUALSASSIGN  shift and go to state 62
-    ANDASSIGN       shift and go to state 63
-    ORASSIGN        shift and go to state 64
-    XORASSIGN       shift and go to state 65
-    EXPASSIGN       shift and go to state 66
-    MODASSIGN       shift and go to state 67
+    PLUS_ASSIGN     shift and go to state 50
+    MINUS_ASSIGN    shift and go to state 51
+    TIMES_ASSIGN    shift and go to state 52
+    POWER_ASSIGN    shift and go to state 53
+    DIVIDE_ASSIGN   shift and go to state 54
+    DIVIDE_FLOOR_ASSIGN shift and go to state 55
+    DIVIDE_CEIL_ASSIGN shift and go to state 56
+    GREATER_THAN_ASSIGN shift and go to state 57
+    SMALLER_THAN_ASSIGN shift and go to state 58
+    GREATER_EQUALS_ASSIGN shift and go to state 59
+    SMALLER_EQUALS_ASSIGN shift and go to state 60
+    EQUALS_ASSIGN   shift and go to state 61
+    UNEQUALS_ASSIGN shift and go to state 62
+    AND_ASSIGN      shift and go to state 63
+    OR_ASSIGN       shift and go to state 64
+    XOR_ASSIGN      shift and go to state 65
+    EXP_ASSIGN      shift and go to state 66
+    MOD_ASSIGN      shift and go to state 67
     PLUS            reduce using rule 3 (atomar -> IDENTIFIER .)
     MINUS           reduce using rule 3 (atomar -> IDENTIFIER .)
     TIMES           reduce using rule 3 (atomar -> IDENTIFIER .)
@@ -556,24 +561,24 @@ state 14
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -639,24 +644,24 @@ state 17
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -707,24 +712,24 @@ state 18
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -1019,24 +1024,24 @@ state 27
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -1109,24 +1114,24 @@ state 28
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -1768,24 +1773,24 @@ state 49
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -1832,28 +1837,28 @@ state 49
 
 state 50
 
-    (35) expression -> IDENTIFIER PLUSASSIGN . expression
+    (35) expression -> IDENTIFIER PLUS_ASSIGN . expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -1900,28 +1905,28 @@ state 50
 
 state 51
 
-    (36) expression -> IDENTIFIER MINUSASSIGN . expression
+    (36) expression -> IDENTIFIER MINUS_ASSIGN . expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -1968,28 +1973,28 @@ state 51
 
 state 52
 
-    (37) expression -> IDENTIFIER TIMESASSIGN . expression
+    (37) expression -> IDENTIFIER TIMES_ASSIGN . expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -2036,28 +2041,28 @@ state 52
 
 state 53
 
-    (38) expression -> IDENTIFIER POWERASSIGN . expression
+    (38) expression -> IDENTIFIER POWER_ASSIGN . expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -2104,28 +2109,28 @@ state 53
 
 state 54
 
-    (39) expression -> IDENTIFIER DIVIDEASSIGN . expression
+    (39) expression -> IDENTIFIER DIVIDE_ASSIGN . expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -2172,28 +2177,28 @@ state 54
 
 state 55
 
-    (40) expression -> IDENTIFIER DIVIDE_FLOORASSIGN . expression
+    (40) expression -> IDENTIFIER DIVIDE_FLOOR_ASSIGN . expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -2240,28 +2245,28 @@ state 55
 
 state 56
 
-    (41) expression -> IDENTIFIER DIVIDE_CEILASSIGN . expression
+    (41) expression -> IDENTIFIER DIVIDE_CEIL_ASSIGN . expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -2308,28 +2313,28 @@ state 56
 
 state 57
 
-    (42) expression -> IDENTIFIER GREATER_THANASSIGN . expression
+    (42) expression -> IDENTIFIER GREATER_THAN_ASSIGN . expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -2376,28 +2381,28 @@ state 57
 
 state 58
 
-    (43) expression -> IDENTIFIER SMALLER_THANASSIGN . expression
+    (43) expression -> IDENTIFIER SMALLER_THAN_ASSIGN . expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -2444,28 +2449,28 @@ state 58
 
 state 59
 
-    (44) expression -> IDENTIFIER GREATER_EQUALSASSIGN . expression
+    (44) expression -> IDENTIFIER GREATER_EQUALS_ASSIGN . expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -2512,28 +2517,28 @@ state 59
 
 state 60
 
-    (45) expression -> IDENTIFIER SMALLER_EQUALSASSIGN . expression
+    (45) expression -> IDENTIFIER SMALLER_EQUALS_ASSIGN . expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -2580,28 +2585,28 @@ state 60
 
 state 61
 
-    (46) expression -> IDENTIFIER EQUALSASSIGN . expression
+    (46) expression -> IDENTIFIER EQUALS_ASSIGN . expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -2648,28 +2653,28 @@ state 61
 
 state 62
 
-    (47) expression -> IDENTIFIER UNEQUALSASSIGN . expression
+    (47) expression -> IDENTIFIER UNEQUALS_ASSIGN . expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -2716,28 +2721,28 @@ state 62
 
 state 63
 
-    (48) expression -> IDENTIFIER ANDASSIGN . expression
+    (48) expression -> IDENTIFIER AND_ASSIGN . expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -2784,28 +2789,28 @@ state 63
 
 state 64
 
-    (49) expression -> IDENTIFIER ORASSIGN . expression
+    (49) expression -> IDENTIFIER OR_ASSIGN . expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -2852,28 +2857,28 @@ state 64
 
 state 65
 
-    (50) expression -> IDENTIFIER XORASSIGN . expression
+    (50) expression -> IDENTIFIER XOR_ASSIGN . expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -2920,28 +2925,28 @@ state 65
 
 state 66
 
-    (51) expression -> IDENTIFIER EXPASSIGN . expression
+    (51) expression -> IDENTIFIER EXP_ASSIGN . expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -2988,28 +2993,28 @@ state 66
 
 state 67
 
-    (52) expression -> IDENTIFIER MODASSIGN . expression
+    (52) expression -> IDENTIFIER MOD_ASSIGN . expression
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -3111,24 +3116,24 @@ state 73
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -3179,24 +3184,24 @@ state 74
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -4413,378 +4418,378 @@ state 102
 
 state 103
 
-    (35) expression -> IDENTIFIER PLUSASSIGN expression .
+    (35) expression -> IDENTIFIER PLUS_ASSIGN expression .
     (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    LPAREN          reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
-    END             reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
-    SEMICOLON       reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
-    RPAREN          reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
-    THEN            reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
-    COMMA           reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
-    COLON           reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
-    ENDCOND         reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
-    ELIF            reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
-    ELSE            reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
-    CLOSED_BRACKETS reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
-    OPEN_BRACKETS   reduce using rule 35 (expression -> IDENTIFIER PLUSASSIGN expression .)
+    LPAREN          reduce using rule 35 (expression -> IDENTIFIER PLUS_ASSIGN expression .)
+    END             reduce using rule 35 (expression -> IDENTIFIER PLUS_ASSIGN expression .)
+    SEMICOLON       reduce using rule 35 (expression -> IDENTIFIER PLUS_ASSIGN expression .)
+    RPAREN          reduce using rule 35 (expression -> IDENTIFIER PLUS_ASSIGN expression .)
+    THEN            reduce using rule 35 (expression -> IDENTIFIER PLUS_ASSIGN expression .)
+    COMMA           reduce using rule 35 (expression -> IDENTIFIER PLUS_ASSIGN expression .)
+    COLON           reduce using rule 35 (expression -> IDENTIFIER PLUS_ASSIGN expression .)
+    ENDCOND         reduce using rule 35 (expression -> IDENTIFIER PLUS_ASSIGN expression .)
+    ELIF            reduce using rule 35 (expression -> IDENTIFIER PLUS_ASSIGN expression .)
+    ELSE            reduce using rule 35 (expression -> IDENTIFIER PLUS_ASSIGN expression .)
+    CLOSED_BRACKETS reduce using rule 35 (expression -> IDENTIFIER PLUS_ASSIGN expression .)
+    OPEN_BRACKETS   reduce using rule 35 (expression -> IDENTIFIER PLUS_ASSIGN expression .)
 
   ! LPAREN          [ shift and go to state 28 ]
 
 
 state 104
 
-    (36) expression -> IDENTIFIER MINUSASSIGN expression .
+    (36) expression -> IDENTIFIER MINUS_ASSIGN expression .
     (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    LPAREN          reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
-    END             reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
-    SEMICOLON       reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
-    RPAREN          reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
-    THEN            reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
-    COMMA           reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
-    COLON           reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
-    ENDCOND         reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
-    ELIF            reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
-    ELSE            reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
-    CLOSED_BRACKETS reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
-    OPEN_BRACKETS   reduce using rule 36 (expression -> IDENTIFIER MINUSASSIGN expression .)
+    LPAREN          reduce using rule 36 (expression -> IDENTIFIER MINUS_ASSIGN expression .)
+    END             reduce using rule 36 (expression -> IDENTIFIER MINUS_ASSIGN expression .)
+    SEMICOLON       reduce using rule 36 (expression -> IDENTIFIER MINUS_ASSIGN expression .)
+    RPAREN          reduce using rule 36 (expression -> IDENTIFIER MINUS_ASSIGN expression .)
+    THEN            reduce using rule 36 (expression -> IDENTIFIER MINUS_ASSIGN expression .)
+    COMMA           reduce using rule 36 (expression -> IDENTIFIER MINUS_ASSIGN expression .)
+    COLON           reduce using rule 36 (expression -> IDENTIFIER MINUS_ASSIGN expression .)
+    ENDCOND         reduce using rule 36 (expression -> IDENTIFIER MINUS_ASSIGN expression .)
+    ELIF            reduce using rule 36 (expression -> IDENTIFIER MINUS_ASSIGN expression .)
+    ELSE            reduce using rule 36 (expression -> IDENTIFIER MINUS_ASSIGN expression .)
+    CLOSED_BRACKETS reduce using rule 36 (expression -> IDENTIFIER MINUS_ASSIGN expression .)
+    OPEN_BRACKETS   reduce using rule 36 (expression -> IDENTIFIER MINUS_ASSIGN expression .)
 
   ! LPAREN          [ shift and go to state 28 ]
 
 
 state 105
 
-    (37) expression -> IDENTIFIER TIMESASSIGN expression .
+    (37) expression -> IDENTIFIER TIMES_ASSIGN expression .
     (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    LPAREN          reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
-    END             reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
-    SEMICOLON       reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
-    RPAREN          reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
-    THEN            reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
-    COMMA           reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
-    COLON           reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
-    ENDCOND         reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
-    ELIF            reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
-    ELSE            reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
-    CLOSED_BRACKETS reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
-    OPEN_BRACKETS   reduce using rule 37 (expression -> IDENTIFIER TIMESASSIGN expression .)
+    LPAREN          reduce using rule 37 (expression -> IDENTIFIER TIMES_ASSIGN expression .)
+    END             reduce using rule 37 (expression -> IDENTIFIER TIMES_ASSIGN expression .)
+    SEMICOLON       reduce using rule 37 (expression -> IDENTIFIER TIMES_ASSIGN expression .)
+    RPAREN          reduce using rule 37 (expression -> IDENTIFIER TIMES_ASSIGN expression .)
+    THEN            reduce using rule 37 (expression -> IDENTIFIER TIMES_ASSIGN expression .)
+    COMMA           reduce using rule 37 (expression -> IDENTIFIER TIMES_ASSIGN expression .)
+    COLON           reduce using rule 37 (expression -> IDENTIFIER TIMES_ASSIGN expression .)
+    ENDCOND         reduce using rule 37 (expression -> IDENTIFIER TIMES_ASSIGN expression .)
+    ELIF            reduce using rule 37 (expression -> IDENTIFIER TIMES_ASSIGN expression .)
+    ELSE            reduce using rule 37 (expression -> IDENTIFIER TIMES_ASSIGN expression .)
+    CLOSED_BRACKETS reduce using rule 37 (expression -> IDENTIFIER TIMES_ASSIGN expression .)
+    OPEN_BRACKETS   reduce using rule 37 (expression -> IDENTIFIER TIMES_ASSIGN expression .)
 
   ! LPAREN          [ shift and go to state 28 ]
 
 
 state 106
 
-    (38) expression -> IDENTIFIER POWERASSIGN expression .
+    (38) expression -> IDENTIFIER POWER_ASSIGN expression .
     (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    LPAREN          reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
-    END             reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
-    SEMICOLON       reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
-    RPAREN          reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
-    THEN            reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
-    COMMA           reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
-    COLON           reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
-    ENDCOND         reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
-    ELIF            reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
-    ELSE            reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
-    CLOSED_BRACKETS reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
-    OPEN_BRACKETS   reduce using rule 38 (expression -> IDENTIFIER POWERASSIGN expression .)
+    LPAREN          reduce using rule 38 (expression -> IDENTIFIER POWER_ASSIGN expression .)
+    END             reduce using rule 38 (expression -> IDENTIFIER POWER_ASSIGN expression .)
+    SEMICOLON       reduce using rule 38 (expression -> IDENTIFIER POWER_ASSIGN expression .)
+    RPAREN          reduce using rule 38 (expression -> IDENTIFIER POWER_ASSIGN expression .)
+    THEN            reduce using rule 38 (expression -> IDENTIFIER POWER_ASSIGN expression .)
+    COMMA           reduce using rule 38 (expression -> IDENTIFIER POWER_ASSIGN expression .)
+    COLON           reduce using rule 38 (expression -> IDENTIFIER POWER_ASSIGN expression .)
+    ENDCOND         reduce using rule 38 (expression -> IDENTIFIER POWER_ASSIGN expression .)
+    ELIF            reduce using rule 38 (expression -> IDENTIFIER POWER_ASSIGN expression .)
+    ELSE            reduce using rule 38 (expression -> IDENTIFIER POWER_ASSIGN expression .)
+    CLOSED_BRACKETS reduce using rule 38 (expression -> IDENTIFIER POWER_ASSIGN expression .)
+    OPEN_BRACKETS   reduce using rule 38 (expression -> IDENTIFIER POWER_ASSIGN expression .)
 
   ! LPAREN          [ shift and go to state 28 ]
 
 
 state 107
 
-    (39) expression -> IDENTIFIER DIVIDEASSIGN expression .
+    (39) expression -> IDENTIFIER DIVIDE_ASSIGN expression .
     (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    LPAREN          reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
-    END             reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
-    SEMICOLON       reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
-    RPAREN          reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
-    THEN            reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
-    COMMA           reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
-    COLON           reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
-    ENDCOND         reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
-    ELIF            reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
-    ELSE            reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
-    CLOSED_BRACKETS reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
-    OPEN_BRACKETS   reduce using rule 39 (expression -> IDENTIFIER DIVIDEASSIGN expression .)
+    LPAREN          reduce using rule 39 (expression -> IDENTIFIER DIVIDE_ASSIGN expression .)
+    END             reduce using rule 39 (expression -> IDENTIFIER DIVIDE_ASSIGN expression .)
+    SEMICOLON       reduce using rule 39 (expression -> IDENTIFIER DIVIDE_ASSIGN expression .)
+    RPAREN          reduce using rule 39 (expression -> IDENTIFIER DIVIDE_ASSIGN expression .)
+    THEN            reduce using rule 39 (expression -> IDENTIFIER DIVIDE_ASSIGN expression .)
+    COMMA           reduce using rule 39 (expression -> IDENTIFIER DIVIDE_ASSIGN expression .)
+    COLON           reduce using rule 39 (expression -> IDENTIFIER DIVIDE_ASSIGN expression .)
+    ENDCOND         reduce using rule 39 (expression -> IDENTIFIER DIVIDE_ASSIGN expression .)
+    ELIF            reduce using rule 39 (expression -> IDENTIFIER DIVIDE_ASSIGN expression .)
+    ELSE            reduce using rule 39 (expression -> IDENTIFIER DIVIDE_ASSIGN expression .)
+    CLOSED_BRACKETS reduce using rule 39 (expression -> IDENTIFIER DIVIDE_ASSIGN expression .)
+    OPEN_BRACKETS   reduce using rule 39 (expression -> IDENTIFIER DIVIDE_ASSIGN expression .)
 
   ! LPAREN          [ shift and go to state 28 ]
 
 
 state 108
 
-    (40) expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .
+    (40) expression -> IDENTIFIER DIVIDE_FLOOR_ASSIGN expression .
     (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    LPAREN          reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
-    END             reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
-    SEMICOLON       reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
-    RPAREN          reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
-    THEN            reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
-    COMMA           reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
-    COLON           reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
-    ENDCOND         reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
-    ELIF            reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
-    ELSE            reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
-    CLOSED_BRACKETS reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
-    OPEN_BRACKETS   reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOORASSIGN expression .)
+    LPAREN          reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOOR_ASSIGN expression .)
+    END             reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOOR_ASSIGN expression .)
+    SEMICOLON       reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOOR_ASSIGN expression .)
+    RPAREN          reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOOR_ASSIGN expression .)
+    THEN            reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOOR_ASSIGN expression .)
+    COMMA           reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOOR_ASSIGN expression .)
+    COLON           reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOOR_ASSIGN expression .)
+    ENDCOND         reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOOR_ASSIGN expression .)
+    ELIF            reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOOR_ASSIGN expression .)
+    ELSE            reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOOR_ASSIGN expression .)
+    CLOSED_BRACKETS reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOOR_ASSIGN expression .)
+    OPEN_BRACKETS   reduce using rule 40 (expression -> IDENTIFIER DIVIDE_FLOOR_ASSIGN expression .)
 
   ! LPAREN          [ shift and go to state 28 ]
 
 
 state 109
 
-    (41) expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .
+    (41) expression -> IDENTIFIER DIVIDE_CEIL_ASSIGN expression .
     (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    LPAREN          reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
-    END             reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
-    SEMICOLON       reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
-    RPAREN          reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
-    THEN            reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
-    COMMA           reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
-    COLON           reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
-    ENDCOND         reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
-    ELIF            reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
-    ELSE            reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
-    CLOSED_BRACKETS reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
-    OPEN_BRACKETS   reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEILASSIGN expression .)
+    LPAREN          reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEIL_ASSIGN expression .)
+    END             reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEIL_ASSIGN expression .)
+    SEMICOLON       reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEIL_ASSIGN expression .)
+    RPAREN          reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEIL_ASSIGN expression .)
+    THEN            reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEIL_ASSIGN expression .)
+    COMMA           reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEIL_ASSIGN expression .)
+    COLON           reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEIL_ASSIGN expression .)
+    ENDCOND         reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEIL_ASSIGN expression .)
+    ELIF            reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEIL_ASSIGN expression .)
+    ELSE            reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEIL_ASSIGN expression .)
+    CLOSED_BRACKETS reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEIL_ASSIGN expression .)
+    OPEN_BRACKETS   reduce using rule 41 (expression -> IDENTIFIER DIVIDE_CEIL_ASSIGN expression .)
 
   ! LPAREN          [ shift and go to state 28 ]
 
 
 state 110
 
-    (42) expression -> IDENTIFIER GREATER_THANASSIGN expression .
+    (42) expression -> IDENTIFIER GREATER_THAN_ASSIGN expression .
     (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    LPAREN          reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
-    END             reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
-    SEMICOLON       reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
-    RPAREN          reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
-    THEN            reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
-    COMMA           reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
-    COLON           reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
-    ENDCOND         reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
-    ELIF            reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
-    ELSE            reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
-    CLOSED_BRACKETS reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
-    OPEN_BRACKETS   reduce using rule 42 (expression -> IDENTIFIER GREATER_THANASSIGN expression .)
+    LPAREN          reduce using rule 42 (expression -> IDENTIFIER GREATER_THAN_ASSIGN expression .)
+    END             reduce using rule 42 (expression -> IDENTIFIER GREATER_THAN_ASSIGN expression .)
+    SEMICOLON       reduce using rule 42 (expression -> IDENTIFIER GREATER_THAN_ASSIGN expression .)
+    RPAREN          reduce using rule 42 (expression -> IDENTIFIER GREATER_THAN_ASSIGN expression .)
+    THEN            reduce using rule 42 (expression -> IDENTIFIER GREATER_THAN_ASSIGN expression .)
+    COMMA           reduce using rule 42 (expression -> IDENTIFIER GREATER_THAN_ASSIGN expression .)
+    COLON           reduce using rule 42 (expression -> IDENTIFIER GREATER_THAN_ASSIGN expression .)
+    ENDCOND         reduce using rule 42 (expression -> IDENTIFIER GREATER_THAN_ASSIGN expression .)
+    ELIF            reduce using rule 42 (expression -> IDENTIFIER GREATER_THAN_ASSIGN expression .)
+    ELSE            reduce using rule 42 (expression -> IDENTIFIER GREATER_THAN_ASSIGN expression .)
+    CLOSED_BRACKETS reduce using rule 42 (expression -> IDENTIFIER GREATER_THAN_ASSIGN expression .)
+    OPEN_BRACKETS   reduce using rule 42 (expression -> IDENTIFIER GREATER_THAN_ASSIGN expression .)
 
   ! LPAREN          [ shift and go to state 28 ]
 
 
 state 111
 
-    (43) expression -> IDENTIFIER SMALLER_THANASSIGN expression .
+    (43) expression -> IDENTIFIER SMALLER_THAN_ASSIGN expression .
     (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    LPAREN          reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
-    END             reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
-    SEMICOLON       reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
-    RPAREN          reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
-    THEN            reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
-    COMMA           reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
-    COLON           reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
-    ENDCOND         reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
-    ELIF            reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
-    ELSE            reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
-    CLOSED_BRACKETS reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
-    OPEN_BRACKETS   reduce using rule 43 (expression -> IDENTIFIER SMALLER_THANASSIGN expression .)
+    LPAREN          reduce using rule 43 (expression -> IDENTIFIER SMALLER_THAN_ASSIGN expression .)
+    END             reduce using rule 43 (expression -> IDENTIFIER SMALLER_THAN_ASSIGN expression .)
+    SEMICOLON       reduce using rule 43 (expression -> IDENTIFIER SMALLER_THAN_ASSIGN expression .)
+    RPAREN          reduce using rule 43 (expression -> IDENTIFIER SMALLER_THAN_ASSIGN expression .)
+    THEN            reduce using rule 43 (expression -> IDENTIFIER SMALLER_THAN_ASSIGN expression .)
+    COMMA           reduce using rule 43 (expression -> IDENTIFIER SMALLER_THAN_ASSIGN expression .)
+    COLON           reduce using rule 43 (expression -> IDENTIFIER SMALLER_THAN_ASSIGN expression .)
+    ENDCOND         reduce using rule 43 (expression -> IDENTIFIER SMALLER_THAN_ASSIGN expression .)
+    ELIF            reduce using rule 43 (expression -> IDENTIFIER SMALLER_THAN_ASSIGN expression .)
+    ELSE            reduce using rule 43 (expression -> IDENTIFIER SMALLER_THAN_ASSIGN expression .)
+    CLOSED_BRACKETS reduce using rule 43 (expression -> IDENTIFIER SMALLER_THAN_ASSIGN expression .)
+    OPEN_BRACKETS   reduce using rule 43 (expression -> IDENTIFIER SMALLER_THAN_ASSIGN expression .)
 
   ! LPAREN          [ shift and go to state 28 ]
 
 
 state 112
 
-    (44) expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .
+    (44) expression -> IDENTIFIER GREATER_EQUALS_ASSIGN expression .
     (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    LPAREN          reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
-    END             reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
-    SEMICOLON       reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
-    RPAREN          reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
-    THEN            reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
-    COMMA           reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
-    COLON           reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
-    ENDCOND         reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
-    ELIF            reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
-    ELSE            reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
-    CLOSED_BRACKETS reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
-    OPEN_BRACKETS   reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALSASSIGN expression .)
+    LPAREN          reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALS_ASSIGN expression .)
+    END             reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALS_ASSIGN expression .)
+    SEMICOLON       reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALS_ASSIGN expression .)
+    RPAREN          reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALS_ASSIGN expression .)
+    THEN            reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALS_ASSIGN expression .)
+    COMMA           reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALS_ASSIGN expression .)
+    COLON           reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALS_ASSIGN expression .)
+    ENDCOND         reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALS_ASSIGN expression .)
+    ELIF            reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALS_ASSIGN expression .)
+    ELSE            reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALS_ASSIGN expression .)
+    CLOSED_BRACKETS reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALS_ASSIGN expression .)
+    OPEN_BRACKETS   reduce using rule 44 (expression -> IDENTIFIER GREATER_EQUALS_ASSIGN expression .)
 
   ! LPAREN          [ shift and go to state 28 ]
 
 
 state 113
 
-    (45) expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .
+    (45) expression -> IDENTIFIER SMALLER_EQUALS_ASSIGN expression .
     (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    LPAREN          reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
-    END             reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
-    SEMICOLON       reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
-    RPAREN          reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
-    THEN            reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
-    COMMA           reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
-    COLON           reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
-    ENDCOND         reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
-    ELIF            reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
-    ELSE            reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
-    CLOSED_BRACKETS reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
-    OPEN_BRACKETS   reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALSASSIGN expression .)
+    LPAREN          reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALS_ASSIGN expression .)
+    END             reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALS_ASSIGN expression .)
+    SEMICOLON       reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALS_ASSIGN expression .)
+    RPAREN          reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALS_ASSIGN expression .)
+    THEN            reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALS_ASSIGN expression .)
+    COMMA           reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALS_ASSIGN expression .)
+    COLON           reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALS_ASSIGN expression .)
+    ENDCOND         reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALS_ASSIGN expression .)
+    ELIF            reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALS_ASSIGN expression .)
+    ELSE            reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALS_ASSIGN expression .)
+    CLOSED_BRACKETS reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALS_ASSIGN expression .)
+    OPEN_BRACKETS   reduce using rule 45 (expression -> IDENTIFIER SMALLER_EQUALS_ASSIGN expression .)
 
   ! LPAREN          [ shift and go to state 28 ]
 
 
 state 114
 
-    (46) expression -> IDENTIFIER EQUALSASSIGN expression .
+    (46) expression -> IDENTIFIER EQUALS_ASSIGN expression .
     (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    LPAREN          reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
-    END             reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
-    SEMICOLON       reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
-    RPAREN          reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
-    THEN            reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
-    COMMA           reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
-    COLON           reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
-    ENDCOND         reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
-    ELIF            reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
-    ELSE            reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
-    CLOSED_BRACKETS reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
-    OPEN_BRACKETS   reduce using rule 46 (expression -> IDENTIFIER EQUALSASSIGN expression .)
+    LPAREN          reduce using rule 46 (expression -> IDENTIFIER EQUALS_ASSIGN expression .)
+    END             reduce using rule 46 (expression -> IDENTIFIER EQUALS_ASSIGN expression .)
+    SEMICOLON       reduce using rule 46 (expression -> IDENTIFIER EQUALS_ASSIGN expression .)
+    RPAREN          reduce using rule 46 (expression -> IDENTIFIER EQUALS_ASSIGN expression .)
+    THEN            reduce using rule 46 (expression -> IDENTIFIER EQUALS_ASSIGN expression .)
+    COMMA           reduce using rule 46 (expression -> IDENTIFIER EQUALS_ASSIGN expression .)
+    COLON           reduce using rule 46 (expression -> IDENTIFIER EQUALS_ASSIGN expression .)
+    ENDCOND         reduce using rule 46 (expression -> IDENTIFIER EQUALS_ASSIGN expression .)
+    ELIF            reduce using rule 46 (expression -> IDENTIFIER EQUALS_ASSIGN expression .)
+    ELSE            reduce using rule 46 (expression -> IDENTIFIER EQUALS_ASSIGN expression .)
+    CLOSED_BRACKETS reduce using rule 46 (expression -> IDENTIFIER EQUALS_ASSIGN expression .)
+    OPEN_BRACKETS   reduce using rule 46 (expression -> IDENTIFIER EQUALS_ASSIGN expression .)
 
   ! LPAREN          [ shift and go to state 28 ]
 
 
 state 115
 
-    (47) expression -> IDENTIFIER UNEQUALSASSIGN expression .
+    (47) expression -> IDENTIFIER UNEQUALS_ASSIGN expression .
     (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    LPAREN          reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
-    END             reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
-    SEMICOLON       reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
-    RPAREN          reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
-    THEN            reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
-    COMMA           reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
-    COLON           reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
-    ENDCOND         reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
-    ELIF            reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
-    ELSE            reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
-    CLOSED_BRACKETS reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
-    OPEN_BRACKETS   reduce using rule 47 (expression -> IDENTIFIER UNEQUALSASSIGN expression .)
+    LPAREN          reduce using rule 47 (expression -> IDENTIFIER UNEQUALS_ASSIGN expression .)
+    END             reduce using rule 47 (expression -> IDENTIFIER UNEQUALS_ASSIGN expression .)
+    SEMICOLON       reduce using rule 47 (expression -> IDENTIFIER UNEQUALS_ASSIGN expression .)
+    RPAREN          reduce using rule 47 (expression -> IDENTIFIER UNEQUALS_ASSIGN expression .)
+    THEN            reduce using rule 47 (expression -> IDENTIFIER UNEQUALS_ASSIGN expression .)
+    COMMA           reduce using rule 47 (expression -> IDENTIFIER UNEQUALS_ASSIGN expression .)
+    COLON           reduce using rule 47 (expression -> IDENTIFIER UNEQUALS_ASSIGN expression .)
+    ENDCOND         reduce using rule 47 (expression -> IDENTIFIER UNEQUALS_ASSIGN expression .)
+    ELIF            reduce using rule 47 (expression -> IDENTIFIER UNEQUALS_ASSIGN expression .)
+    ELSE            reduce using rule 47 (expression -> IDENTIFIER UNEQUALS_ASSIGN expression .)
+    CLOSED_BRACKETS reduce using rule 47 (expression -> IDENTIFIER UNEQUALS_ASSIGN expression .)
+    OPEN_BRACKETS   reduce using rule 47 (expression -> IDENTIFIER UNEQUALS_ASSIGN expression .)
 
   ! LPAREN          [ shift and go to state 28 ]
 
 
 state 116
 
-    (48) expression -> IDENTIFIER ANDASSIGN expression .
+    (48) expression -> IDENTIFIER AND_ASSIGN expression .
     (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    LPAREN          reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
-    END             reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
-    SEMICOLON       reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
-    RPAREN          reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
-    THEN            reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
-    COMMA           reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
-    COLON           reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
-    ENDCOND         reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
-    ELIF            reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
-    ELSE            reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
-    CLOSED_BRACKETS reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
-    OPEN_BRACKETS   reduce using rule 48 (expression -> IDENTIFIER ANDASSIGN expression .)
+    LPAREN          reduce using rule 48 (expression -> IDENTIFIER AND_ASSIGN expression .)
+    END             reduce using rule 48 (expression -> IDENTIFIER AND_ASSIGN expression .)
+    SEMICOLON       reduce using rule 48 (expression -> IDENTIFIER AND_ASSIGN expression .)
+    RPAREN          reduce using rule 48 (expression -> IDENTIFIER AND_ASSIGN expression .)
+    THEN            reduce using rule 48 (expression -> IDENTIFIER AND_ASSIGN expression .)
+    COMMA           reduce using rule 48 (expression -> IDENTIFIER AND_ASSIGN expression .)
+    COLON           reduce using rule 48 (expression -> IDENTIFIER AND_ASSIGN expression .)
+    ENDCOND         reduce using rule 48 (expression -> IDENTIFIER AND_ASSIGN expression .)
+    ELIF            reduce using rule 48 (expression -> IDENTIFIER AND_ASSIGN expression .)
+    ELSE            reduce using rule 48 (expression -> IDENTIFIER AND_ASSIGN expression .)
+    CLOSED_BRACKETS reduce using rule 48 (expression -> IDENTIFIER AND_ASSIGN expression .)
+    OPEN_BRACKETS   reduce using rule 48 (expression -> IDENTIFIER AND_ASSIGN expression .)
 
   ! LPAREN          [ shift and go to state 28 ]
 
 
 state 117
 
-    (49) expression -> IDENTIFIER ORASSIGN expression .
+    (49) expression -> IDENTIFIER OR_ASSIGN expression .
     (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    LPAREN          reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
-    END             reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
-    SEMICOLON       reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
-    RPAREN          reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
-    THEN            reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
-    COMMA           reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
-    COLON           reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
-    ENDCOND         reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
-    ELIF            reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
-    ELSE            reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
-    CLOSED_BRACKETS reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
-    OPEN_BRACKETS   reduce using rule 49 (expression -> IDENTIFIER ORASSIGN expression .)
+    LPAREN          reduce using rule 49 (expression -> IDENTIFIER OR_ASSIGN expression .)
+    END             reduce using rule 49 (expression -> IDENTIFIER OR_ASSIGN expression .)
+    SEMICOLON       reduce using rule 49 (expression -> IDENTIFIER OR_ASSIGN expression .)
+    RPAREN          reduce using rule 49 (expression -> IDENTIFIER OR_ASSIGN expression .)
+    THEN            reduce using rule 49 (expression -> IDENTIFIER OR_ASSIGN expression .)
+    COMMA           reduce using rule 49 (expression -> IDENTIFIER OR_ASSIGN expression .)
+    COLON           reduce using rule 49 (expression -> IDENTIFIER OR_ASSIGN expression .)
+    ENDCOND         reduce using rule 49 (expression -> IDENTIFIER OR_ASSIGN expression .)
+    ELIF            reduce using rule 49 (expression -> IDENTIFIER OR_ASSIGN expression .)
+    ELSE            reduce using rule 49 (expression -> IDENTIFIER OR_ASSIGN expression .)
+    CLOSED_BRACKETS reduce using rule 49 (expression -> IDENTIFIER OR_ASSIGN expression .)
+    OPEN_BRACKETS   reduce using rule 49 (expression -> IDENTIFIER OR_ASSIGN expression .)
 
   ! LPAREN          [ shift and go to state 28 ]
 
 
 state 118
 
-    (50) expression -> IDENTIFIER XORASSIGN expression .
+    (50) expression -> IDENTIFIER XOR_ASSIGN expression .
     (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    LPAREN          reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
-    END             reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
-    SEMICOLON       reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
-    RPAREN          reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
-    THEN            reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
-    COMMA           reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
-    COLON           reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
-    ENDCOND         reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
-    ELIF            reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
-    ELSE            reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
-    CLOSED_BRACKETS reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
-    OPEN_BRACKETS   reduce using rule 50 (expression -> IDENTIFIER XORASSIGN expression .)
+    LPAREN          reduce using rule 50 (expression -> IDENTIFIER XOR_ASSIGN expression .)
+    END             reduce using rule 50 (expression -> IDENTIFIER XOR_ASSIGN expression .)
+    SEMICOLON       reduce using rule 50 (expression -> IDENTIFIER XOR_ASSIGN expression .)
+    RPAREN          reduce using rule 50 (expression -> IDENTIFIER XOR_ASSIGN expression .)
+    THEN            reduce using rule 50 (expression -> IDENTIFIER XOR_ASSIGN expression .)
+    COMMA           reduce using rule 50 (expression -> IDENTIFIER XOR_ASSIGN expression .)
+    COLON           reduce using rule 50 (expression -> IDENTIFIER XOR_ASSIGN expression .)
+    ENDCOND         reduce using rule 50 (expression -> IDENTIFIER XOR_ASSIGN expression .)
+    ELIF            reduce using rule 50 (expression -> IDENTIFIER XOR_ASSIGN expression .)
+    ELSE            reduce using rule 50 (expression -> IDENTIFIER XOR_ASSIGN expression .)
+    CLOSED_BRACKETS reduce using rule 50 (expression -> IDENTIFIER XOR_ASSIGN expression .)
+    OPEN_BRACKETS   reduce using rule 50 (expression -> IDENTIFIER XOR_ASSIGN expression .)
 
   ! LPAREN          [ shift and go to state 28 ]
 
 
 state 119
 
-    (51) expression -> IDENTIFIER EXPASSIGN expression .
+    (51) expression -> IDENTIFIER EXP_ASSIGN expression .
     (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    LPAREN          reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
-    END             reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
-    SEMICOLON       reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
-    RPAREN          reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
-    THEN            reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
-    COMMA           reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
-    COLON           reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
-    ENDCOND         reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
-    ELIF            reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
-    ELSE            reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
-    CLOSED_BRACKETS reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
-    OPEN_BRACKETS   reduce using rule 51 (expression -> IDENTIFIER EXPASSIGN expression .)
+    LPAREN          reduce using rule 51 (expression -> IDENTIFIER EXP_ASSIGN expression .)
+    END             reduce using rule 51 (expression -> IDENTIFIER EXP_ASSIGN expression .)
+    SEMICOLON       reduce using rule 51 (expression -> IDENTIFIER EXP_ASSIGN expression .)
+    RPAREN          reduce using rule 51 (expression -> IDENTIFIER EXP_ASSIGN expression .)
+    THEN            reduce using rule 51 (expression -> IDENTIFIER EXP_ASSIGN expression .)
+    COMMA           reduce using rule 51 (expression -> IDENTIFIER EXP_ASSIGN expression .)
+    COLON           reduce using rule 51 (expression -> IDENTIFIER EXP_ASSIGN expression .)
+    ENDCOND         reduce using rule 51 (expression -> IDENTIFIER EXP_ASSIGN expression .)
+    ELIF            reduce using rule 51 (expression -> IDENTIFIER EXP_ASSIGN expression .)
+    ELSE            reduce using rule 51 (expression -> IDENTIFIER EXP_ASSIGN expression .)
+    CLOSED_BRACKETS reduce using rule 51 (expression -> IDENTIFIER EXP_ASSIGN expression .)
+    OPEN_BRACKETS   reduce using rule 51 (expression -> IDENTIFIER EXP_ASSIGN expression .)
 
   ! LPAREN          [ shift and go to state 28 ]
 
 
 state 120
 
-    (52) expression -> IDENTIFIER MODASSIGN expression .
+    (52) expression -> IDENTIFIER MOD_ASSIGN expression .
     (93) expression -> expression . LPAREN parameter_expr RPAREN
 
-    LPAREN          reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
-    END             reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
-    SEMICOLON       reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
-    RPAREN          reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
-    THEN            reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
-    COMMA           reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
-    COLON           reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
-    ENDCOND         reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
-    ELIF            reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
-    ELSE            reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
-    CLOSED_BRACKETS reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
-    OPEN_BRACKETS   reduce using rule 52 (expression -> IDENTIFIER MODASSIGN expression .)
+    LPAREN          reduce using rule 52 (expression -> IDENTIFIER MOD_ASSIGN expression .)
+    END             reduce using rule 52 (expression -> IDENTIFIER MOD_ASSIGN expression .)
+    SEMICOLON       reduce using rule 52 (expression -> IDENTIFIER MOD_ASSIGN expression .)
+    RPAREN          reduce using rule 52 (expression -> IDENTIFIER MOD_ASSIGN expression .)
+    THEN            reduce using rule 52 (expression -> IDENTIFIER MOD_ASSIGN expression .)
+    COMMA           reduce using rule 52 (expression -> IDENTIFIER MOD_ASSIGN expression .)
+    COLON           reduce using rule 52 (expression -> IDENTIFIER MOD_ASSIGN expression .)
+    ENDCOND         reduce using rule 52 (expression -> IDENTIFIER MOD_ASSIGN expression .)
+    ELIF            reduce using rule 52 (expression -> IDENTIFIER MOD_ASSIGN expression .)
+    ELSE            reduce using rule 52 (expression -> IDENTIFIER MOD_ASSIGN expression .)
+    CLOSED_BRACKETS reduce using rule 52 (expression -> IDENTIFIER MOD_ASSIGN expression .)
+    OPEN_BRACKETS   reduce using rule 52 (expression -> IDENTIFIER MOD_ASSIGN expression .)
 
   ! LPAREN          [ shift and go to state 28 ]
 
@@ -4795,24 +4800,24 @@ state 121
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -4975,24 +4980,24 @@ state 131
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -5066,24 +5071,24 @@ state 132
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -5166,24 +5171,24 @@ state 134
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -5239,24 +5244,24 @@ state 135
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -5428,24 +5433,24 @@ state 142
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -5571,24 +5576,24 @@ state 149
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -5640,24 +5645,24 @@ state 150
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -5828,24 +5833,24 @@ state 158
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -5925,24 +5930,24 @@ state 160
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -6027,24 +6032,24 @@ state 162
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -6133,24 +6138,24 @@ state 165
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -6244,24 +6249,24 @@ state 169
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -6331,24 +6336,24 @@ state 172
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -6400,24 +6405,24 @@ state 173
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN
@@ -6551,24 +6556,24 @@ state 182
     (5) expression -> . arithmetic_expression
     (6) expression -> . comparison
     (34) expression -> . IDENTIFIER ASSIGN expression
-    (35) expression -> . IDENTIFIER PLUSASSIGN expression
-    (36) expression -> . IDENTIFIER MINUSASSIGN expression
-    (37) expression -> . IDENTIFIER TIMESASSIGN expression
-    (38) expression -> . IDENTIFIER POWERASSIGN expression
-    (39) expression -> . IDENTIFIER DIVIDEASSIGN expression
-    (40) expression -> . IDENTIFIER DIVIDE_FLOORASSIGN expression
-    (41) expression -> . IDENTIFIER DIVIDE_CEILASSIGN expression
-    (42) expression -> . IDENTIFIER GREATER_THANASSIGN expression
-    (43) expression -> . IDENTIFIER SMALLER_THANASSIGN expression
-    (44) expression -> . IDENTIFIER GREATER_EQUALSASSIGN expression
-    (45) expression -> . IDENTIFIER SMALLER_EQUALSASSIGN expression
-    (46) expression -> . IDENTIFIER EQUALSASSIGN expression
-    (47) expression -> . IDENTIFIER UNEQUALSASSIGN expression
-    (48) expression -> . IDENTIFIER ANDASSIGN expression
-    (49) expression -> . IDENTIFIER ORASSIGN expression
-    (50) expression -> . IDENTIFIER XORASSIGN expression
-    (51) expression -> . IDENTIFIER EXPASSIGN expression
-    (52) expression -> . IDENTIFIER MODASSIGN expression
+    (35) expression -> . IDENTIFIER PLUS_ASSIGN expression
+    (36) expression -> . IDENTIFIER MINUS_ASSIGN expression
+    (37) expression -> . IDENTIFIER TIMES_ASSIGN expression
+    (38) expression -> . IDENTIFIER POWER_ASSIGN expression
+    (39) expression -> . IDENTIFIER DIVIDE_ASSIGN expression
+    (40) expression -> . IDENTIFIER DIVIDE_FLOOR_ASSIGN expression
+    (41) expression -> . IDENTIFIER DIVIDE_CEIL_ASSIGN expression
+    (42) expression -> . IDENTIFIER GREATER_THAN_ASSIGN expression
+    (43) expression -> . IDENTIFIER SMALLER_THAN_ASSIGN expression
+    (44) expression -> . IDENTIFIER GREATER_EQUALS_ASSIGN expression
+    (45) expression -> . IDENTIFIER SMALLER_EQUALS_ASSIGN expression
+    (46) expression -> . IDENTIFIER EQUALS_ASSIGN expression
+    (47) expression -> . IDENTIFIER UNEQUALS_ASSIGN expression
+    (48) expression -> . IDENTIFIER AND_ASSIGN expression
+    (49) expression -> . IDENTIFIER OR_ASSIGN expression
+    (50) expression -> . IDENTIFIER XOR_ASSIGN expression
+    (51) expression -> . IDENTIFIER EXP_ASSIGN expression
+    (52) expression -> . IDENTIFIER MOD_ASSIGN expression
     (72) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (93) expression -> . expression LPAREN parameter_expr RPAREN
     (94) expression -> . ECHO LPAREN expression RPAREN

@@ -1,5 +1,46 @@
 from ply.lex import Lexer, lex
 
+module = __import__(__name__)
+
+def gen():
+    count = dict()
+
+    def g(name):
+        nonlocal count
+        if name not in count:
+            count[name] = 0
+        else:
+            count[name] += 1
+        return name + str(count[name])
+
+    return g
+unique = gen()
+
+def rule_lexer(doc, name, func):
+    def f(t):
+        func()
+        return t
+
+    f.__doc__ = doc
+    setattr(module, unique(f"t_{name.upper()}"), f)
+
+rule_lexer(r"(?:[^\W\d_]|[\U0001F300-\U0001FAFF_])(?:[^\W_]|[\d_]|[\U0001F300-\U0001FAFF])*",
+           "IDENTIFIER",
+           lambda (t): t.type = keywords.get(t.value.lower(), "IDENTIFIER"))
+
+
+def t_IDENTIFIER(t):
+    r"(?:[^\W\d_]|[\U0001F300-\U0001FAFF_])(?:[^\W_]|[\d_]|[\U0001F300-\U0001FAFF])*"
+    # ?:[^\W\d_] : ein Zeichen, das ein Buchstabe ist, aber keine Ziffer und kein Unterstrich.
+    # [\U0001F300-\U0001FAFF_] : Unicode-Zeichen im Bereich von U+1F300 bis U+1FAFF (Emoji- und Symbolbereich) oder der Unterstrich (_)
+    #
+    # ?:[^\W_]|[\d_] : Ein Buchstabe oder eine Ziffer (ohne Unterstrich) oder eine Ziffer oder ein Unterstrich
+    # [\U0001F300-\U0001FAFF_] : Unicode-Zeichen im Bereich von U+1F300 bis U+1FAFF (Emoji- und Symbolbereich) oder der Unterstrich (_)
+    # beliebig oft wiederholt
+    t.type = keywords.get(t.value.lower(), "IDENTIFIER")
+    return t
+
+
 operations = [
     "PLUS",
     "MINUS",
@@ -39,6 +80,7 @@ keywords = {
     "lambda": "LAMBDA",
     "echo": "ECHO",
     "länge": "LENGTH",
+    "sei": "LET" # Ist schon ein Letrec
 }
 
 assigns += [x + "ASSIGN" for x in ["AND", "OR", "XOR", "MOD", "EXP"]]

@@ -120,49 +120,6 @@ def call_lambda(lambda_obj, pos_args, keyword_args, eval_func, env):
     return execute_lambda(lambda_obj, bound_args, varargs_values, eval_func, env)
 
 
-def call_partial_application_alt(partial_app, pos_args, keyword_args, eval_func, env):
-    """Führt eine Partial Application weiter aus"""
-    original = partial_app.original_lambda
-    bound_args = partial_app.bound_args.copy()
-
-    # Neue Keyword-Argumente zu bereits gebundenen hinzufügen
-    bound_args.update(keyword_args)
-
-    # Prüfen welche Parameter noch ungebunden sind
-    unbound_params = [p for p in original.params if p not in bound_args]
-
-    if len(pos_args) > len(unbound_params):
-        # Zu viele Positionsargumente - an varargs weitergeben wenn vorhanden
-        if not original.varargs:
-            raise TypeError("Too many positional arguments")
-
-    # Positionsargumente binden
-    varargs_values = []
-    for i, arg in enumerate(pos_args):
-        if i < len(unbound_params):
-            bound_args[unbound_params[i]] = arg
-        elif original.varargs:
-            varargs_values.append(arg)
-
-    # Prüfen ob noch Parameter fehlen (die keine defaults haben)
-    still_missing = []
-    for param in original.params:
-        if param not in bound_args and param not in original.defaults:
-            still_missing.append(param)
-
-    if still_missing:
-        # Immer noch nicht vollständig - weitere Partial Application
-        return PartialApplication(original, bound_args)
-    else:
-        # Defaults für fehlende Parameter setzen
-        for param in original.params:
-            if param not in bound_args:
-                bound_args[param] = original.defaults[param]
-
-        # Vollständig - Lambda ausführen
-        return execute_lambda(original, bound_args, varargs_values, eval_func, env)
-
-
 def call_partial_application(partial_app, pos_args, keyword_args, eval_func, env):
     """Führt eine Partial Application weiter aus"""
     original = partial_app.original_lambda
@@ -225,3 +182,46 @@ def execute_lambda(lambda_obj, bound_args, varargs_values, eval_func, env):
 
     # Body ausführen
     return eval_func(lambda_obj.body, local_env)
+
+
+# def call_partial_application_alt(partial_app, pos_args, keyword_args, eval_func, env):
+#     """Führt eine Partial Application weiter aus"""
+#     original = partial_app.original_lambda
+#     bound_args = partial_app.bound_args.copy()
+#
+#     # Neue Keyword-Argumente zu bereits gebundenen hinzufügen
+#     bound_args.update(keyword_args)
+#
+#     # Prüfen welche Parameter noch ungebunden sind
+#     unbound_params = [p for p in original.params if p not in bound_args]
+#
+#     if len(pos_args) > len(unbound_params):
+#         # Zu viele Positionsargumente - an varargs weitergeben wenn vorhanden
+#         if not original.varargs:
+#             raise TypeError("Too many positional arguments")
+#
+#     # Positionsargumente binden
+#     varargs_values = []
+#     for i, arg in enumerate(pos_args):
+#         if i < len(unbound_params):
+#             bound_args[unbound_params[i]] = arg
+#         elif original.varargs:
+#             varargs_values.append(arg)
+#
+#     # Prüfen ob noch Parameter fehlen (die keine defaults haben)
+#     still_missing = []
+#     for param in original.params:
+#         if param not in bound_args and param not in original.defaults:
+#             still_missing.append(param)
+#
+#     if still_missing:
+#         # Immer noch nicht vollständig - weitere Partial Application
+#         return PartialApplication(original, bound_args)
+#     else:
+#         # Defaults für fehlende Parameter setzen
+#         for param in original.params:
+#             if param not in bound_args:
+#                 bound_args[param] = original.defaults[param]
+#
+#         # Vollständig - Lambda ausführen
+#         return execute_lambda(original, bound_args, varargs_values, eval_func, env)

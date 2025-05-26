@@ -144,6 +144,7 @@ def eval(expression, env: Environment):
             b -= 1 if right_interval == "[" else 0
 
             local_env = Environment(parent=env)
+            # TODO: wieder weg
             local_env.put(counter)
             local_env[counter] = a
 
@@ -173,39 +174,6 @@ def eval(expression, env: Environment):
 
             else:
                 # Alter Code für Kompatibilität (falls noch andere Funktionstypen verwendet werden)
-                raise TypeError(f"Cannot call object of type {type(func_obj)}")
-                if isinstance(func_obj, tuple) and len(func_obj) == 3:
-                    lambda_env, param_list, lbd_body = func_obj
-
-                    # Vereinfachte Behandlung für alte Lambda-Struktur
-                    if (
-                        isinstance(args_expr, tuple)
-                        and args_expr[0] == "parameter_expr"
-                    ):
-                        arg_list = args_expr[1]
-
-                        # Keywords argumente behandeln
-                        if isinstance(arg_list[-1], list):
-                            for _, var, val in arg_list[-1]:
-                                if isinstance(var, tuple) and var[0] == "var":
-                                    k = var[1]
-                                else:
-                                    k = var
-                                v = eval(val, env)
-                                lambda_env[k] = v
-
-                        # Positionsargumente behandeln
-                        pos_count = 0
-                        for arg in arg_list:
-                            if not isinstance(arg, list):
-                                if pos_count < len(param_list) and isinstance(
-                                    param_list[pos_count], str
-                                ):
-                                    lambda_env[param_list[pos_count]] = eval(arg, env)
-                                    pos_count += 1
-
-                        return eval(lbd_body, lambda_env)
-
                 raise TypeError(f"Cannot call object of type {type(func_obj)}")
 
         case ("print", expr):

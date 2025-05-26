@@ -383,8 +383,17 @@ def p_empty(p):
 
 
 def p_call(p):
-    "expression : expression LPAREN parameter_expr RPAREN"
+    "expression : expression LPAREN parameter_expr RPAREN %prec CALL"
     p[0] = ("call", p[1], p[3])
+
+
+######################### LET #########################
+
+
+def p_let(p):
+    "expression : LET assignment IN expression ENDCOND"
+    # definiert Letrec
+    p[0] = ("let", p[1], p[3])
 
 
 ######################### BUILTIN #########################
@@ -412,6 +421,7 @@ def p_error(p):
 precedence = (
     tuple(["right", "ASSIGN"] + [a for a in assigns]),
     ("right", "LAMBDA"),
+    ("right", "CALL"),
     ("left", "OR"),
     ("left", "XOR"),
     ("left", "AND"),

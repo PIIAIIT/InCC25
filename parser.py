@@ -197,7 +197,6 @@ def p_statement0(p):
               | if_statement
               | while_statement
               | loop_statement
-              | function
     """
     p[0] = p[1]
 
@@ -284,16 +283,20 @@ def p_interval(p):
 
 
 def p_lambda(p):
-    "expression : LAMBDA LPAREN parameter RPAREN LAMBDA_ARROW expression %prec LAMBDA"
-    p[0] = ("lambda", p[3], p[6])
+    "expression : LAMBDA parameter LAMBDA_ARROW expression %prec LAMBDA"
+    p[0] = ("lambda", p[2], p[4])
 
 
 def p_parameter0(p):
     """
-    parameter : parameter_pos
+    parameter : LPAREN parameter_pos RPAREN
+              | IDENTIFIER
               | empty
     """
-    p[0] = ("parameter", p[1])
+    if len(p) == 4:
+        p[0] = ("parameter", p[2])
+    else:
+        p[0] = ("parameter", p[1])
 
 
 def p_parameter1(p):
@@ -387,14 +390,10 @@ def p_call(p):
 ######################### BUILTIN #########################
 
 
-def p_echo(p):
-    "function : ECHO LPAREN expression RPAREN"
-    p[0] = ("print", p[3])
-
-
-def p_length(p):
-    "function : LENGTH LPAREN expression RPAREN"
-    p[0] = ("length", p[3])
+def p_builtin_func(p):
+    """expression : ECHO LPAREN expression RPAREN
+    | LENGTH LPAREN expression RPAREN"""
+    p[0] = ("function", p[1], p[3])
 
 
 ########################################################
@@ -412,7 +411,7 @@ def p_error(p):
 
 precedence = (
     tuple(["right", "ASSIGN"] + [a for a in assigns]),
-    ("left", "LAMBDA"),
+    ("right", "LAMBDA"),
     ("left", "OR"),
     ("left", "XOR"),
     ("left", "AND"),
@@ -448,5 +447,5 @@ if __name__ == "__main__":
         if s.lower() == "q":
             break
 
-        res = parser.parse("{" + s + "}", debug=True)
+        res = parser.parse("{" + s + "}", debug=False)
         print(res)

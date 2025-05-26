@@ -1,5 +1,13 @@
 import numpy as np
 from environment import Environment
+from _lambda import (
+    Lambda,
+    PartialApplication,
+    call_lambda,
+    call_partial_application,
+    parse_call_arguments,
+    parse_lambda_parameters,
+)
 
 bin_operations = {
     "plus": lambda x, y: x + y,
@@ -149,70 +157,56 @@ def eval(expression, env: Environment):
         # Sem(loop expr1: expr2, U;S) = (None, S')          falls n=0
         #                             = Sem(expr2, U)^n(S') sonst
         case ("lambda", parameter, body):
-            local_env = Environment(env)
-            params = []
-            match parameter:
-                case "parameter", param:
-                    for x in param:
-                        if isinstance(x, list):
-                            tmp = {}
-                            for i in x:
-                                local_env.put(i[1])
-                                if i[0] == "keyword":
-                                    local_env[i[1]] = eval(i[2], env)
-                                    tmp[i[1]] = local_env[i[1]]
-                            params.append(tmp)
-                            break
-                        local_env.put(x)
-                        params.append(x)
-            return (local_env, params, body)
-        # ('parameter', ['x', [('keyword', 'y', ('num', '3')), ('keyword', 'z', ('num', '5')), ('infty', 'c')]])
-        # -> (Global: {'x': None, 'y': None, 'z': None}, Scope Level 0: {'x': None, 'y': 3, 'z': 5, 'c': None}, ['x', {"y" : 3, "z" : 5}], ('parameter_expr', [('num', '2'), [('keyword', ('var', 'x'), ('num', '3'))]]))
+            params, defauls, varargs = parse_lambda_parameters(parameter, eval, env)
+            return Lambda(params, varargs, defauls, body, env)
 
         case ("call", func, args_expr):
-            lambda_env, param_list, lbd_body = eval(
-                func, env
-            )  # f(x,y:3,z:5,c...) = x+y-z
-            # lambda_env:   Global: {'x': None, 'y': None, 'z': None}, Scope Level 0: {'x': None, 'y': 3, 'z': 5, 'c': None}
-            # param_list: ['x', {"y" : 3, "z" : 5}]
-            # lbd_body: ('binop', 'minus', ('binop', 'plus', ('var', 'x'), ('var', 'y')), ('var', 'z'))
+            func_obj = eval(func, env)
 
-            # args_expr: ('parameter_expr', [('num', '2'), [('keyword', ('var', 'x'), ('num', '3'))]]) f(2,x:3)
+            if isinstance(func_obj, Lambda):
+                pos_arg, key_arg = parse_call_arguments(args_expr, eval, env)
+                return call_lambda(func_obj, pos_arg, key_arg, eval, env)
 
-            # keywords argumente sind angegeben
-            if isinstance(args_expr[-1], list):
-                for _, var, val in args_expr[-1]:
-                    k = eval(var, lambda_env)
-                    v = eval(val, lambda_env)
-                    lambda_env[k] = v
+            elif isinstance(func_obj, PartialApplication):
+                pos_arg, key_arg = parse_call_arguments(args_expr, eval, env)
+                return call_partial_application(func_obj, pos_arg, key_arg, eval, env)
+
             else:
-                # nur pos_args abarbeiten
-                pass
+                # Alter Code für Kompatibilität (falls noch andere Funktionstypen verwendet werden)
+                raise TypeError(f"Cannot call object of type {type(func_obj)}")
+                if isinstance(func_obj, tuple) and len(func_obj) == 3:
+                    lambda_env, param_list, lbd_body = func_obj
 
-        #     lambda_env, def_parameter, lbd_body = eval(func, env)
-        #
-        #     # eval Argumente -> bekomme (pos, benannte, rest) getrennt
-        #     pos_args, kw_args = [], {}
-        #     # ('parameter',
-        #     # [('var', 'x'), ('var', 'y'),
-        #     # [(('var', 'z'), ('num', '3')),
-        #     # ('infty', ('var', 'c'))]])
-        #     if not isinstance(args[-1], list):
-        #         for arg in args:
-        #             pos_args.append(arg)
-        #     else:
-        #
-        #     # find list
-        #     single, keywords, rest = eval(args, env)
-        #     local_env = Environment(parent=env)
-        #     local_env.put(keywords.keys())
-        #     # assign keywords
-        #     for k, v in keywords:
-        #         local_env[k] = v
-        #     local_env.put(single)
-        #     # TODO: Hier weiter machen noch nicht fertig!
-        #
-        #     return 0
+                    # Vereinfachte Behandlung für alte Lambda-Struktur
+                    if (
+                        isinstance(args_expr, tuple)
+                        and args_expr[0] == "parameter_expr"
+                    ):
+                        arg_list = args_expr[1]
+
+                        # Keywords argumente behandeln
+                        if isinstance(arg_list[-1], list):
+                            for _, var, val in arg_list[-1]:
+                                if isinstance(var, tuple) and var[0] == "var":
+                                    k = var[1]
+                                else:
+                                    k = var
+                                v = eval(val, env)
+                                lambda_env[k] = v
+
+                        # Positionsargumente behandeln
+                        pos_count = 0
+                        for arg in arg_list:
+                            if not isinstance(arg, list):
+                                if pos_count < len(param_list) and isinstance(
+                                    param_list[pos_count], str
+                                ):
+                                    lambda_env[param_list[pos_count]] = eval(arg, env)
+                                    pos_count += 1
+
+                        return eval(lbd_body, lambda_env)
+
+                raise TypeError(f"Cannot call object of type {type(func_obj)}")
 
         case ("print", expr):
             a = eval(expr, env)
@@ -221,11 +215,18 @@ def eval(expression, env: Environment):
                 return 1
             return 0
 
-        case ("length", expr):
-            a = eval(expr, env)
-            if a is not None:
-                return len(a)
-            return None
+        case ("function", func, expr):
+            if func == "echo":
+                a = eval(expr, env)
+                if a is not None:
+                    print(eval(expr, env))
+                    return 1
+                return 0
+            elif func == "länge":
+                a = eval(expr, env)
+                if a is not None:
+                    return len(a)
+                return None
 
         case _:
             print(f"unknown expression {expression}")

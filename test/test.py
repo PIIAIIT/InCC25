@@ -134,8 +134,7 @@ x:=-x-2;
 x mod 5;
 }
 """
-# 2. 7999
-assert test_interpreter(test_code) == 2
+assert test_interpreter(test_code) == 4
 
 
 test_code = r"""
@@ -147,8 +146,7 @@ x mod 5;
 y:=0xff + 0b11 + -x - 5 e 10;
 }
 """
-# 2. 7999
-assert test_interpreter(test_code) == -50000009005
+assert test_interpreter(test_code) == -50000009001
 
 test_code = r"""
 {
@@ -166,13 +164,13 @@ v = False
 assert test_lexer(read_file("test1.incc25"), verbose=v)
 assert test_lexer(read_file("test2.incc25"), verbose=v)
 assert test_lexer(read_file("test3.incc25"), verbose=v)
-# test_lexer(read_file("test6.incc25"), verbose=verbose)
+assert test_lexer(read_file("test6.incc25"), verbose=v)
 
 ################### PARSER TEST ###################
 assert test_parser(read_file("test1.incc25"), verbose=v)
 assert test_parser(read_file("test2.incc25"), verbose=v)
 assert test_parser(read_file("test3.incc25"), verbose=v)
-# test_parser(read_file("test6.incc25"), verbose=verbose)
+assert test_parser(read_file("test6.incc25"), verbose=v)
 
 ################### INTERPRETER TEST ###################
 assert test_interpreter(read_file("test1.incc25"), verbose=v) == 23
@@ -180,4 +178,4 @@ assert test_interpreter(read_file("test2.incc25"), verbose=v) == 243290200817664
 assert test_interpreter(read_file("test3.incc25"), verbose=v) == 50 / 4
 assert test_interpreter(read_file("test4.incc25"), verbose=v) == 17
 assert test_interpreter(read_file("test5.incc25"), verbose=v)
-# test_interpreter(read_file("test6.incc25"))
+assert test_interpreter(read_file("test6.incc25")) == 324

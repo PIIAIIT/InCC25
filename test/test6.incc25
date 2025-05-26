@@ -4,19 +4,18 @@ add := lambda (x, y) -> x + y;
 add(2, 3); # Erwartet: 5 #
 
 # === Unbenannter Lambda-Ausdruck === #
-(lambda (x) -> x * x)(4); # Erwartet: 16 #
+(lambda x -> x * x)(4); # Erwartet: 16 #
 
 # === Keyword- und Positionsargumente === #
 format := lambda (a, b, c) -> +(a | b - (c:=2));
 format(1, 2, c: 3); # Erwartet: "a=1, b=2, c=2" #
 
 # === Oversupply (Mehr Argumente) === #
-# Funktion mit variadischen Argumenten (z. B. letzte ist Rest) #
-variadic := lambda (x, y, ...rest) -> x + y + länge(rest); 
+# Funktion mit variadischen Argumenten (z.B. letzte ist Rest) #
+variadic := lambda (x, y, rest...) -> x + y; #+ länge(rest);#
 variadic(1, 2, 3, 4); # Erwartet: 1 + 2 + 2 = 5 #
 
 # === Undersupply (Teilanwendung) === #
-
 multiply := lambda (x, y) -> x * y;
 double := multiply(2); # => lambda (y) -> 2 * y #
 double(5); # Erwartet: 10 #

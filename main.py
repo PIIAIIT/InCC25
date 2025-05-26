@@ -2,9 +2,9 @@ from parser import parser
 from environment import Environment
 from interpreter import eval
 from lexer import lexer
+import sys, json
 
 env = Environment()
-env.put(["x", "y", "z"])
 
 
 def test_code(debug=False):
@@ -20,10 +20,19 @@ def test_code(debug=False):
         if debug:
             print(result)
 
-        r = eval(result, env)
-        print(r)
-        # except Exception:
-        #     print("Fehler bei der Eingabe: ", i)
+        try:
+            r = eval(result, env)
+            print(r)
+        except Exception:
+            print("Fehler bei der Eingabe: ", i)
 
 
-test_code()
+if __name__ == "__main__":
+    debug = False
+
+    for eachArg in sys.argv:
+        if eachArg == "-debug":
+            debug = True
+
+    env.put(["x", "y", "z"])
+    test_code(debug)

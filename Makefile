@@ -16,5 +16,8 @@ parser::
 test::
 	$(PYTHON_ENV) -m test.test
 
+debug::
+	$(PYTHON_ENV) $(main_file) -debug
+
 clean:
 	rm -f parsertab.py parser.out

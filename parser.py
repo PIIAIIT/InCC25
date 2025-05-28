@@ -61,6 +61,8 @@ def p_paran(p):
 def p_expression(p):
     """expression : arithmetic_expression
     | comparison
+    | sequence
+    | assignment
     """
     p[0] = p[1]
 
@@ -148,7 +150,7 @@ def p_comparison_op(p):
 
 
 def p_assignment1(p):
-    "expression : IDENTIFIER ASSIGN expression"
+    "assignment : IDENTIFIER ASSIGN expression"
     p[0] = ("assign", None, p[1], p[3])
 
 
@@ -193,7 +195,6 @@ def p_sequence(p):
 def p_statement0(p):
     """
     statement : expression
-              | sequence
               | if_statement
               | while_statement
               | loop_statement
@@ -264,7 +265,7 @@ def p_while_statement(p):
 
 def p_loop_statement(p):
     """
-    loop_statement : LOOP IDENTIFIER LOOPIN interval LOOPTHEN statements ENDCOND
+    loop_statement : LOOP IDENTIFIER IN interval LOOPTHEN statements ENDCOND
     """
     p[0] = ("loop", p[2], p[4], p[6])
 
@@ -388,12 +389,12 @@ def p_call(p):
 
 
 ######################### LET #########################
+############## Ist Standardmäßig das LETREC ##############
 
 
-# def p_let(p):
-#     "expression : LET assignment IN expression ENDCOND"
-#     # definiert Letrec
-#     p[0] = ("let", p[1], p[3])
+def p_let(p):
+    "expression : LET assignment IN expression ENDCOND"
+    p[0] = ("let", p[2], p[4])
 
 
 ######################### BUILTIN #########################

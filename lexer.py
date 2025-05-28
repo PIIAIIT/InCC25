@@ -11,7 +11,7 @@ def rule_lexer(doc, name):
     setattr(module, f"t_{name.upper()}", f)
 
 
-ops = {
+binops = {
     r"\+": "PLUS",
     r"-": "MINUS",
     r"\*\*": "POWER",
@@ -31,6 +31,10 @@ ops = {
     "mod": "MOD",
     "e": "EXP",  # als Operator
 }
+unary = {
+    "not": "NOT",
+    "imag": "IMAG",
+}  # unary
 
 table = {
     r"(\d+\.\d*|\.\d+)": "FLOAT",
@@ -54,22 +58,17 @@ table = {
     "solange": "WHILE",
     "für": "LOOP",
     "wiederhole": "LOOPTHEN",
-    "in": "LOOPIN",
+    "in": "IN",
     "lambda": "LAMBDA",
     "echo": "ECHO",
     "länge": "LENGTH",
     "sei": "LET",  # Ist schon ein Letrec
     r",": "COMMA",
 }
-table.update(
-    {
-        "not": "NOT",
-        "imag": "IMAG",  # als Operator
-    }
-)
-assigns = {k + ":=": v + "_ASSIGN" for k, v in ops.items()}
+assigns = {k + ":=": v + "_ASSIGN" for k, v in binops.items()}
 table.update(assigns)
-table.update(ops)
+table.update(binops)
+table.update(unary)
 table.update(
     {
         r"(?:[^\W\d_]|[\U0001F300-\U0001FAFF_])(?:[^\W_]|[\d_]|[\U0001F300-\U0001FAFF])*": "IDENTIFIER"

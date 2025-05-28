@@ -139,16 +139,11 @@ def eval(expression, env: Environment):
             a += 1 if left_interval == "]" else 0
             b -= 1 if right_interval == "[" else 0
 
-            local_env = Environment(parent=env)
-            # TODO: wieder weg
-            local_env.put(counter)
-            local_env[counter] = a
-
             result = None
-            while local_env[counter] < b:
-                local_env[counter] += 1
+            while env[counter] < b:
+                env[counter] += 1
                 for _b in body:
-                    result = eval(_b, local_env)
+                    result = eval(_b, env)
             return result
 
         # Sem(loop expr1: expr2, U;S) = (None, S')          falls n=0
@@ -172,12 +167,11 @@ def eval(expression, env: Environment):
                 # Alter Code für Kompatibilität (falls noch andere Funktionstypen verwendet werden)
                 raise TypeError(f"Cannot call object of type {type(func_obj)}")
 
-        case ("print", expr):
-            a = eval(expr, env)
-            if a is not None:
-                print(eval(expr, env))
-                return 1
-            return 0
+        case ("let", ("assign", op, var, val) as asgn, expr):
+            env2 = Environment(env)
+            env2.put(var)
+            eval(asgn, env2)
+            return eval(expr, env2)
 
         case ("function", func, expr):
             if func == "echo":

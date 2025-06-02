@@ -218,11 +218,11 @@ def p_statements1(p):
 
 # def p_statements2(p):
 #     """
-#     statements : statements if_statement
-#                | statements while_statement
-#                | statements loop_statement
+#     statements : if_statement statement
+#     | while_statement statement
+#     | loop_statement statement
 #     """
-#     p[0] = [p[1], p[2]]
+#     p[0] = p[1] + [p[3]]
 
 
 ######################### IF #########################
@@ -245,9 +245,9 @@ def p_if_statements2(p):
                    | ELSE statements
     """
     if len(p) == 3:
-        p[0] = [("None", p[2])]  # Für None als keine expression
+        p[0] = [("None", p[2])]
     else:
-        p[0] = [(p[3], p[5])] + p[6]
+        p[0] = [(p[3], p[5]), *p[6]]
 
 
 ######################### WHILE #########################
@@ -283,9 +283,14 @@ def p_interval(p):
 ######################### LAMBDA #########################
 
 
-def p_lambda(p):
-    "expression : LAMBDA parameter LAMBDA_ARROW expression %prec LAMBDA"
+def p_lambda0(p):
+    "lambda : LAMBDA parameter LAMBDA_ARROW expression %prec LAMBDA"
     p[0] = ("lambda", p[2], p[4])
+
+
+def p_lambda1(p):
+    "expression : lambda"
+    p[0] = p[1]
 
 
 def p_parameter0(p):
@@ -333,7 +338,7 @@ def p_parameter4(p):
                       | parameter_infty
     """
     if len(p) == 6:
-        p[0] = [("keyword", p[1], p[3])] + p[5]
+        p[0] = [("keyword", p[1], p[3]), *p[5]]
     elif len(p) == 4:
         p[0] = [("keyword", p[1], p[3])]
     else:

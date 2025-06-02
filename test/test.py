@@ -178,4 +178,5 @@ assert test_interpreter(read_file("test2.incc25"), verbose=v) == 243290200817664
 assert test_interpreter(read_file("test3.incc25"), verbose=v) == 50 / 4
 assert test_interpreter(read_file("test4.incc25"), verbose=v) == 17
 assert test_interpreter(read_file("test5.incc25"), verbose=v)
-assert test_interpreter(read_file("test6.incc25")) == 324
+v = True
+assert test_interpreter(read_file("test6.incc25"), verbose=v) == 324

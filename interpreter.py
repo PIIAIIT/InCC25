@@ -77,7 +77,10 @@ def eval(expression, env: Environment):
 
         case ("assign", op, var, val):
             y = eval(val, env)
-            env[var] = bin_operations[op](env[var], y) if op is not None else y
+            if op is not None:
+                env[var] = bin_operations[op](env[var], y)
+            else:
+                env[var] = y
             return env[var]
 
         case ("unary", op, expr):
@@ -139,6 +142,7 @@ def eval(expression, env: Environment):
             a += 1 if left_interval == "]" else 0
             b -= 1 if right_interval == "[" else 0
 
+            env[counter] = a
             result = None
             while env[counter] < b:
                 env[counter] += 1

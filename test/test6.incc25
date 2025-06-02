@@ -1,31 +1,38 @@
 {
 # === Benannter Lambda-Ausdruck === #
 add := lambda (x, y) -> x + y;
-add(2, 3); # Erwartet: 5 #
+x := add(2, 3); # Erwartet: 5 #
+echo(x);
 
 # === Unbenannter Lambda-Ausdruck === #
-(lambda x -> x * x)(4); # Erwartet: 16 #
+x := (lambda x -> x * x)(4); # Erwartet: 16 #
+echo(x);
 
 # === Keyword- und Positionsargumente === #
 format := lambda (a, b, c) -> +(a | b - (c:=2));
-format(1, 2, c: 3); # Erwartet: "a=1, b=2, c=2" #
+x := format(1, 2, c: 3); # Erwartet: "a=1, b=2, c=2" #
+echo(x);
 
 # === Oversupply (Mehr Argumente) === #
 # Funktion mit variadischen Argumenten (z.B. letzte ist Rest) #
 variadic := lambda (x, y, rest...) -> x + y; #+ länge(rest);#
-variadic(1, 2, 3, 4); # Erwartet: 1 + 2 + 2 = 5 #
+x := variadic(1, 2, 3, 4); # Erwartet: 1 + 2 + 2 = 5 #
+echo(x);
 
 # === Undersupply (Teilanwendung) === #
 multiply := lambda (x, y) -> x * y;
 double := multiply(2); # => lambda (y) -> 2 * y #
-double(5); # Erwartet: 10 #
+x := double(5); # Erwartet: 10 #
+echo(x);
 
 # Weitere Teilanwendung mit benanntem Argument #
 setY := multiply(y: 10); # => lambda (x) -> x * 10 #
-setY(3); # Erwartet: 30 #
+x := setY(3); # Erwartet: 30 #
+echo(x);
 
 # === Kombination: Benannt + Undersupply === #
 fancy := lambda (x, y, z) -> x + 10*y + 100*z;
 part := fancy(y: 2, z: 3); # => lambda (x) -> x + 20 + 300 #
-part(4); # Erwartet: 324 #
+x := part(4); # Erwartet: 324 #
+echo(x);
 }

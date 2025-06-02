@@ -2,7 +2,7 @@ from parser import parser
 from environment import Environment
 from interpreter import eval
 from lexer import lexer
-import sys, json
+import sys
 
 env = Environment()
 

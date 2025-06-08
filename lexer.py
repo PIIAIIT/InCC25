@@ -39,6 +39,7 @@ unary = {
 table = {
     r"(\d+\.\d*|\.\d+)": "FLOAT",
     r"0x[0-9a-fA-F]+|0b(0|1[01]*)|\d+": "NUMBER",
+    r'"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'': "STRING",
     r"\(": "LPAREN",
     r"\)": "RPAREN",
     r":=": "ASSIGN",
@@ -50,7 +51,7 @@ table = {
     r"\}": "END",  # Sequence End
     r"->": "LAMBDA_ARROW",
     r"\.\.\.": "DOTS",
-    r"\.": "ENDCOND",
+    r"\.": "DOT",
     "wenn": "IF",
     "gilt,": "THEN",
     ",aber": "ELIF",
@@ -62,6 +63,8 @@ table = {
     "lambda": "LAMBDA",
     "echo": "ECHO",
     "länge": "LENGTH",
+    "list": "LIST",
+    "&": "CONST",
     "sei": "LET",  # Ist schon ein Letrec
     r",": "COMMA",
 }

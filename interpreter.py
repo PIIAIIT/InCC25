@@ -48,6 +48,8 @@ def eval(expression, env: Environment):
             return int(n)
         case ("float", n):
             return float(n)
+        case ("str", n):
+            return str(n)
         case ("complex", imag):
             a = eval(imag, env)
             return unary_operations["imag"](a)
@@ -177,19 +179,19 @@ def eval(expression, env: Environment):
             eval(asgn, env2)
             return eval(expr, env2)
 
-        case ("function", func, expr):
-            if func == "echo":
-                a = eval(expr, env)
-                if a is not None:
-                    print(eval(expr, env))
-                    return 1
-                return 0
-            elif func == "länge":
-                a = eval(expr, env)
-                if a is not None:
-                    return len(a)
-                return None
+        case ("function", func, params):
+            a = []
+            for expr in params:
+                a.append(eval(expr, env))
+            return func_list[func](a)
 
         case _:
             print(f"unknown expression {expression}")
             return -1
+
+
+func_list = {
+    "echo": lambda params: list(print(param) for param in params),
+    "länge": lambda params: len(params),
+    "list": lambda params: list(params),
+}

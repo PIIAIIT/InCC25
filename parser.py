@@ -45,25 +45,26 @@ def p_float(p):
     p[0] = ("float", p[1])
 
 
+def p_string(p):
+    "atomar : STRING"
+    p[0] = ("str", p[1])
+
+
 def p_var(p):
     "atomar : IDENTIFIER"
     p[0] = ("var", p[1])
 
 
-################ EXPRESSION ################
 def p_paran(p):
-    """
-    arithmetic_expression : LPAREN expression RPAREN
-    """
+    "atomar : LPAREN expression RPAREN"
     p[0] = p[2]
 
 
-def p_expression(p):
-    """expression : arithmetic_expression
-    | comparison
-    | sequence
-    | assignment
-    """
+################ EXPRESSION ################
+
+
+def p_expression0(p):
+    """expression : arithmetic_expression"""
     p[0] = p[1]
 
 
@@ -84,8 +85,7 @@ def p_arithmetic_expression(p):
     | arithmetic_expression XOR arithmetic_expression
     | arithmetic_expression POWER arithmetic_expression
     """
-    op = look_up_table[p[2]]
-    p[0] = ("binop", op, p[1], p[3])
+    p[0] = ("binop", look_up_table[p[2]], p[1], p[3])
 
 
 def p_unary(p):
@@ -146,11 +146,16 @@ def p_comparison_op(p):
     p[0] = look_up_table[p[1]]
 
 
+def p_expression1(p):
+    """expression : comparison"""
+    p[0] = p[1]
+
+
 ################ ASSIGNMENTS ################
 
 
 def p_assignment1(p):
-    "assignment : IDENTIFIER ASSIGN expression"
+    "expression : IDENTIFIER ASSIGN expression %prec ASSIGN"
     p[0] = ("assign", None, p[1], p[3])
 
 
@@ -189,6 +194,11 @@ def p_sequence(p):
     p[0] = ("seq", p[2])
 
 
+def p_expression2(p):
+    """expression : sequence"""
+    p[0] = p[1]
+
+
 ################ STATEMENTS ################
 
 
@@ -216,22 +226,13 @@ def p_statements1(p):
     p[0] = [p[1]]
 
 
-# def p_statements2(p):
-#     """
-#     statements : if_statement statement
-#     | while_statement statement
-#     | loop_statement statement
-#     """
-#     p[0] = p[1] + [p[3]]
-
-
 ######################### IF #########################
 
 
 def p_if_statements1(p):
     """
-    if_statement : IF expression THEN statements ENDCOND
-                 | IF expression THEN statements else_elif_body ENDCOND
+    if_statement : IF expression THEN statements DOT
+                 | IF expression THEN statements else_elif_body DOT
     """
     if len(p) == 6:
         p[0] = ("if", p[2], p[4], None)
@@ -255,7 +256,7 @@ def p_if_statements2(p):
 
 def p_while_statement(p):
     """
-    while_statement : WHILE expression THEN statements ENDCOND
+    while_statement : WHILE expression THEN statements DOT
     """
     p[0] = ("while", p[2], p[4])
 
@@ -265,7 +266,7 @@ def p_while_statement(p):
 
 def p_loop_statement(p):
     """
-    loop_statement : LOOP IDENTIFIER IN interval LOOPTHEN statements ENDCOND
+    loop_statement : LOOP IDENTIFIER IN interval LOOPTHEN statements DOT
     """
     p[0] = ("loop", p[2], p[4], p[6])
 
@@ -284,7 +285,7 @@ def p_interval(p):
 
 
 def p_lambda0(p):
-    "lambda : LAMBDA parameter LAMBDA_ARROW expression %prec LAMBDA"
+    "lambda : LAMBDA parameter LAMBDA_ARROW expression"
     p[0] = ("lambda", p[2], p[4])
 
 
@@ -319,7 +320,9 @@ def p_parameter2(p):
                        | parameter_keywords
     """
     if len(p) == 4:
-        p[0] = [p[1]] + p[3]
+        p[0] = [p[1], *p[3]]
+    elif isinstance(p[1], list):
+        p[0] = [*p[1]]
     else:
         p[0] = [p[1]]
 
@@ -389,7 +392,7 @@ def p_empty(p):
 
 
 def p_call(p):
-    "expression : expression LPAREN parameter_expr RPAREN %prec CALL"
+    "expression : atomar LPAREN parameter_expr RPAREN"
     p[0] = ("call", p[1], p[3])
 
 
@@ -398,18 +401,61 @@ def p_call(p):
 
 
 def p_let(p):
-    "expression : LET assignment IN expression ENDCOND"
-    p[0] = ("let", p[2], p[4])
+    "expression : LET IDENTIFIER EQUALS expression IN expression DOT"
+    p[0] = ("let", ("assign", None, p[2], p[4]), p[6])
 
 
 ######################### BUILTIN #########################
 
 
 def p_builtin_func(p):
-    """expression : ECHO LPAREN expression RPAREN
-    | LENGTH LPAREN expression RPAREN"""
+    """
+    expression : ECHO   LPAREN param_list RPAREN
+               | LENGTH LPAREN param_list RPAREN
+               | LIST   LPAREN param_list RPAREN
+    """
     p[0] = ("function", p[1], p[3])
 
+
+def p_paramlist1(p):
+    "param_list : expression COMMA param_list"
+    p[0] = [p[1], *p[3]]
+
+
+def p_paramlist2(p):
+    "param_list : expression"
+    p[0] = [p[1]]
+
+
+######################### LISTS #########################
+
+
+def p_list_param0(p):
+    "list_parameter : expression list_parameter"
+    p[0] = [p[1], *p[2]]
+
+
+def p_list_param1(p):
+    "list_parameter : expression"
+    p[0] = [p[1]]
+
+
+def p_list_param2(p):
+    "expression : list_parameter"
+    p[0] = ("list", p[1])
+
+
+######################### ARRAY #########################
+
+
+def p_array(p):
+    """expression : OPEN_BRACKETS param_list CLOSED_BRACKETS
+    | OPEN_BRACKETS empty      CLOSED_BRACKETS
+    """
+    p[0] = ("array", p[1])
+
+
+######################### STRUCTS #########################
 
 ########################################################
 
@@ -426,8 +472,6 @@ def p_error(p):
 
 precedence = (
     tuple(["right", "ASSIGN"] + [a for a in assigns.values()]),
-    ("right", "LAMBDA"),
-    ("right", "CALL"),
     ("left", "OR"),
     ("left", "XOR"),
     ("left", "AND"),
@@ -444,6 +488,7 @@ precedence = (
     ("right", "POWER", "EXP"),
     ("left", "IMAG"),
     ("right", "NOT", "UPLUS", "UMINUS"),  # weil -7++ = -6 und nicht -8
+    ("right", "LPAREN"),  # , "RPAREN"),
 )
 
 ########################################################

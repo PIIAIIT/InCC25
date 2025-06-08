@@ -11,6 +11,9 @@ class Lambda:
         self.body = body  # AST des Lambda-Bodies
         self.closure_env = closure_env  # Environment zur Closure-Zeit
 
+    def __repr__(self):
+        return str(self.params) + str(self.body) + str(self.closure_env)
+
 
 class PartialApplication:
     """Repräsentiert eine teilweise angewendete Lambda-Funktion"""

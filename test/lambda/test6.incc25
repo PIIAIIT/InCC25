@@ -11,7 +11,7 @@ echo(x);
 # === Keyword- und Positionsargumente === #
 format := lambda (a, b, c) -> +(a | b - (c:=2));
 x := format(1, 2, c: 3); # Erwartet: "a=1, b=2, c=2" #
-echo(x);
+echo(x); # Erwartet : [np.float64(1.5)] #
 
 # === Oversupply (Mehr Argumente) === #
 # Funktion mit variadischen Argumenten (z.B. letzte ist Rest) #
@@ -35,4 +35,5 @@ fancy := lambda (x, y, z) -> x + 10*y + 100*z;
 part := fancy(y: 2, z: 3); # => lambda (x) -> x + 20 + 300 #
 x := part(4); # Erwartet: 324 #
 echo(x);
+x
 }

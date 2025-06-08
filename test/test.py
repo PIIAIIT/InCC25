@@ -5,22 +5,50 @@ from environment import Environment
 import math
 import os
 import sys
+from pathlib import Path
 
 env = Environment()
 env.put(["x"])
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-path = os.path.abspath(".") + "/test/"
+__BASE_DIR = Path(__file__).resolve().parent.parent
+__SEARCH_PATH = __BASE_DIR / "test"
+ALL_TEST_FILES = []
+
+
+def __read_file(verbose=False):
+    base_path = Path(__SEARCH_PATH).resolve()
+    code_files = []
+
+    # Alle Verzeichnisse + das Basisverzeichnis selbst
+    ignore_dirs = {"__pycache__"}
+    dirs = [base_path] + [
+        p for p in base_path.iterdir() if p.is_dir() and p.name not in ignore_dirs
+    ]
+
+    for d in dirs:
+        for f in d.glob("*.incc25"):
+            content = f.read_text(encoding="utf-8")
+            code_files.append((f, content))
+            if verbose:
+                print(f"\n--- {f} ---\n{content}")
+
+    return code_files  # Liste von (Pfad, Inhalt)
+
+
+ALL_TEST_FILES = __read_file()
 
 
 def read_file(incc25_file, verbose=False):
-    with open(path + incc25_file, "r+") as f:
-        code = f.read()
-    print(code) if verbose else ""
-    return code
+    for posix_file, content in ALL_TEST_FILES:
+        if str(posix_file).endswith(incc25_file):
+            print(content) if verbose else ""
+            return content
+    return None
 
 
 def test_lexer(input_string, verbose=False):
+    if input_string is None:
+        print("Es ist ein Fehler mit dem InputStream.")
     input_string = input_string.strip("\n")
     if not input_string.startswith("{") or not input_string.endswith("}"):
         input_string = "{\n" + input_string + "\n}"
@@ -36,6 +64,8 @@ def test_lexer(input_string, verbose=False):
 
 
 def test_parser(input_string, verbose=False):
+    if input_string is None:
+        print("Es ist ein Fehler mit dem InputStream.")
     input_string = input_string.strip("\n")
     if not input_string.startswith("{") or not input_string.endswith("}"):
         input_string = "{\n" + input_string + "\n}"
@@ -45,6 +75,8 @@ def test_parser(input_string, verbose=False):
 
 
 def test_interpreter(input_string, env=None, verbose=False):
+    if input_string is None:
+        print("Es ist ein Fehler mit dem InputStream.")
     input_string = input_string.strip("\n")
     if not input_string.startswith("{") or not input_string.endswith("}"):
         input_string = "{\n" + input_string + "\n}"
@@ -155,9 +187,7 @@ x := 256;
 x := x mod 5 \ 4 - 10 ** (4 | 2 + 3) / 5;
 i_me:=420.69
 }"""
-
 assert test_interpreter(test_code) == 420.69
-################### FILE TEST ###################
 
 ################### LEXER TEST ###################
 v = False
@@ -178,5 +208,4 @@ assert test_interpreter(read_file("test2.incc25"), verbose=v) == 243290200817664
 assert test_interpreter(read_file("test3.incc25"), verbose=v) == 50 / 4
 assert test_interpreter(read_file("test4.incc25"), verbose=v) == 17
 assert test_interpreter(read_file("test5.incc25"), verbose=v)
-v = True
 assert test_interpreter(read_file("test6.incc25"), verbose=v) == 324

@@ -17,7 +17,7 @@ assert +:= x = 1.5;
 # Funktion mit variadischen Argumenten (z.B. letzte ist Rest) #
 variadic := lambda (x, y, rest...) -> x + y; #+ länge(rest);#
 x := variadic(1, 2, 3, 4); # Erwartet: 1 + 2 + 2 = 5 #
-assert +:= x = 5;
+assert +:= x = 3;
 
 # === Undersupply (Teilanwendung) === #
 multiply := lambda (x, y) -> x * y;

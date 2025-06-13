@@ -170,7 +170,7 @@ def eval(expression, env: Environment):
             a = []
             for expr in params:
                 a.append(eval(expr, env))
-            return func_list[func](a)
+            return eval(func_list[func](a), env)
 
         case ("array", list_elements):
             arr = []
@@ -208,8 +208,26 @@ def eval(expression, env: Environment):
             return -1
 
 
+def __länge(lst):
+    """ Länge einer Liste/Array bestimmen"""
+    if len(lst) != 1: 
+        raise Exception("")
+    if not isinstance(lst[0], list):
+        raise Exception("")
+    return ("num", str(len(lst[0])))
+
+
+def __echo(*lst):
+    print(lst)
+    return ("leere")
+
+
+def __list(param):
+   return ("list", param)
+
+
 func_list = {
-    "echo": lambda params: list(print(param) for param in params),
-    "länge": lambda params: len(params),
-    "list": lambda params: list(params),
+    "echo": __echo,
+    "länge": __länge,
+    "list": __list,
 }

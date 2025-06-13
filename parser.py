@@ -63,45 +63,37 @@ def p_paran(p):
 ################ EXPRESSION ################
 
 
-def p_expression0(p):
-    """expression : arithmetic_expression"""
-    p[0] = p[1]
-
-
-################ ARITHMETIC EXPRESSION ################
-
-
 def p_arithmetic_expression(p):
-    """arithmetic_expression : arithmetic_expression PLUS arithmetic_expression
-    | arithmetic_expression MINUS arithmetic_expression
-    | arithmetic_expression TIMES arithmetic_expression
-    | arithmetic_expression DIVIDE arithmetic_expression
-    | arithmetic_expression DIVIDE_CEIL arithmetic_expression
-    | arithmetic_expression DIVIDE_FLOOR arithmetic_expression
-    | arithmetic_expression MOD arithmetic_expression
-    | arithmetic_expression EXP arithmetic_expression
-    | arithmetic_expression AND arithmetic_expression
-    | arithmetic_expression OR arithmetic_expression
-    | arithmetic_expression XOR arithmetic_expression
-    | arithmetic_expression POWER arithmetic_expression
+    """expression : expression PLUS expression
+    | expression MINUS expression
+    | expression TIMES expression
+    | expression DIVIDE expression
+    | expression DIVIDE_CEIL expression
+    | expression DIVIDE_FLOOR expression
+    | expression MOD expression
+    | expression EXP expression
+    | expression AND expression
+    | expression OR expression
+    | expression XOR expression
+    | expression POWER expression
     """
     p[0] = ("binop", look_up_table[p[2]], p[1], p[3])
 
 
 def p_unary(p):
-    """arithmetic_expression : NOT   arithmetic_expression
-    | MINUS arithmetic_expression %prec UMINUS
-    | PLUS  arithmetic_expression %prec UPLUS"""
+    """expression : NOT   expression
+    | MINUS expression %prec UMINUS
+    | PLUS  expression %prec UPLUS"""
     p[0] = ("unary", unary[p[1]], p[2])
 
 
 def p_complex(p):
-    """arithmetic_expression : arithmetic_expression IMAG"""
+    """expression : expression IMAG"""
     p[0] = ("complex", p[1])
 
 
-def p_arithmetic_end(p):
-    """arithmetic_expression : atomar"""
+def p_expression(p):
+    """expression : atomar"""
     p[0] = p[1]
 
 
@@ -110,30 +102,22 @@ def p_arithmetic_end(p):
 
 def p_expression_comparison_chain1(p):
     """
-    comparison : arithmetic_expression comparison_op arithmetic_expression comparison_chain
+    comparison : expression comparison_op expression %prec CMP
     """
-    p[0] = ("comparison_chain", p[1], [(p[2], p[3])] + p[4])
+    # TODO: SHIFT-REDUCE STATE 117
+    p[0] = [p[2], p[1], p[3]]
 
 
 def p_expression_comparison_chain2(p):
     """
-    comparison : arithmetic_expression comparison_op arithmetic_expression
+    comparison : comparison comparison_op expression %prec CMP2
     """
-    p[0] = ("comparison_chain", p[2], p[1], p[3])
+    p[0] = [p[1][0] + [p[2]], p[1][1] + [p[3]]]
 
 
-def p_comparison_chain1(p):
-    """
-    comparison_chain : comparison_op arithmetic_expression comparison_chain
-    """
-    p[0] = [(p[1], p[2])] + p[3]
-
-
-def p_comparison_chain2(p):
-    """
-    comparison_chain : comparison_op arithmetic_expression
-    """
-    p[0] = [(p[1], p[2])]
+def p_expression1(p):
+    """expression : comparison %prec CLS"""
+    p[0] = ("comparison", *p[1])
 
 
 def p_comparison_op(p):
@@ -144,11 +128,6 @@ def p_comparison_op(p):
     | SMALLER_EQUALS
     | GREATER_EQUALS"""
     p[0] = look_up_table[p[1]]
-
-
-def p_expression1(p):
-    """expression : comparison"""
-    p[0] = p[1]
 
 
 ################ ASSIGNMENTS ################
@@ -205,9 +184,6 @@ def p_expression2(p):
 def p_statement0(p):
     """
     statement : expression
-              | if_statement
-              | while_statement
-              | loop_statement
     """
     p[0] = p[1]
 
@@ -251,20 +227,34 @@ def p_if_statements2(p):
         p[0] = [(p[3], p[5]), *p[6]]
 
 
+def p_if_statements3(p):
+    """
+    expression : if_statement
+    """
+    p[0] = p[1]
+
+
 ######################### WHILE #########################
 
 
-def p_while_statement(p):
+def p_while_statement0(p):
     """
     while_statement : WHILE expression THEN statements DOT
     """
     p[0] = ("while", p[2], p[4])
 
 
+def p_while_statement1(p):
+    """
+    expression : while_statement
+    """
+    p[0] = p[1]
+
+
 ######################### LOOP #########################
 
 
-def p_loop_statement(p):
+def p_loop_statement0(p):
     """
     loop_statement : LOOP IDENTIFIER IN interval LOOPTHEN statements DOT
     """
@@ -281,11 +271,18 @@ def p_interval(p):
     p[0] = (p[1], p[2], p[4], p[5])
 
 
+def p_loop_statement1(p):
+    """
+    expression : loop_statement
+    """
+    p[0] = p[1]
+
+
 ######################### LAMBDA #########################
 
 
 def p_lambda0(p):
-    "lambda : LAMBDA parameter LAMBDA_ARROW expression"
+    "lambda : LAMBDA parameter LAMBDA_ARROW expression %prec LAMBDA"
     p[0] = ("lambda", p[2], p[4])
 
 
@@ -302,8 +299,10 @@ def p_parameter0(p):
     """
     if len(p) == 4:
         p[0] = ("parameter", p[2])
-    else:
+    elif isinstance(p[1], list):
         p[0] = ("parameter", p[1])
+    else:
+        p[0] = ("parameter", [("pos", p[1])])
 
 
 def p_parameter1(p):
@@ -320,11 +319,11 @@ def p_parameter2(p):
                        | parameter_keywords
     """
     if len(p) == 4:
-        p[0] = [p[1], *p[3]]
+        p[0] = [("pos", p[1]), *p[3]]
     elif isinstance(p[1], list):
-        p[0] = [*p[1]]
+        p[0] = p[1]
     else:
-        p[0] = [p[1]]
+        p[0] = [("pos", p[1])]
 
 
 def p_parameter3(p):
@@ -370,9 +369,11 @@ def p_parameter7(p):
                        | parameter_keywords_expr
     """
     if len(p) == 4:
-        p[0] = [p[1]] + p[3]
+        p[0] = [("pos", p[1]), *p[3]]
+    elif isinstance(p[1], tuple):
+        p[0] = [("pos", p[1])]
     else:
-        p[0] = [p[1]]
+        p[0] = p[1]
 
 
 def p_parameter8(p):
@@ -381,7 +382,7 @@ def p_parameter8(p):
                             | expression COLON expression
     """
     if len(p) == 6:
-        p[0] = [("keyword", p[1], p[3])] + p[5]
+        p[0] = [("keyword", p[1], p[3]), *p[5]]
     elif len(p) == 4:
         p[0] = [("keyword", p[1], p[3])]
 
@@ -392,7 +393,7 @@ def p_empty(p):
 
 
 def p_call(p):
-    "expression : atomar LPAREN parameter_expr RPAREN"
+    """expression : expression LPAREN parameter_expr RPAREN"""
     p[0] = ("call", p[1], p[3])
 
 
@@ -430,19 +431,38 @@ def p_paramlist2(p):
 ######################### LISTS #########################
 
 
-def p_list_param0(p):
-    "list_parameter : expression list_parameter"
-    p[0] = [p[1], *p[2]]
+# def p_list_param0(p):
+#     "list_parameter : expression expression list_parameter"
+#     p[0] = [p[1], p[2], *p[3]]
+#
+#
+# def p_list_param1(p):
+#     "list_parameter : expression"
+#     p[0] = [p[1]]
+#
+#
+# def p_list_param2(p):
+#     "expression : list_parameter"
+#     p[0] = ("list", p[1])
+#
+
+def p_list_zugriff(p):
+    """expression : expression OPEN_BRACKETS DOT CLOSED_BRACKETS
+                  | expression OPEN_BRACKETS TIMES CLOSED_BRACKETS
+                  | expression OPEN_BRACKETS expression CLOSED_BRACKETS
+    """
+    # TIMES == ASTRIKS
+    p[0] = ("array_access", p[1], p[3])
 
 
-def p_list_param1(p):
-    "list_parameter : expression"
-    p[0] = [p[1]]
+def p_leere_liste(p):
+    "expression : NULL"
+    p[0] = ("leere")
 
 
-def p_list_param2(p):
-    "expression : list_parameter"
-    p[0] = ("list", p[1])
+def p_cons(p):
+    "expression : expression CONS expression"
+    p[0] = ("cons", p[1], p[3])
 
 
 ######################### ARRAY #########################
@@ -450,9 +470,9 @@ def p_list_param2(p):
 
 def p_array(p):
     """expression : OPEN_BRACKETS param_list CLOSED_BRACKETS
-    | OPEN_BRACKETS empty      CLOSED_BRACKETS
+                  | OPEN_BRACKETS empty      CLOSED_BRACKETS
     """
-    p[0] = ("array", p[1])
+    p[0] = ("array", p[2])
 
 
 ######################### STRUCTS #########################
@@ -472,9 +492,11 @@ def p_error(p):
 
 precedence = (
     tuple(["right", "ASSIGN"] + [a for a in assigns.values()]),
+    ("left", "CONS", "LAMBDA"),
     ("left", "OR"),
     ("left", "XOR"),
     ("left", "AND"),
+    ("left", "CLS", "CMP", "CMP2"),
     ("left", "EQUALS", "UNEQUALS"),
     (
         "left",
@@ -488,7 +510,7 @@ precedence = (
     ("right", "POWER", "EXP"),
     ("left", "IMAG"),
     ("right", "NOT", "UPLUS", "UMINUS"),  # weil -7++ = -6 und nicht -8
-    ("right", "LPAREN"),  # , "RPAREN"),
+    ("right", "LPAREN", "RPAREN"),
 )
 
 ########################################################

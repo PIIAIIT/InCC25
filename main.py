@@ -23,7 +23,8 @@ def test_code(debug=False):
         try:
             r = eval(result, env)
             print(r)
-        except Exception:
+        except Exception as e:
+            print(e)
             print("Fehler bei der Eingabe: ", i)
 
 

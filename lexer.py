@@ -64,7 +64,8 @@ table = {
     "echo": "ECHO",
     "länge": "LENGTH",
     "list": "LIST",
-    "&": "CONST",
+    "&": "CONS",
+    "leere": "NULL",
     "sei": "LET",  # Ist schon ein Letrec
     r",": "COMMA",
 }

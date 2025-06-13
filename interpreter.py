@@ -2,9 +2,7 @@ import numpy as np
 from environment import Environment
 from _lambda import (
     Lambda,
-    PartialApplication,
     call_lambda,
-    call_partial_application,
     parse_call_arguments,
     parse_lambda_parameters,
 )
@@ -63,19 +61,20 @@ def eval(expression, env: Environment):
             y = eval(expr2, env)
             return bin_operations[op](x, y)
 
-        case ("comparison_chain", expr1, chain):
-            x = eval(expr1, env)
-            result = True
-            for op, expr2 in chain:
-                y = eval(expr2, env)
-                result = result and bin_operations[op](x, y)
-                x = y
-            return result
-
-        case ("comparison_chain", op, expr1, expr2):
-            x = eval(expr1, env)
-            y = eval(expr2, env)
-            return bin_operations[op](x, y)
+        case ("comparison", f, x, y):
+            ops = []
+            expr1 = []
+            expr2 = []
+            ops.append(f)
+            expr1.append(x)
+            tmp = y
+            while tmp[0] == 'comparison':
+                ops.append(tmp[1])
+                expr2.append(tmp[2])
+                expr1.append(tmp[2])
+                tmp = tmp[3]
+            expr2.append(tmp)
+            return int(all([bin_operations[ops[i]](eval(expr1[i], env), eval(expr2[i], env)) for i in range(len(ops))]))
 
         case ("assign", op, var, val):
             y = eval(val, env)
@@ -98,6 +97,7 @@ def eval(expression, env: Environment):
             if else_body is None:  # Fall kein else
                 if eval(condition, env) == 1:
                     # statements handling
+                    return eval(("seq", then_body), env)
                     for expr in then_body[:-1]:
                         eval(expr, env)
                     return eval(then_body[-1], env)
@@ -106,41 +106,30 @@ def eval(expression, env: Environment):
             else:
                 for cond, statement in else_body:
                     if cond == "None":
+                        return eval(("seq", statement), env)
                         for expr in statement[:-1]:
                             eval(expr, env)
                         return eval(statement[-1], env)
-                    if eval(cond, env):
+                    elif eval(cond, env):
+                        return eval(("seq", statement), env)
                         for expr in statement[:-1]:
                             eval(expr, env)
                         return eval(statement[-1], env)
                 return None
 
-        # Sem(if expr0: expr1 else expr2, U;S) = (x, S'')
-        # wobei (b,S')=Sem(expr0, U;S)
-        #
-        # (x,S") = Sem(expr1, U;S') falls b=true
-        #           Sem(expr2, U;S') sonst
-
         case ("while", condition, body):
             result = None
             while eval(condition, env):
-                for b in body:
-                    result = eval(b, env)
+                result = eval(("seq", body), env)
             return result
-
-        # Sem(while cond: expr, U;S) = (x,S")     ,falls n!=0
-        #                            = (None,S")  ,sonst
-        # (x,S') = Sem(begin cond; expr end, U)^n(S)
-        # (t,S") = Sem(cond, U;S') , t=False und n die kleinste Zahl mit dieser Eigenschaft
-        # (n,S') = Sem(expr1, U;S)
 
         case ("loop", counter, interval, body):
             left_interval, expr1, expr2, right_interval = interval
 
             a = eval(expr1, env)
             b = eval(expr2, env)
-            if isinstance(a, float) or isinstance(b, float):
-                raise TypeError("Float Type is not supported!")
+            if not isinstance(a, int) or not isinstance(b, int):
+                raise TypeError("Non-Int Type is not supported!")
             a += 1 if left_interval == "]" else 0
             b -= 1 if right_interval == "[" else 0
 
@@ -148,42 +137,71 @@ def eval(expression, env: Environment):
             result = None
             while env[counter] < b:
                 env[counter] += 1
-                for _b in body:
-                    result = eval(_b, env)
+                result = eval(("seq", body), env)
+                # for _b in body:
+                #     result = eval(_b, env)
             return result
 
-        # Sem(loop expr1: expr2, U;S) = (None, S')          falls n=0
-        #                             = Sem(expr2, U)^n(S') sonst
         case ("lambda", parameter, body):
-            params, defauls, varargs = parse_lambda_parameters(parameter, eval, env)
-            return Lambda(params, varargs, defauls, body, env)
+            params, defaults, varargs = parse_lambda_parameters(parameter, eval, env)
+            # print("Lambda-Def: ", params, defaults, varargs)
+            return Lambda(params, varargs, defaults, body, env)
 
         case ("call", func, args_expr):
             func_obj = eval(func, env)
+            # print("Dieses Lambda wird gecallt: ", func_obj)
 
             if isinstance(func_obj, Lambda):
                 pos_arg, key_arg = parse_call_arguments(args_expr, eval, env)
+                # print("Diese Argumenten wurden geparst", pos_arg, key_arg)
                 return call_lambda(func_obj, pos_arg, key_arg, eval, env)
-
-            elif isinstance(func_obj, PartialApplication):
-                pos_arg, key_arg = parse_call_arguments(args_expr, eval, env)
-                return call_partial_application(func_obj, pos_arg, key_arg, eval, env)
 
             else:
                 # Alter Code für Kompatibilität (falls noch andere Funktionstypen verwendet werden)
                 raise TypeError(f"Cannot call object of type {type(func_obj)}")
 
-        case ("let", ("assign", op, var, val) as asgn, expr):
+        case ("let", ("assign", op, var, val) as asgn, body):
             env2 = Environment(env)
             env2.put(var)
             eval(asgn, env2)
-            return eval(expr, env2)
+            return eval(body, env2)
 
         case ("function", func, params):
             a = []
             for expr in params:
                 a.append(eval(expr, env))
             return func_list[func](a)
+
+        case ("array", list_elements):
+            arr = []
+            for elem in list_elements:
+                a = eval(elem, env)
+                arr.append(a)
+            return arr
+
+        case ("array_access", array_ptr, index):
+            arr = eval(array_ptr, env)
+            if index == ".":
+                return arr[0]
+            elif index == "*":
+                if len(arr) == 2:
+                    return arr[1]
+                return arr[1:]
+            else:
+                i = eval(index, env)
+                return arr[i]
+
+        case ("list", list_elements):
+            # anonyme lambda func
+            return eval(
+                    ("cons", list_elements[0], ("list", list_elements[1:])) if len(list_elements) > 0 else ("leere"), env
+            )
+
+        case ("cons", expr1, expr2):
+            return eval(expr1, env), eval(expr2, env)
+
+        case ("leere"):
+            return None
 
         case _:
             print(f"unknown expression {expression}")

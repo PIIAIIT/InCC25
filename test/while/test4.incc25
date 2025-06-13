@@ -10,6 +10,7 @@ solange x2 < x1 gilt,
   x2:=x2+1
 .;
 x0;
+assert := x0 = 4;
 
 # DIVISION FUNCTION #
 # PROCEDUR: x0 = div(x1, x2): #
@@ -20,6 +21,7 @@ solange x1 >= x2 gilt,
     x0:=x0+1
 .;
 x0;
+assert +:= x0 = 2;
 
 # MODULO FUNCTION #
 # PROCEDUR: x1 = mod(x1, x2): #
@@ -30,6 +32,7 @@ solange x1 >= x2 gilt,
     x0:=x0+1
 .;
 x1;
+assert +:= x1 = 0;
 
 # CANTOR FUNCTION #
 # PROCEDUR: x0 = cantor(x, y): #
@@ -41,5 +44,7 @@ solange i < z gilt,
     i:=i+1;
     s:=s+i
 .;
-x0:=x+s
+x0:=x+s;
+assert +:= x0 = 17;
+assert
 }

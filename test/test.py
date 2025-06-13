@@ -143,7 +143,7 @@ assert test_interpreter("3 imag") == 3j
 assert test_interpreter("(2 + 3) imag") == 5j
 
 assert test_interpreter("{2 < 5 <2 e 10 > 0}") == 1
-assert test_interpreter("{2 < 5 and 5<2 e 10 and 2e 10 > 0}") == 0
+assert test_interpreter("{2 < 5 and 5<2 e 10 and 2e 10 > 0}") == 1
 assert test_interpreter("{(2 < 5) and (5<2 e 10) and (2e 10 > 0)}") == 1
 assert test_interpreter("{x:=2<3; x:=x+1; x}") == 2
 
@@ -205,7 +205,7 @@ assert test_parser(read_file("test6.incc25"), verbose=v)
 ################### INTERPRETER TEST ###################
 assert test_interpreter(read_file("test1.incc25"), verbose=v) == 23
 assert test_interpreter(read_file("test2.incc25"), verbose=v) == 2432902008176640000
-assert test_interpreter(read_file("test3.incc25"), verbose=v) == 50 / 4
-assert test_interpreter(read_file("test4.incc25"), verbose=v) == 17
-assert test_interpreter(read_file("test5.incc25"), verbose=v)
-assert test_interpreter(read_file("test6.incc25"), verbose=v) == 324
+assert test_interpreter(read_file("test3.incc25"), verbose=v) == 4
+assert test_interpreter(read_file("test4.incc25"), verbose=v) == 4
+assert test_interpreter(read_file("test5.incc25"), verbose=v) == 4
+assert test_interpreter(read_file("test6.incc25"), verbose=v) == 7

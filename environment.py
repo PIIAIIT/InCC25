@@ -39,13 +39,4 @@ class Environment(dict):
             self.parent[name] = value
 
     def __str__(self):
-        lines = []
-        env = self
-        level = 0
-        while env is not None:
-            indent = "  " * level
-            scope_type = "Global" if env.parent is None else f"Scope Level {level}"
-            lines.append(f"{indent}{scope_type}: {env.vars}")
-            env = env.parent
-            level += 1
-        return "\n".join(reversed(lines))
+        return str(self.vars) + "\n" + str(self.parent)

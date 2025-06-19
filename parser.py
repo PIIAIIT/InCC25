@@ -12,7 +12,6 @@ look_up_table = {
     "\\": "divide_floor",
     "e": "exp",
     "imag": "imag",
-    # booleans
     "and": "and",
     "or": "or",
     "xor": "xor",
@@ -56,7 +55,7 @@ def p_var(p):
 
 
 def p_paran(p):
-    "atomar : LPAREN expression RPAREN"
+    "expression : LPAREN expression RPAREN"
     p[0] = p[2]
 
 
@@ -104,7 +103,6 @@ def p_expression_comparison_chain1(p):
     """
     comparison : expression comparison_op expression %prec CMP
     """
-    # TODO: SHIFT-REDUCE STATE 117
     p[0] = [p[2], p[1], p[3]]
 
 
@@ -183,23 +181,16 @@ def p_expression2(p):
 
 def p_statement0(p):
     """
-    statement : expression
+    statements : expression
     """
-    p[0] = p[1]
+    p[0] = [p[1]]
 
 
 def p_statements0(p):
     """
-    statements : statements SEMICOLON statement
+    statements : statements SEMICOLON expression
     """
     p[0] = p[1] + [p[3]]
-
-
-def p_statements1(p):
-    """
-    statements : statement
-    """
-    p[0] = [p[1]]
 
 
 ######################### IF #########################
@@ -207,7 +198,7 @@ def p_statements1(p):
 
 def p_if_statements1(p):
     """
-    if_statement : IF expression THEN statements DOT
+    expression : IF expression THEN statements DOT
                  | IF expression THEN statements else_elif_body DOT
     """
     if len(p) == 6:
@@ -222,16 +213,9 @@ def p_if_statements2(p):
                    | ELSE statements
     """
     if len(p) == 3:
-        p[0] = [("None", p[2])]
+        p[0] = [("else", p[2])]
     else:
         p[0] = [(p[3], p[5]), *p[6]]
-
-
-def p_if_statements3(p):
-    """
-    expression : if_statement
-    """
-    p[0] = p[1]
 
 
 ######################### WHILE #########################
@@ -239,16 +223,9 @@ def p_if_statements3(p):
 
 def p_while_statement0(p):
     """
-    while_statement : WHILE expression THEN statements DOT
+    expression : WHILE expression THEN statements DOT
     """
     p[0] = ("while", p[2], p[4])
-
-
-def p_while_statement1(p):
-    """
-    expression : while_statement
-    """
-    p[0] = p[1]
 
 
 ######################### LOOP #########################
@@ -256,39 +233,37 @@ def p_while_statement1(p):
 
 def p_loop_statement0(p):
     """
-    loop_statement : LOOP IDENTIFIER IN interval LOOPTHEN statements DOT
+    expression : LOOP IDENTIFIER IN iter LOOPTHEN statements DOT
     """
     p[0] = ("loop", p[2], p[4], p[6])
 
 
+def p_loop_iter(p):
+    """
+    iter : interval
+         | expression
+    """
+    # expression muss eine Array oder Liste sein
+    # wird im Interpreter geregelt
+    p[0] = p[1]
+
+
 def p_interval(p):
     """
-    interval : OPEN_BRACKETS   expression COMMA expression CLOSED_BRACKETS
-             | CLOSED_BRACKETS expression COMMA expression CLOSED_BRACKETS
-             | OPEN_BRACKETS   expression COMMA expression OPEN_BRACKETS
-             | CLOSED_BRACKETS expression COMMA expression OPEN_BRACKETS
+    interval : OPEN_BRACKETS   expression ITER expression CLOSED_BRACKETS
+             | CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
+             | OPEN_BRACKETS   expression ITER expression OPEN_BRACKETS
+             | CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
     """
-    p[0] = (p[1], p[2], p[4], p[5])
-
-
-def p_loop_statement1(p):
-    """
-    expression : loop_statement
-    """
-    p[0] = p[1]
+    p[0] = ("interval", p[1], p[2], p[4], p[5])
 
 
 ######################### LAMBDA #########################
 
 
 def p_lambda0(p):
-    "lambda : LAMBDA parameter LAMBDA_ARROW expression %prec LAMBDA"
+    "expression : LAMBDA parameter LAMBDA_ARROW expression %prec LAMBDA"
     p[0] = ("lambda", p[2], p[4])
-
-
-def p_lambda1(p):
-    "expression : lambda"
-    p[0] = p[1]
 
 
 def p_parameter0(p):
@@ -411,11 +386,17 @@ def p_let(p):
 
 def p_builtin_func(p):
     """
-    expression : ECHO   LPAREN param_list RPAREN
-               | LENGTH LPAREN param_list RPAREN
-               | LIST   LPAREN param_list RPAREN
+    expression : function LPAREN param_list RPAREN
     """
     p[0] = ("function", p[1], p[3])
+
+
+def p_func(p):
+    """function : ECHO
+                | LENGTH
+                | LIST
+    """
+    p[0] = p[1]
 
 
 def p_paramlist1(p):
@@ -429,29 +410,18 @@ def p_paramlist2(p):
 
 
 ######################### LISTS #########################
+###################### WIE IN LISP mit KOMMA ######################
 
 
-# def p_list_param0(p):
-#     "list_parameter : expression expression list_parameter"
-#     p[0] = [p[1], p[2], *p[3]]
-#
-#
-# def p_list_param1(p):
-#     "list_parameter : expression"
-#     p[0] = [p[1]]
-#
-#
-# def p_list_param2(p):
-#     "expression : list_parameter"
-#     p[0] = ("list", p[1])
-#
+def p_list(p):
+    "expression : LPAREN param_list RPAREN"
+    p[0] = ("list", p[2])
+
 
 def p_list_zugriff(p):
-    """expression : expression OPEN_BRACKETS DOT CLOSED_BRACKETS
-                  | expression OPEN_BRACKETS TIMES CLOSED_BRACKETS
+    """expression : expression OPEN_BRACKETS PLUS CLOSED_BRACKETS
                   | expression OPEN_BRACKETS expression CLOSED_BRACKETS
     """
-    # TIMES == ASTRIKS
     p[0] = ("array_access", p[1], p[3])
 
 
@@ -461,7 +431,7 @@ def p_leere_liste(p):
 
 
 def p_cons(p):
-    "expression : expression CONS expression"
+    "expression : expression CONS expression %prec CONS"
     p[0] = ("cons", p[1], p[3])
 
 
@@ -492,14 +462,15 @@ def p_error(p):
 
 precedence = (
     tuple(["right", "ASSIGN"] + [a for a in assigns.values()]),
-    ("left", "CONS", "LAMBDA"),
+    ("left", "LAMBDA"),
     ("left", "OR"),
     ("left", "XOR"),
     ("left", "AND"),
     ("left", "CLS", "CMP", "CMP2"),
-    ("left", "EQUALS", "UNEQUALS"),
     (
         "left",
+        "EQUALS",
+        "UNEQUALS",
         "GREATER_THAN",
         "SMALLER_THAN",
         "SMALLER_EQUALS",
@@ -510,6 +481,8 @@ precedence = (
     ("right", "POWER", "EXP"),
     ("left", "IMAG"),
     ("right", "NOT", "UPLUS", "UMINUS"),  # weil -7++ = -6 und nicht -8
+    ("left", "CONS"),
+    ("nonassoc", "OPEN_BRACKETS", "CLOSED_BRACKETS"),
     ("right", "LPAREN", "RPAREN"),
 )
 

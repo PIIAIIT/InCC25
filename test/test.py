@@ -2,9 +2,6 @@ from lexer import lexer
 from parser import parser
 from interpreter import eval
 from environment import Environment
-import math
-import os
-import sys
 from pathlib import Path
 
 env = Environment()
@@ -86,7 +83,7 @@ def test_interpreter(input_string, env=None, verbose=False):
 
     ast = parser.parse(input_string, debug=verbose)
     print(ast, end=" === ") if verbose else ""
-    res = eval(ast, env)
+    res = eval(ast, env, verbose)
     print(res) if verbose else ""
     return res
 
@@ -195,17 +192,20 @@ assert test_lexer(read_file("test1.incc25"), verbose=v)
 assert test_lexer(read_file("test2.incc25"), verbose=v)
 assert test_lexer(read_file("test3.incc25"), verbose=v)
 assert test_lexer(read_file("test6.incc25"), verbose=v)
+# assert test_lexer(read_file("test7.incc25"), verbose=v)
 
 ################### PARSER TEST ###################
 assert test_parser(read_file("test1.incc25"), verbose=v)
 assert test_parser(read_file("test2.incc25"), verbose=v)
 assert test_parser(read_file("test3.incc25"), verbose=v)
 assert test_parser(read_file("test6.incc25"), verbose=v)
+# assert test_parser(read_file("test7.incc25"), verbose=v)
 
 ################### INTERPRETER TEST ###################
-assert test_interpreter(read_file("test1.incc25"), verbose=v) == 23
+assert test_interpreter(read_file("test1.incc25"), verbose=v) == 24
 assert test_interpreter(read_file("test2.incc25"), verbose=v) == 2432902008176640000
 assert test_interpreter(read_file("test3.incc25"), verbose=v) == 4
 assert test_interpreter(read_file("test4.incc25"), verbose=v) == 4
 assert test_interpreter(read_file("test5.incc25"), verbose=v) == 4
 assert test_interpreter(read_file("test6.incc25"), verbose=v) == 7
+assert test_interpreter(read_file("test7.incc25"), verbose=v) == 2

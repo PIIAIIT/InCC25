@@ -2,7 +2,7 @@
 # factorial function #
 n:=20;
 x:=1;
-für i in [1 ,n] wiederhole
+für i in [1..n] wiederhole
   x := x * i
 .
 }

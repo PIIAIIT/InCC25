@@ -37,7 +37,7 @@ unary = {
 }  # unary
 
 table = {
-    r"(\d+\.\d*|\.\d+)": "FLOAT",
+    r"(\d+\.\d+)": "FLOAT",
     r"0x[0-9a-fA-F]+|0b(0|1[01]*)|\d+": "NUMBER",
     r'"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'': "STRING",
     r"\(": "LPAREN",
@@ -51,6 +51,7 @@ table = {
     r"\}": "END",  # Sequence End
     r"->": "LAMBDA_ARROW",
     r"\.\.\.": "DOTS",
+    r"\.\.": "ITER",
     r"\.": "DOT",
     "wenn": "IF",
     "gilt,": "THEN",

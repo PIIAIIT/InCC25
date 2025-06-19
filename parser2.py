@@ -1,6 +1,6 @@
 import unique_name
 from ply.yacc import yacc
-from lexer import tokens, binops, unary, assigns, print_error_with_caret
+from lexer import tokens, binops, assigns, print_error_with_caret
 
 unique = unique_name.generator()
 module = __import__(__name__)
@@ -126,9 +126,10 @@ precedence = (
     ("left", "OR"),
     ("left", "XOR"),
     ("left", "AND"),
-    ("left", "EQUALS", "UNEQUALS"),
     (
         "left",
+        "EQUALS",
+        "UNEQUALS",
         "GREATER_THAN",
         "SMALLER_THAN",
         "SMALLER_EQUALS",

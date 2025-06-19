@@ -1,11 +1,12 @@
 import numpy as np
-from environment import Environment
+
 from _lambda import (
     Lambda,
     call_lambda,
     parse_call_arguments,
     parse_lambda_parameters,
 )
+from environment import Environment
 
 bin_operations = {
     "plus": lambda x, y: x + y,
@@ -36,22 +37,29 @@ unary_operations = {
 }
 
 
-def eval(expression, env: Environment):
+def eval(expression, env: Environment, debug=False):
     match expression:
         case ("num", n):
+            print("num", n) if debug else ""
             if n.startswith("0b"):
+                print("num", int(n, 2)) if debug else ""
                 return int(n, 2)
             if n.startswith("0x"):
+                print("num", int(n, 16)) if debug else ""
                 return int(n, 16)
             return int(n)
         case ("float", n):
+            print("float", n) if debug else ""
             return float(n)
         case ("str", n):
-            return str(n)
+            print("str", n) if debug else ""
+            return str(n[1:-1])
         case ("complex", imag):
+            print("complex", imag) if debug else ""
             a = eval(imag, env)
             return unary_operations["imag"](a)
         case ("var", n):
+            print("var", n) if debug else ""
             if n not in env:
                 raise Exception(f"variable {n} not found in environment {env}")
             return env[n]
@@ -59,26 +67,62 @@ def eval(expression, env: Environment):
         case ("binop", op, expr1, expr2):
             x = eval(expr1, env)
             y = eval(expr2, env)
-            return bin_operations[op](x, y)
+            func = bin_operations[op]
+            if isinstance(x, list) and isinstance(y, list):
+                return [func(i, j) for i, j in zip(x, y)]
+            elif isinstance(x, list):
+                return [func(i, y) for i in x]
+            elif isinstance(y, list):
+                return [func(x, i) for i in y]
+            if isinstance(x, tuple) and isinstance(y, tuple):
+                def inner(ls1, ls2):
+                    a, b = ls1[0], ls2[0]
+                    if a is None or b is None:
+                        return ls2 if b is None else ls1
+                    if ls1[1] is None or ls2[1] is None:
+                        return (func(a, b), None)
+                    return (func(a, b), inner(ls1[1], ls2[1]))
+                return inner(x, y)
+            elif isinstance(x, tuple):
+                def inner2(ls1, y):
+                    a = ls1[0]
+                    if a is None:
+                        return ls1
+                    if ls1[1] is None:
+                        return (func(a, y), None)
+                    return (func(a, y), inner2(ls1[1], y))
+                return inner2(x, y)
+            elif isinstance(y, tuple):
+                def inner3(x, ls2):
+                    a = ls2[0]
+                    if a is None:
+                        return ls2
+                    if ls2[1] is None:
+                        return (func(x, a), None)
+                    return (func(x, a), inner3(x, ls2[1]))
+                return inner3(x, y)
+            return func(x, y)
 
         case ("comparison", f, x, y):
-            ops = []
-            expr1 = []
-            expr2 = []
-            ops.append(f)
-            expr1.append(x)
+            ops = [f]
+            exprs = [x]
             tmp = y
             while tmp[0] == 'comparison':
                 ops.append(tmp[1])
-                expr2.append(tmp[2])
-                expr1.append(tmp[2])
+                exprs.append(tmp[2])
                 tmp = tmp[3]
-            expr2.append(tmp)
-            return int(all([bin_operations[ops[i]](eval(expr1[i], env), eval(expr2[i], env)) for i in range(len(ops))]))
+            exprs.append(tmp)
+            values = [eval(e, env) for e in exprs]
+            return int(all([bin_operations[ops[i]](values[i], values[i+1]) for i in range(len(ops))]))
 
         case ("assign", op, var, val):
             y = eval(val, env)
             if op is not None:
+                if debug:
+                    print("Assign: ", op, var, val)
+                # Erst wieder Entkommentieren, wenn Let korrekt funktioniert.
+                # if var not in env:
+                #     raise NameError(f"Variable '{var}' not defined before augmented assignment.")
                 env[var] = bin_operations[op](env[var], y)
             else:
                 env[var] = y
@@ -94,28 +138,18 @@ def eval(expression, env: Environment):
             return eval(body[-1], env)
 
         case ("if", condition, then_body, else_body):
-            if else_body is None:  # Fall kein else
-                if eval(condition, env) == 1:
-                    # statements handling
-                    return eval(("seq", then_body), env)
-                    for expr in then_body[:-1]:
-                        eval(expr, env)
-                    return eval(then_body[-1], env)
-                else:
-                    return None
-            else:
+            if eval(condition, env):
+                # statements handling
+                return eval(("seq", then_body), env)
+
+            if else_body is not None:  # Fall kein else
                 for cond, statement in else_body:
-                    if cond == "None":
+                    if cond == "else":
                         return eval(("seq", statement), env)
-                        for expr in statement[:-1]:
-                            eval(expr, env)
-                        return eval(statement[-1], env)
                     elif eval(cond, env):
                         return eval(("seq", statement), env)
-                        for expr in statement[:-1]:
-                            eval(expr, env)
-                        return eval(statement[-1], env)
-                return None
+            # falls if übersprungen wird
+            return None
 
         case ("while", condition, body):
             result = None
@@ -124,41 +158,46 @@ def eval(expression, env: Environment):
             return result
 
         case ("loop", counter, interval, body):
-            left_interval, expr1, expr2, right_interval = interval
+            arr = eval(interval, env)
 
+            # Normalisiere das arr zu einem Iterierbaren Objekt
+            if isinstance(arr, tuple):
+                res_list = []
+                tmp = arr # (2, (3, (4, None)))
+                while tmp is not None and isinstance(tmp, tuple):
+                    res_list.append(tmp[0])
+                    tmp = tmp[1]
+                arr = res_list
+
+            local_env = Environment(env)
+            local_env.put(counter)
+            result = None
+            for i in arr:
+                local_env[counter] = i
+                result = eval(("seq", body), local_env)
+            return result
+
+        case ("interval", left_interval, expr1, expr2, right_interval):
             a = eval(expr1, env)
             b = eval(expr2, env)
             if not isinstance(a, int) or not isinstance(b, int):
                 raise TypeError("Non-Int Type is not supported!")
             a += 1 if left_interval == "]" else 0
             b -= 1 if right_interval == "[" else 0
-
-            env[counter] = a
-            result = None
-            while env[counter] < b:
-                env[counter] += 1
-                result = eval(("seq", body), env)
-                # for _b in body:
-                #     result = eval(_b, env)
-            return result
+            return range(a, b+1)
 
         case ("lambda", parameter, body):
             params, defaults, varargs = parse_lambda_parameters(parameter, eval, env)
-            # print("Lambda-Def: ", params, defaults, varargs)
             return Lambda(params, varargs, defaults, body, env)
 
         case ("call", func, args_expr):
             func_obj = eval(func, env)
-            # print("Dieses Lambda wird gecallt: ", func_obj)
 
-            if isinstance(func_obj, Lambda):
-                pos_arg, key_arg = parse_call_arguments(args_expr, eval, env)
-                # print("Diese Argumenten wurden geparst", pos_arg, key_arg)
-                return call_lambda(func_obj, pos_arg, key_arg, eval, env)
-
-            else:
-                # Alter Code für Kompatibilität (falls noch andere Funktionstypen verwendet werden)
+            if not isinstance(func_obj, Lambda):
                 raise TypeError(f"Cannot call object of type {type(func_obj)}")
+
+            pos_arg, key_arg = parse_call_arguments(args_expr, eval, env)
+            return call_lambda(func_obj, pos_arg, key_arg, eval, env)
 
         case ("let", ("assign", op, var, val) as asgn, body):
             env2 = Environment(env)
@@ -170,7 +209,19 @@ def eval(expression, env: Environment):
             a = []
             for expr in params:
                 a.append(eval(expr, env))
-            return eval(func_list[func](a), env)
+            res = None
+            match func:
+                case 'echo':
+                    res = __echo(a)
+                case 'list':
+                    # erstelle eine Liste
+                    if params == []:
+                        res = ("leere")
+                    else:
+                        res = ("list", params)
+                case 'länge':
+                    res = __länge(a)
+            return eval(res, env)
 
         case ("array", list_elements):
             arr = []
@@ -181,27 +232,43 @@ def eval(expression, env: Environment):
 
         case ("array_access", array_ptr, index):
             arr = eval(array_ptr, env)
-            if index == ".":
-                return arr[0]
-            elif index == "*":
-                if len(arr) == 2:
-                    return arr[1]
-                return arr[1:]
+
+            if isinstance(arr, tuple):
+                match index:
+                    case '+':
+                        return arr[1]
+                    case _:
+                        i = eval(index, env)
+                        tmp = arr
+                        for _ in range(i):
+                            if tmp[1] is None:
+                                raise IndexError("Index out of Bounds")
+                            tmp = tmp[1]
+                        return tmp[0]
+            elif isinstance(arr, list):
+                match index:
+                    case '+':
+                        return arr[1:]
+                    case _:
+                        return arr[eval(index, env)]
             else:
-                i = eval(index, env)
-                return arr[i]
+                raise Exception("Array Access ist nicht bei nicht-Listen/Arrays definiert")
 
         case ("list", list_elements):
-            # anonyme lambda func
             return eval(
                     ("cons", list_elements[0], ("list", list_elements[1:])) if len(list_elements) > 0 else ("leere"), env
             )
 
         case ("cons", expr1, expr2):
-            return eval(expr1, env), eval(expr2, env)
+            a = eval(expr1, env)
+            b = eval(expr2, env)
+            return (eval(expr1, env), eval(expr2, env))
 
         case ("leere"):
             return None
+
+        # TODO:
+        # Stucts oder Standard-Lib
 
         case _:
             print(f"unknown expression {expression}")
@@ -210,24 +277,22 @@ def eval(expression, env: Environment):
 
 def __länge(lst):
     """ Länge einer Liste/Array bestimmen"""
-    if len(lst) != 1: 
-        raise Exception("")
-    if not isinstance(lst[0], list):
-        raise Exception("")
-    return ("num", str(len(lst[0])))
+    if len(lst) != 1:
+        raise Exception("Länge Funktion akzeptiert nur 1 Argument type: List|Array|String")
+    elif isinstance(lst[0], tuple):
+        def inner(a):
+            if a[0] is None:
+                return 0
+            if a[1] is None:
+                return 1
+            return 1 + inner(a[1])
+        return ("num", str(inner(lst[0])))
+    elif isinstance(lst[0], list):
+        return ("num", str(len(lst[0])))
+    elif isinstance(lst[0], str):
+        return ("num", str(len(lst[0])))
 
 
-def __echo(*lst):
-    print(lst)
+def __echo(lst):
+    print(*lst)
     return ("leere")
-
-
-def __list(param):
-   return ("list", param)
-
-
-func_list = {
-    "echo": __echo,
-    "länge": __länge,
-    "list": __list,
-}

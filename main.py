@@ -9,18 +9,18 @@ env = Environment()
 
 def test_code(debug=False):
     while True:
-        i = input(">>> ")
-        if i in " \t\n":
-            continue
-        if i == "q":
-            break
-        i = "{" + i + "}"
-        # try:
-        result = parser.parse(i, debug=debug)
-        if debug:
-            print(result)
-
         try:
+            i = input(">>> ")
+            if i in " \t\n":
+                continue
+            if i == "q":
+                break
+            i = "{" + i + "}"
+            # try:
+            result = parser.parse(i, debug=debug)
+            if debug:
+                print(result)
+
             r = eval(result, env)
             print(r)
         except Exception as e:

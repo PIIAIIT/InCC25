@@ -27,6 +27,7 @@ bin_operations = {
     "greater_equals": lambda x, y: int(x >= y),
     "smaller_equals": lambda x, y: int(x <= y),
     "unequals": lambda x, y: int(x != y),
+    "cons": lambda x, y: (x, y),
 }
 
 unary_operations = {
@@ -68,39 +69,10 @@ def eval(expression, env: Environment, debug=False):
             x = eval(expr1, env)
             y = eval(expr2, env)
             func = bin_operations[op]
-            if isinstance(x, list) and isinstance(y, list):
-                return [func(i, j) for i, j in zip(x, y)]
-            elif isinstance(x, list):
-                return [func(i, y) for i in x]
-            elif isinstance(y, list):
-                return [func(x, i) for i in y]
-            if isinstance(x, tuple) and isinstance(y, tuple):
-                def inner(ls1, ls2):
-                    a, b = ls1[0], ls2[0]
-                    if a is None or b is None:
-                        return ls2 if b is None else ls1
-                    if ls1[1] is None or ls2[1] is None:
-                        return (func(a, b), None)
-                    return (func(a, b), inner(ls1[1], ls2[1]))
-                return inner(x, y)
-            elif isinstance(x, tuple):
-                def inner2(ls1, y):
-                    a = ls1[0]
-                    if a is None:
-                        return ls1
-                    if ls1[1] is None:
-                        return (func(a, y), None)
-                    return (func(a, y), inner2(ls1[1], y))
-                return inner2(x, y)
-            elif isinstance(y, tuple):
-                def inner3(x, ls2):
-                    a = ls2[0]
-                    if a is None:
-                        return ls2
-                    if ls2[1] is None:
-                        return (func(x, a), None)
-                    return (func(x, a), inner3(x, ls2[1]))
-                return inner3(x, y)
+            if res := binop_for_lists(x, y, func) is not None:
+                return res
+            elif res := binop_for_tuples(x, y, func) is not None:
+                return res
             return func(x, y)
 
         case ("comparison", f, x, y):
@@ -199,10 +171,11 @@ def eval(expression, env: Environment, debug=False):
             pos_arg, key_arg = parse_call_arguments(args_expr, eval, env)
             return call_lambda(func_obj, pos_arg, key_arg, eval, env)
 
-        case ("let", ("assign", op, var, val) as asgn, body):
+        case ("let", assignments, body):
             env2 = Environment(env)
-            env2.put(var)
-            eval(asgn, env2)
+            for _, op, var, val in assignments:
+                env2.put(var)
+                eval(("assign", op, var, val), env2)
             return eval(body, env2)
 
         case ("function", func, params):
@@ -262,7 +235,7 @@ def eval(expression, env: Environment, debug=False):
         case ("cons", expr1, expr2):
             a = eval(expr1, env)
             b = eval(expr2, env)
-            return (eval(expr1, env), eval(expr2, env))
+            return (a, b)
 
         case ("leere"):
             return None
@@ -296,3 +269,45 @@ def __länge(lst):
 def __echo(lst):
     print(*lst)
     return ("leere")
+
+
+# PRIVATE FUNKTIONS
+def binop_for_lists(x, y, func):
+    if isinstance(x, list) and isinstance(y, list):
+        return [func(i, j) for i, j in zip(x, y)]
+    elif isinstance(x, list):
+        return [func(i, y) for i in x]
+    elif isinstance(y, list):
+        return [func(x, i) for i in y]
+    return None
+
+
+def binop_for_tuples(x, y, func):
+    if isinstance(x, tuple) and isinstance(y, tuple):
+        def inner(ls1, ls2):
+            a, b = ls1[0], ls2[0]
+            if a is None or b is None:
+                return ls2 if b is None else ls1
+            if ls1[1] is None or ls2[1] is None:
+                return (func(a, b), None)
+            return (func(a, b), inner(ls1[1], ls2[1]))
+        return inner(x, y)
+    elif isinstance(x, tuple):
+        def inner2(ls1, y):
+            a = ls1[0]
+            if a is None:
+                return ls1
+            if ls1[1] is None:
+                return (func(a, y), None)
+            return (func(a, y), inner2(ls1[1], y))
+        return inner2(x, y)
+    elif isinstance(y, tuple):
+        def inner3(x, ls2):
+            a = ls2[0]
+            if a is None:
+                return ls2
+            if ls2[1] is None:
+                return (func(x, a), None)
+            return (func(x, a), inner3(x, ls2[1]))
+        return inner3(x, y)
+    return None

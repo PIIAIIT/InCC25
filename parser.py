@@ -375,10 +375,19 @@ def p_call(p):
 ######################### LET #########################
 ############## Ist Standardmäßig das LETREC ##############
 
+def p_let_assign0(p):
+    "let_assign : IDENTIFIER EQUALS expression COMMA let_assign"
+    p[0] = [("assign", None, p[1], p[3]), *p[5]]
+
+
+def p_let_assign1(p):
+    "let_assign : IDENTIFIER EQUALS expression"
+    p[0] = [("assign", None, p[1], p[3])]
+
 
 def p_let(p):
-    "expression : LET IDENTIFIER EQUALS expression IN expression DOT"
-    p[0] = ("let", ("assign", None, p[2], p[4]), p[6])
+    "expression : LET let_assign IN expression DOT"
+    p[0] = ("let", p[2], p[4])
 
 
 ######################### BUILTIN #########################

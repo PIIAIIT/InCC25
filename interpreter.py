@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 
 import numpy as np
 
@@ -177,7 +176,7 @@ def eval(expression, env: Environment, debug=False):
                 return call_lambda(func_obj, pos_arg, key_arg, eval, env)
             # Fall 2: Python-Built-in (z.B als Funktion mit __call__)
             elif callable(func_obj):
-                print("CALL", func_obj, args_expr)
+                print("CALL", func_obj, args_expr) if debug else ""
                 return func_obj(pos_arg, key_arg)
 
             else:

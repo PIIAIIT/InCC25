@@ -7,13 +7,14 @@ import sys
 
 env = Environment()
 builtins = {
-    "echo": builtin_print,
-    "länge": builtin_len,
-    "list": builtin_list,
+    "echo": BuiltinFunction(builtin_print),
+    "länge": BuiltinFunction(builtin_len),
+    "list": BuiltinFunction(builtin_list),
+    "type": BuiltinFunction(lambda pos, key: type(pos[0]))
 }
 
 for name, fn in builtins.items():
-    env.define(name, fn)
+    env[name] = fn
 
 
 def test_code(debug=False):

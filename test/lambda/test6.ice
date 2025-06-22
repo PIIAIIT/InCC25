@@ -15,9 +15,9 @@ assert +:= x = 1.5;
 
 # === Oversupply (Mehr Argumente) === #
 # Funktion mit variadischen Argumenten (z.B. letzte ist Rest) #
-variadic := lambda (x, y, rest...) -> x + y; #+ länge(rest);#
+variadic := lambda (x, y, rest...) -> x + y + länge(rest);
 x := variadic(1, 2, 3, 4); # Erwartet: 1 + 2 + 2 = 5 #
-assert +:= x = 3;
+assert +:= x = 5;
 
 # === Undersupply (Teilanwendung) === #
 multiply := lambda (x, y) -> x * y;
@@ -35,5 +35,5 @@ fancy := lambda (x, y, z) -> x + 10*y + 100*z;
 part := fancy(y: 2, z: 3); # => lambda (x) -> x + 20 + 300 #
 x := part(4); # Erwartet: 324 #
 assert +:= x = 324;
-assert # Erwartet 7 #
+assert; # Erwartet 7 #
 }

@@ -3,9 +3,19 @@ from parser import parser
 from interpreter import eval
 from environment import Environment
 from pathlib import Path
+from _builtin import *
 
-env = Environment()
-env.put(["x"])
+start_env = Environment()
+builtins = {
+    "echo": BuiltinFunction(builtin_print),
+    "länge": BuiltinFunction(builtin_len),
+    "list": BuiltinFunction(builtin_list),
+    "type": BuiltinFunction(lambda pos, key: type(pos[0]))
+}
+
+for name, fn in builtins.items():
+    start_env[name] = fn
+
 
 __BASE_DIR = Path(__file__).resolve().parent.parent
 __SEARCH_PATH = __BASE_DIR / "test"
@@ -75,7 +85,7 @@ def test_parser(input_string, verbose=False):
     return res is not None
 
 
-def test_interpreter(input_string, env=None, verbose=False):
+def test_interpreter(input_string, env=start_env, verbose=False):
     if input_string is None:
         print("Es ist ein Fehler mit dem InputStream.")
     input_string = input_string.strip("\n")
@@ -167,12 +177,12 @@ assert test_interpreter("+(-5)") == 5
 assert test_interpreter("not -1") == 0
 
 # ENVIRONMENT / ASSIGNMENT
-env = Environment()
-assert test_interpreter("a := 7", env) == 7
-assert env["a"] == 7
-assert test_interpreter("a := (x:=2) + 5", env) == 7
-assert env["x"] == 2
-assert env["a"] == 7
+new_env = Environment()
+assert test_interpreter("a := 7", new_env) == 7
+assert new_env["a"] == 7
+assert test_interpreter("a := (x:=2) + 5", new_env) == 7
+assert new_env["x"] == 2
+assert new_env["a"] == 7
 assert test_interpreter("a:=2; a+:=3; a") == 5
 assert test_interpreter("a:=2; a-:=5; a") == -3
 assert test_interpreter("a:=3; a*:=-2; a") == -6

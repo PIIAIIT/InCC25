@@ -1,5 +1,7 @@
-import numpy as np
 import os
+from pathlib import Path
+
+import numpy as np
 
 from _lambda import (
     Lambda,
@@ -217,7 +219,7 @@ def eval(expression, env: Environment, debug=False):
                     case _:
                         return arr[eval(index, env)]
             else:
-                raise Exception("Array Access ist nicht bei nicht-Listen/Arrays definiert")
+                raise Exception(f"{type(arr)} {arr} ist nicht veränderlich.")
 
         case ("list", list_elements):
             if len(list_elements) == 0:
@@ -235,7 +237,7 @@ def eval(expression, env: Environment, debug=False):
         case ("import", packages):
             errmsg = lambda file : f"Es gibt kein{"e" if len(packages)<=1 else ""} Modul{"e" if len(packages)> 1 else ""} mit dem Namen: {file}"
             for file in packages[:-1]:
-                file = file[1]
+                file: str = file[1]
                 if file not in loaded_modules:
                     if not file_in_path(file):
                         raise Exception(errmsg(file))
@@ -246,7 +248,7 @@ def eval(expression, env: Environment, debug=False):
                     loaded_modules.add(file)
             last_path = packages[-1]
             if last_path not in loaded_modules:
-                last_path = last_path[1]
+                last_path: str = last_path[1]
                 if not file_in_path(last_path):
                         raise Exception(errmsg(last_path))
                 with open(last_path, "r", encoding="utf-8") as f:

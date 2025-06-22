@@ -1,4 +1,5 @@
 import numpy as np
+import os
 
 from _lambda import (
     Lambda,
@@ -27,7 +28,6 @@ bin_operations = {
     "greater_equals": lambda x, y: int(x >= y),
     "smaller_equals": lambda x, y: int(x <= y),
     "unequals": lambda x, y: int(x != y),
-    "cons": lambda x, y: (x, y),
 }
 
 unary_operations = {
@@ -37,6 +37,9 @@ unary_operations = {
     "imag": lambda x: np.complex64(0, x),
 }
 
+
+pyeval = eval
+loaded_modules = set()
 
 def eval(expression, env: Environment, debug=False):
     match expression:
@@ -165,11 +168,18 @@ def eval(expression, env: Environment, debug=False):
         case ("call", func, args_expr):
             func_obj = eval(func, env)
 
-            if not isinstance(func_obj, Lambda):
-                raise TypeError(f"Cannot call object of type {type(func_obj)}")
-
             pos_arg, key_arg = parse_call_arguments(args_expr, eval, env)
-            return call_lambda(func_obj, pos_arg, key_arg, eval, env)
+
+            # Fall 1: eigene Lambda-Funktionen
+            if isinstance(func_obj, Lambda):
+                return call_lambda(func_obj, pos_arg, key_arg, eval, env)
+            # Fall 2: Python-Built-in (z.B als Funktion mit __call__)
+            elif callable(func_obj):
+                print("CALL", func_obj, args_expr)
+                return func_obj(pos_arg, key_arg)
+
+            else:
+                raise TypeError(f"Cannot call object of type {type(func_obj)}")
 
         case ("let", assignments, body):
             env2 = Environment(env)
@@ -177,24 +187,6 @@ def eval(expression, env: Environment, debug=False):
                 env2.put(var)
                 eval(("assign", op, var, val), env2)
             return eval(body, env2)
-
-        case ("function", func, params):
-            a = []
-            for expr in params:
-                a.append(eval(expr, env))
-            res = None
-            match func:
-                case 'echo':
-                    res = __echo(a)
-                case 'list':
-                    # erstelle eine Liste
-                    if params == []:
-                        res = ("leere")
-                    else:
-                        res = ("list", params)
-                case 'länge':
-                    res = __länge(a)
-            return eval(res, env)
 
         case ("array", list_elements):
             arr = []
@@ -228,17 +220,39 @@ def eval(expression, env: Environment, debug=False):
                 raise Exception("Array Access ist nicht bei nicht-Listen/Arrays definiert")
 
         case ("list", list_elements):
-            return eval(
-                    ("cons", list_elements[0], ("list", list_elements[1:])) if len(list_elements) > 0 else ("leere"), env
-            )
+            if len(list_elements) == 0:
+                return (None)
+            if len(list_elements) == 1:
+                return eval(("cons", list_elements[0], ("leere")), env)
+            return eval(("cons", list_elements[0], ("list", list_elements[1:])), env)
 
         case ("cons", expr1, expr2):
-            a = eval(expr1, env)
-            b = eval(expr2, env)
-            return (a, b)
+            return (eval(expr1, env), eval(expr2, env))
 
         case ("leere"):
             return None
+
+        case ("import", packages):
+            errmsg = lambda file : f"Es gibt kein{"e" if len(packages)<=1 else ""} Modul{"e" if len(packages)> 1 else ""} mit dem Namen: {file}"
+            for file in packages[:-1]:
+                file = file[1]
+                if file not in loaded_modules:
+                    if not file_in_path(file):
+                        raise Exception(errmsg(file))
+                    with open(file, "r", encoding="utf-8") as f:
+                        source_code = f.read()
+                    eval(source_code, env)
+                    f.close()
+                    loaded_modules.add(file)
+            last_path = packages[-1]
+            if last_path not in loaded_modules:
+                last_path = last_path[1]
+                if not file_in_path(last_path):
+                        raise Exception(errmsg(last_path))
+                with open(last_path, "r", encoding="utf-8") as f:
+                    code = f.read()
+                loaded_modules.add(last_path)
+                return eval(code, env)
 
         # TODO:
         # Stucts oder Standard-Lib
@@ -246,30 +260,6 @@ def eval(expression, env: Environment, debug=False):
         case _:
             print(f"unknown expression {expression}")
             return -1
-
-
-def __länge(lst):
-    """ Länge einer Liste/Array bestimmen"""
-    if len(lst) != 1:
-        raise Exception("Länge Funktion akzeptiert nur 1 Argument type: List|Array|String")
-    elif isinstance(lst[0], tuple):
-        def inner(a):
-            if a[0] is None:
-                return 0
-            if a[1] is None:
-                return 1
-            return 1 + inner(a[1])
-        return ("num", str(inner(lst[0])))
-    elif isinstance(lst[0], list):
-        return ("num", str(len(lst[0])))
-    elif isinstance(lst[0], str):
-        return ("num", str(len(lst[0])))
-
-
-def __echo(lst):
-    print(*lst)
-    return ("leere")
-
 
 # PRIVATE FUNKTIONS
 def binop_for_lists(x, y, func):
@@ -311,3 +301,8 @@ def binop_for_tuples(x, y, func):
             return (func(x, a), inner3(x, ls2[1]))
         return inner3(x, y)
     return None
+
+
+def file_in_path(file):
+    return os.path.isfile(file)
+

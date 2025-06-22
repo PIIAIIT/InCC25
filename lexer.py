@@ -3,9 +3,9 @@ from ply.lex import Lexer, lex
 module = __import__(__name__)
 
 
-def rule_lexer(doc, name):
+def rule_lexer(doc, name, func=lambda x: x):
     def f(t):
-        return t
+        return func(t)
 
     f.__doc__ = doc
     setattr(module, f"t_{name.upper()}", f)
@@ -62,9 +62,10 @@ table = {
     "wiederhole": "LOOPTHEN",
     "in": "IN",
     "lambda": "LAMBDA",
-    "echo": "ECHO",
-    "länge": "LENGTH",
-    "list": "LIST",
+    "echo": "PRINT",
+    "importiere": "IMPORT",
+    # "länge": "LENGTH",
+    # "list": "LIST",
     "&": "CONS",
     "leere": "NULL",
     "sei": "LET",  # Ist schon ein Letrec

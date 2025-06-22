@@ -1,4 +1,5 @@
 from ply.yacc import yacc
+from _builtin import builtin_print
 from lexer import tokens, print_error_with_caret, assigns
 
 look_up_table = {
@@ -35,22 +36,22 @@ unary = {
 
 
 def p_number(p):
-    "atomar : NUMBER"
+    "expression : NUMBER"
     p[0] = ("num", p[1])
 
 
 def p_float(p):
-    "atomar : FLOAT"
+    "expression : FLOAT"
     p[0] = ("float", p[1])
 
 
 def p_string(p):
-    "atomar : STRING"
+    "expression : STRING"
     p[0] = ("str", p[1])
 
 
 def p_var(p):
-    "atomar : IDENTIFIER"
+    "expression : IDENTIFIER"
     p[0] = ("var", p[1])
 
 
@@ -89,11 +90,6 @@ def p_unary(p):
 def p_complex(p):
     """expression : expression IMAG"""
     p[0] = ("complex", p[1])
-
-
-def p_expression(p):
-    """expression : atomar"""
-    p[0] = p[1]
 
 
 ################ COMPARISON EXPRESSION ################
@@ -165,15 +161,10 @@ def p_assignment2(p):
 
 def p_sequence(p):
     """
-    sequence : BEGIN statements END
+    expression : BEGIN statements END
              | BEGIN statements SEMICOLON END
     """
     p[0] = ("seq", p[2])
-
-
-def p_expression2(p):
-    """expression : sequence"""
-    p[0] = p[1]
 
 
 ################ STATEMENTS ################
@@ -395,31 +386,36 @@ def p_let(p):
 
 def p_builtin_func(p):
     """
-    expression : function LPAREN param_list RPAREN
+    expression : function LPAREN parameter_expr RPAREN
     """
-    p[0] = ("function", p[1], p[3])
+    p[0] = ("call", p[1], p[3])
 
 
 def p_func(p):
-    """function : ECHO
-                | LENGTH
-                | LIST
+    """function : PRINT
     """
-    p[0] = p[1]
-
-
-def p_paramlist1(p):
-    "param_list : expression COMMA param_list"
-    p[0] = [p[1], *p[3]]
-
-
-def p_paramlist2(p):
-    "param_list : expression"
-    p[0] = [p[1]]
+    p[0] = ("var", "echo")
 
 
 ######################### LISTS #########################
 ###################### WIE IN LISP mit KOMMA ######################
+
+
+def p_paramlist1(p):
+    """param_list : expression COMMA param_list
+                  | expression COMMA param_list2
+    """
+    p[0] = [p[1], *p[3]]
+
+
+def p_paramlist2(p):
+    "param_list2 : expression"
+    p[0] = [p[1]]
+
+
+def p_cons(p):
+    "expression : expression CONS expression"
+    p[0] = ("cons", p[1], p[3])
 
 
 def p_list(p):
@@ -439,11 +435,6 @@ def p_leere_liste(p):
     p[0] = ("leere")
 
 
-def p_cons(p):
-    "expression : expression CONS expression %prec CONS"
-    p[0] = ("cons", p[1], p[3])
-
-
 ######################### ARRAY #########################
 
 
@@ -455,6 +446,22 @@ def p_array(p):
 
 
 ######################### STRUCTS #########################
+
+######################### IMPORT #########################
+
+def p_import(p):
+    "expression : IMPORT files"
+    p[0] = ("import", p[2])
+
+
+def p_files(p):
+    "files : expression COMMA files"
+    p[0] = [p[1], *p[3]]
+
+
+def p_file(p):
+    "files : expression"
+    p[0] = [p[1]]
 
 ########################################################
 
@@ -491,13 +498,12 @@ precedence = (
     ("left", "IMAG"),
     ("right", "NOT", "UPLUS", "UMINUS"),  # weil -7++ = -6 und nicht -8
     ("left", "CONS"),
-    ("nonassoc", "OPEN_BRACKETS", "CLOSED_BRACKETS"),
-    ("right", "LPAREN", "RPAREN"),
+    ("nonassoc", "OPEN_BRACKETS", "CLOSED_BRACKETS", "LPAREN", "RPAREN", "BEGIN", "END"),
 )
 
 ########################################################
 
-parser = yacc(start="sequence")
+parser = yacc(start="expression")
 
 if __name__ == "__main__":
     # Eigene Cases

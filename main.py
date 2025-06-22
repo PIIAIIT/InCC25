@@ -2,9 +2,18 @@ from parser import parser
 from environment import Environment
 from interpreter import eval
 from lexer import lexer
+from _builtin import *
 import sys
 
 env = Environment()
+builtins = {
+    "echo": builtin_print,
+    "länge": builtin_len,
+    "list": builtin_list,
+}
+
+for name, fn in builtins.items():
+    env.define(name, fn)
 
 
 def test_code(debug=False):
@@ -15,9 +24,8 @@ def test_code(debug=False):
                 continue
             if i == "q":
                 break
-            i = "{" + i + "}"
             # try:
-            result = parser.parse(i, debug=debug)
+            result = parser.parse("{" + i + "}", debug=debug)
             if debug:
                 print(result)
 
@@ -35,5 +43,4 @@ if __name__ == "__main__":
         if eachArg == "-debug":
             debug = True
 
-    env.put(["x", "y", "z"])
     test_code(debug)

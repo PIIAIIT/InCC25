@@ -38,5 +38,8 @@ class Environment(dict):
         else:
             self.parent[name] = value
 
+    def define(self, name, value):
+        self.vars[name] = value
+
     def __str__(self):
         return str(self.vars) + "\n" + str(self.parent)

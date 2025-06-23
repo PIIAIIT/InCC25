@@ -3,6 +3,7 @@ from environment import Environment
 from interpreter import eval
 from lexer import lexer
 from _builtin import *
+import readline
 import sys
 
 env = Environment()

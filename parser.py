@@ -1,5 +1,4 @@
 from ply.yacc import yacc
-from _builtin import builtin_print
 from lexer import tokens, print_error_with_caret, assigns
 
 look_up_table = {
@@ -65,17 +64,17 @@ def p_paran(p):
 
 def p_arithmetic_expression(p):
     """expression : expression PLUS expression
-    | expression MINUS expression
-    | expression TIMES expression
-    | expression DIVIDE expression
-    | expression DIVIDE_CEIL expression
-    | expression DIVIDE_FLOOR expression
-    | expression MOD expression
-    | expression EXP expression
-    | expression AND expression
-    | expression OR expression
-    | expression XOR expression
-    | expression POWER expression
+                  | expression MINUS expression
+                  | expression TIMES expression
+                  | expression DIVIDE expression
+                  | expression DIVIDE_CEIL expression
+                  | expression DIVIDE_FLOOR expression
+                  | expression MOD expression
+                  | expression EXP expression
+                  | expression AND expression
+                  | expression OR expression
+                  | expression XOR expression
+                  | expression POWER expression
     """
     p[0] = ("binop", look_up_table[p[2]], p[1], p[3])
 
@@ -127,6 +126,7 @@ def p_comparison_op(p):
 ################ ASSIGNMENTS ################
 
 
+# TODO: IDENTIFIER -> expression
 def p_assignment1(p):
     "expression : IDENTIFIER ASSIGN expression %prec ASSIGN"
     p[0] = ("assign", None, p[1], p[3])
@@ -162,7 +162,7 @@ def p_assignment2(p):
 def p_sequence(p):
     """
     expression : BEGIN statements END
-             | BEGIN statements SEMICOLON END
+               | BEGIN statements SEMICOLON END
     """
     p[0] = ("seq", p[2])
 
@@ -252,11 +252,13 @@ def p_interval(p):
 ######################### LAMBDA #########################
 
 
+# TODO: Am Ende DOT hinzufügen
 def p_lambda0(p):
     "expression : LAMBDA parameter LAMBDA_ARROW expression %prec LAMBDA"
     p[0] = ("lambda", p[2], p[4])
 
 
+# TODO: IDENTIFIER -> expression und dann im interpreter abfangen
 def p_parameter0(p):
     """
     parameter : LPAREN parameter_pos RPAREN
@@ -391,6 +393,7 @@ def p_builtin_func(p):
     p[0] = ("call", p[1], p[3])
 
 
+# TODO: e in literals
 def p_func(p):
     """function : PRINT
     """
@@ -403,13 +406,13 @@ def p_func(p):
 
 def p_paramlist1(p):
     """param_list : expression COMMA param_list
-                  | expression COMMA param_list2
+                  | expression COMMA param_list_end
     """
     p[0] = [p[1], *p[3]]
 
 
 def p_paramlist2(p):
-    "param_list2 : expression"
+    "param_list_end : expression"
     p[0] = [p[1]]
 
 
@@ -449,19 +452,49 @@ def p_array(p):
 
 ######################### IMPORT #########################
 
+def p_files(p):
+    "files : STRING COMMA files"
+    p[0] = [p[1][1:-1], *p[3]]
+
+
+def p_file(p):
+    "files : STRING"
+    p[0] = [p[1][1:-1]]
+
+
 def p_import(p):
     "expression : IMPORT files"
     p[0] = ("import", p[2])
 
+######################### MATCH #########################
 
-def p_files(p):
-    "files : expression COMMA files"
-    p[0] = [p[1], *p[3]]
+# EXAMPLE
+# match expression:
+#     case x: body1 .
+#     case y: body2 .
+#     case z: body3 .
+#     case _: body4 .
+# ("match", expression, [("case", x, body1), ("case", y, body2), ("case", z, body4), ("case", _, body4)])
 
 
-def p_file(p):
-    "files : expression"
-    p[0] = [p[1]]
+def p_match(p):
+    "expression : MATCH expression COLON cases"
+    p[0] = ("match", p[2], p[4])
+
+
+def p_cases0(p):
+    "cases : CASE expression COLON expression DOT cases"
+    p[0] = [(p[2], p[4]), *p[6]]
+
+
+def p_cases1(p):
+    "cases : CASE expression COLON expression DOT"
+    p[0] = [(p[2], p[4])]
+
+
+def p_cases2(p):
+    "cases : CASE '_' COLON expression DOT"
+    p[0] = [('_', p[4])]
 
 ########################################################
 
@@ -478,7 +511,7 @@ def p_error(p):
 
 precedence = (
     tuple(["right", "ASSIGN"] + [a for a in assigns.values()]),
-    ("left", "LAMBDA"),
+    ("left", "LAMBDA", "LET"),
     ("left", "OR"),
     ("left", "XOR"),
     ("left", "AND"),
@@ -496,8 +529,9 @@ precedence = (
     ("left", "TIMES", "DIVIDE", "DIVIDE_CEIL", "DIVIDE_FLOOR", "MOD"),
     ("right", "POWER", "EXP"),
     ("left", "IMAG"),
-    ("right", "NOT", "UPLUS", "UMINUS"),  # weil -7++ = -6 und nicht -8
+    ("right", "NOT", "UPLUS", "UMINUS"),
     ("left", "CONS"),
+    ("right", "IMPORT"),
     ("nonassoc", "OPEN_BRACKETS", "CLOSED_BRACKETS", "LPAREN", "RPAREN", "BEGIN", "END"),
 )
 

@@ -1,5 +1,5 @@
 import os
-
+from parser import parser
 import numpy as np
 
 from _lambda import (
@@ -73,9 +73,9 @@ def eval(expression, env: Environment, debug=False):
             x = eval(expr1, env)
             y = eval(expr2, env)
             func = bin_operations[op]
-            if res := binop_for_lists(x, y, func) is not None:
+            if (res := binop_for_lists(x, y, func)) is not None:
                 return res
-            elif res := binop_for_tuples(x, y, func) is not None:
+            elif (res := binop_for_tuples(x, y, func)) is not None:
                 return res
             return func(x, y)
 
@@ -178,7 +178,6 @@ def eval(expression, env: Environment, debug=False):
             elif callable(func_obj):
                 print("CALL", func_obj, args_expr) if debug else ""
                 return func_obj(pos_arg, key_arg)
-
             else:
                 raise TypeError(f"Cannot call object of type {type(func_obj)}")
 
@@ -236,24 +235,32 @@ def eval(expression, env: Environment, debug=False):
         case ("import", packages):
             errmsg = lambda file : f"Es gibt kein{"e" if len(packages)<=1 else ""} Modul{"e" if len(packages)> 1 else ""} mit dem Namen: {file}"
             for file in packages[:-1]:
-                file: str = file[1]
                 if file not in loaded_modules:
-                    if not file_in_path(file):
+                    if not os.path.exists(os.path.curdir + "/" + file):
                         raise Exception(errmsg(file))
                     with open(file, "r", encoding="utf-8") as f:
-                        source_code = f.read()
-                    eval(source_code, env)
-                    f.close()
+                        code = f.read()
+                    res = parser.parse(code)
                     loaded_modules.add(file)
+                    eval(res, env)
+
             last_path = packages[-1]
             if last_path not in loaded_modules:
-                last_path: str = last_path[1]
-                if not file_in_path(last_path):
-                        raise Exception(errmsg(last_path))
+                last_path: str = last_path
+                if not os.path.exists(os.path.curdir + "/" + last_path):
+                    raise Exception(errmsg(last_path))
                 with open(last_path, "r", encoding="utf-8") as f:
                     code = f.read()
                 loaded_modules.add(last_path)
-                return eval(code, env)
+                res = parser.parse(code)
+                return eval(res, env)
+
+        case ("match", expression, expr_list):
+            expr = eval(expression, env)
+            for c_expr, c_body in expr_list:
+                if expr == eval(c_expr, env):
+                    return eval(c_body, env)
+            return None
 
         # TODO:
         # Stucts oder Standard-Lib
@@ -261,6 +268,7 @@ def eval(expression, env: Environment, debug=False):
         case _:
             print(f"unknown expression {expression}")
             return -1
+
 
 # PRIVATE FUNKTIONS
 def binop_for_lists(x, y, func):
@@ -302,8 +310,4 @@ def binop_for_tuples(x, y, func):
             return (func(x, a), inner3(x, ls2[1]))
         return inner3(x, y)
     return None
-
-
-def file_in_path(file):
-    return os.path.isfile(file)
 

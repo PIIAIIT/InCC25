@@ -11,6 +11,8 @@ def rule_lexer(doc, name, func=lambda x: x):
     setattr(module, f"t_{name.upper()}", f)
 
 
+literals = "_"
+
 binops = {
     r"\+": "PLUS",
     r"-": "MINUS",
@@ -29,7 +31,7 @@ binops = {
     "or": "OR",
     "xor": "XOR",
     "mod": "MOD",
-    "e": "EXP",  # als Operator
+    "e": "EXP",
 }
 unary = {
     "not": "NOT",
@@ -64,8 +66,8 @@ table = {
     "lambda": "LAMBDA",
     "echo": "PRINT",
     "importiere": "IMPORT",
-    # "länge": "LENGTH",
-    # "list": "LIST",
+    "match": "MATCH", # TODO: 1.
+    "case": "CASE", # TODO: 2.
     "&": "CONS",
     "leere": "NULL",
     "sei": "LET",  # Ist schon ein Letrec
@@ -80,9 +82,8 @@ table.update(
         r"(?:[^\W\d_]|[\U0001F300-\U0001FAFF_])(?:[^\W_]|[\d_]|[\U0001F300-\U0001FAFF])*": "IDENTIFIER"
     }
 )
-
-
 tokens = list(table.values())
+
 
 for rule, func_name in table.items():
     rule_lexer(rule, func_name)

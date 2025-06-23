@@ -394,7 +394,7 @@ def p_builtin_func(p):
 def p_func(p):
     """function : PRINT
     """
-    p[0] = ("var", "echo")
+    p[0] = ("var", p[1])
 
 
 ######################### LISTS #########################

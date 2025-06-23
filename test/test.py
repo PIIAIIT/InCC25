@@ -295,6 +295,6 @@ assert test_interpreter(read_file("test3.ice"), verbose=v) == 4
 assert test_interpreter(read_file("test4.ice"), verbose=v) == 4
 assert test_interpreter(read_file("test5.ice"), verbose=v) == 4
 assert test_interpreter(read_file("test6.ice"), verbose=v) == 7
-assert test_interpreter(read_file("test7.ice"), verbose=v) == 2
+assert test_interpreter(read_file("test7.ice"), verbose=v) == 3
 # test8.ice ist nur für test9.ice wichtig
 # assert test_interpreter(read_file("test9.ice"), verbose=v) == 10

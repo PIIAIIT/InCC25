@@ -37,6 +37,5 @@ sonst
 .;
 assert +:= x4 = 20;
 
-# Erwartet 4 #
-assert
+assert = 4 # Erwartet 4 #
 }

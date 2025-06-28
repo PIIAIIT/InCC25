@@ -15,5 +15,5 @@ für i in ]0..n] wiederhole
 .;
 y;
 assert := y = 24;
-assert;
+assert = 1 # CHECK ALLES RICHTIG #
 }

@@ -3,14 +3,14 @@ from parser import parser
 from interpreter import eval
 from environment import Environment
 from pathlib import Path
-from _builtin import *
+from _builtin import BuiltinFunction, builtin_print, builtin_len, builtin_list
 
 start_env = Environment()
 builtins = {
     "echo": BuiltinFunction(builtin_print),
     "länge": BuiltinFunction(builtin_len),
     "list": BuiltinFunction(builtin_list),
-    "type": BuiltinFunction(lambda pos, key: type(pos[0]))
+    "type": BuiltinFunction(lambda pos, _: type(pos[0]))
 }
 
 for name, fn in builtins.items():
@@ -48,7 +48,8 @@ ALL_TEST_FILES = __read_file()
 
 def read_file(incc25_file, verbose=False):
     for posix_file, content in ALL_TEST_FILES:
-        if str(posix_file).endswith(incc25_file):
+        if posix_file == incc25_file:
+            print(incc25_file, "done.") if verbose else ""
             print(content) if verbose else ""
             return content
     return None
@@ -58,8 +59,6 @@ def test_lexer(input_string, verbose=False):
     if input_string is None:
         print("Es ist ein Fehler mit dem InputStream.")
     input_string = input_string.strip("\n")
-    if not input_string.startswith("{") or not input_string.endswith("}"):
-        input_string = "{\n" + input_string + "\n}"
 
     lexer.input(input_string)
     result = True
@@ -75,8 +74,6 @@ def test_parser(input_string, verbose=False):
     if input_string is None:
         print("Es ist ein Fehler mit dem InputStream.")
     input_string = input_string.strip("\n")
-    if not input_string.startswith("{") or not input_string.endswith("}"):
-        input_string = "{\n" + input_string + "\n}"
 
     try:
         res = parser.parse(input_string, debug=verbose)
@@ -88,12 +85,6 @@ def test_parser(input_string, verbose=False):
 def test_interpreter(input_string, env=start_env, verbose=False):
     if input_string is None:
         print("Es ist ein Fehler mit dem InputStream.")
-    input_string = input_string.strip("\n")
-    if not input_string.startswith("{") or not input_string.endswith("}"):
-        input_string = "{\n" + input_string + "\n}"
-
-    if env is None:
-        env = Environment()
 
     ast = parser.parse(input_string, debug=verbose)
     print(ast, end=" === ") if verbose else ""
@@ -126,7 +117,8 @@ assert test_interpreter("8 / 2") == 4.0
 assert test_interpreter("9 mod 4") == 1
 assert test_interpreter("0 mod 1") == 0
 try:
-    test_interpreter("1 mod 0")
+    a = test_interpreter("1 mod 0")
+    raise Exception("Kein Zero Division Error!")
 except ZeroDivisionError:
     pass
 
@@ -177,23 +169,27 @@ assert test_interpreter("+(-5)") == 5
 assert test_interpreter("not -1") == 0
 
 # ENVIRONMENT / ASSIGNMENT
-new_env = Environment()
+new_env = Environment(start_env)
 assert test_interpreter("a := 7", new_env) == 7
 assert new_env["a"] == 7
 assert test_interpreter("a := (x:=2) + 5", new_env) == 7
 assert new_env["x"] == 2
 assert new_env["a"] == 7
-assert test_interpreter("a:=2; a+:=3; a") == 5
-assert test_interpreter("a:=2; a-:=5; a") == -3
-assert test_interpreter("a:=3; a*:=-2; a") == -6
-assert test_interpreter("a:=4; a/:=2; a") == 2
+assert test_interpreter("{a:=2; a+:=3; a}") == 5
+assert test_interpreter("{a:=2; a-:=5; a}") == -3
+assert test_interpreter("{a:=3; a*:=-2; a}") == -6
+assert test_interpreter("{a:=4; a/:=2; a}") == 2
 
 # COMPLEX COMPS/BINOPS/UNARY
 assert test_interpreter("(2 + -3) * 4") == -4
 assert test_interpreter("{2 < 5 <2 e 10 > 0}") == 1
 assert test_interpreter("{2 < 5 and 5<2 e 10 and 2e 10 > 0}") == 1
 assert test_interpreter("{(2 < 5) and (5<2 e 10) and (2e 10 > 0)}") == 1
-assert test_interpreter("{(2 < 5) and (5<2 e 10) and (2e 10 > 5) and (x:=1)}", env={"x": 0}) == 1
+new_env = Environment(new_env)
+new_env.put(["x"])
+new_env["x"] = 0
+assert test_interpreter("{(2 < 5) and (5<2 e 10) and (2e 10 > 5) and (x:=1)}", env=new_env) == 1
+assert new_env["x"] == 1
 assert test_interpreter("{x:=2<3; x:=x+1; x}", env={"x": 2}) == 2
 
 test_code = r"""
@@ -275,26 +271,16 @@ i_me:=420.69
 }"""
 assert test_interpreter(test_code) == 420.69
 
-################### LEXER TEST ###################
+ALL_PATHS = [x for x, _ in ALL_TEST_FILES]
 v = False
-assert test_lexer(read_file("test1.ice"), verbose=v)
-assert test_lexer(read_file("test2.ice"), verbose=v)
-assert test_lexer(read_file("test3.ice"), verbose=v)
-assert test_lexer(read_file("test6.ice"), verbose=v)
+################### LEXER TEST ###################
+for path in ALL_PATHS:
+    assert test_lexer(read_file(path), verbose=v)
 
 ################### PARSER TEST ###################
-assert test_parser(read_file("test1.ice"), verbose=v)
-assert test_parser(read_file("test2.ice"), verbose=v)
-assert test_parser(read_file("test3.ice"), verbose=v)
-assert test_parser(read_file("test6.ice"), verbose=v)
+for path in ALL_PATHS:
+    assert test_parser(read_file(path), verbose=v)
 
 ################### INTERPRETER TEST ###################
-assert test_interpreter(read_file("test1.ice"), verbose=v) == 1
-assert test_interpreter(read_file("test2.ice"), verbose=v) == 1
-assert test_interpreter(read_file("test3.ice"), verbose=v) == 4
-assert test_interpreter(read_file("test4.ice"), verbose=v) == 4
-assert test_interpreter(read_file("test5.ice"), verbose=v) == 4
-assert test_interpreter(read_file("test6.ice"), verbose=v) == 7
-assert test_interpreter(read_file("test7.ice"), verbose=v) == 3
-# test8.ice ist nur für test9.ice wichtig
-assert test_interpreter(read_file("test9.ice"), verbose=v) == 10
+for path in ALL_PATHS:
+    assert test_interpreter(read_file(path), verbose=v)

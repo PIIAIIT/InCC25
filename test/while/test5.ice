@@ -1,50 +1,40 @@
 {
-# TEST WHILE STATEMENTS #
-# DECREMENT FUNCTION #
-# PROCEDUR: x0 = DEC(x1): #
-x1 := 5; # PARAMETER #
-x0 := 0;
-x2 := 1;
-solange x2 < x1 gilt,
-  x0:=x0+1;
-  x2:=x2+1
-.;
-x0;
-assert := x0 = 4;
+i := 0;
+sum := 0;
+solange i < 5 gilt, {
+    sum +:= i;
+    i := i + 1;
+}.;
+assert := sum = 10;
 
-# DIVISION FUNCTION #
-# PROCEDUR: x0 = div(x1, x2): #
-x1:=10; x2:=5; # PARAMETER #
-x0:=0;
-solange x1 >= x2 gilt,
-    x1:=x1-x2;
-    x0:=x0+1
-.;
-x0;
-assert +:= x0 = 2;
+i := 0;
+x := 1;
+solange x gilt, {
+    i := i + 1;
+    wenn i >= 3 gilt,
+        x := 0
+    .
+}.;
+assert +:= i = 3;
 
-# MODULO FUNCTION #
-# PROCEDUR: x1 = mod(x1, x2): #
-x1:=10; x2:=5; # PARAMETER #
-x0:=0;
-solange x1 >= x2 gilt,
-    x1:=x1-x2;
-    x0:=x0+1
-.;
-x1;
-assert +:= x1 = 0;
+i := 10;
+solange (i < 5) gilt, {
+    echo(i);
+    i := i + 1
+}.;
+assert +:= i = 10;
 
-# CANTOR FUNCTION #
-# PROCEDUR: x0 = cantor(x, y): #
-x:=2; y:=3; # PARAMETER #
-i:=0;
-s:=i;
-z:=x+y;
-solange i < z gilt,
-    i:=i+1;
-    s:=s+i
-.;
-x0:=x+s;
-assert +:= x0 = 17;
-assert
+i := 0;
+x := 0;
+solange (i < 3) gilt, {
+    j := 0;
+    solange (j < 2) gilt, {
+        x +:= i * 10 + j;
+        # echo(x); #
+        j := j + 1;
+    }.;
+    i := i + 1;
+}.;
+assert +:= x = 63;
+assert = 4 # Erwartet 4 #
 }

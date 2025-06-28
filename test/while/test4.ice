@@ -5,10 +5,10 @@
 x1 := 5; # PARAMETER #
 x0 := 0;
 x2 := 1;
-solange x2 < x1 gilt,
+solange x2 < x1 gilt, {
   x0:=x0+1;
   x2:=x2+1
-.;
+}.;
 x0;
 assert := x0 = 4;
 
@@ -16,10 +16,10 @@ assert := x0 = 4;
 # PROCEDUR: x0 = div(x1, x2): #
 x1:=10; x2:=5; # PARAMETER #
 x0:=0;
-solange x1 >= x2 gilt,
+solange x1 >= x2 gilt, {
     x1:=x1-x2;
     x0:=x0+1
-.;
+}.;
 x0;
 assert +:= x0 = 2;
 
@@ -27,10 +27,10 @@ assert +:= x0 = 2;
 # PROCEDUR: x1 = mod(x1, x2): #
 x1:=10; x2:=5; # PARAMETER #
 x0:=0;
-solange x1 >= x2 gilt,
+solange x1 >= x2 gilt, {
     x1:=x1-x2;
     x0:=x0+1
-.;
+}.;
 x1;
 assert +:= x1 = 0;
 
@@ -40,11 +40,11 @@ x:=2; y:=3; # PARAMETER #
 i:=0;
 s:=i;
 z:=x+y;
-solange i < z gilt,
+solange i < z gilt, {
     i:=i+1;
     s:=s+i
-.;
+}.;
 x0:=x+s;
 assert +:= x0 = 17;
-assert
+assert = 4 # CHECK IF ALLES RICHTIG #
 }

@@ -58,4 +58,4 @@ class Environment(dict):
             self.parent[name] = value
 
     def __str__(self):
-        return str(self.vars) + "\n" + str(self.parent)
+        return str(self.vars) + "\n" + str(self.parent) if self.parent is not None else ""

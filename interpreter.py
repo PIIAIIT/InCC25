@@ -42,6 +42,7 @@ unary_operations = {
 pyeval = eval
 loaded_modules = set()
 
+
 def eval(expression, env: Environment, debug=False):
     match expression:
         case ("num", n):
@@ -96,10 +97,9 @@ def eval(expression, env: Environment, debug=False):
             if op is not None:
                 if debug:
                     print("Assign: ", op, var, val)
-                # Erst wieder Entkommentieren, wenn Let korrekt funktioniert.
-                # if var not in env:
-                #     raise NameError(f"Variable '{var}' not defined before augmented assignment.")
-                env[var] = bin_operations[op](env[var], y)
+                # env[var] = bin_operations[op](env[var], y)
+                # env[var] = eval(("binop", op, var, val), env) # wenn assignments im parser funktioniert wieder entkommentieren
+                env[var] = eval(("binop", op, ("var", var), val), env)
             else:
                 env[var] = y
             return env[var]
@@ -109,6 +109,8 @@ def eval(expression, env: Environment, debug=False):
             return unary_operations[op](x)
 
         case ("seq", body):
+            if body == []:
+                return None
             for expr in body[:-1]:
                 eval(expr, env)
             return eval(body[-1], env)
@@ -116,21 +118,21 @@ def eval(expression, env: Environment, debug=False):
         case ("if", condition, then_body, else_body):
             if eval(condition, env):
                 # statements handling
-                return eval(("seq", then_body), env)
+                return eval(then_body, env)
 
             if else_body is not None:  # Fall kein else
                 for cond, statement in else_body:
                     if cond == "else":
-                        return eval(("seq", statement), env)
+                        return eval(statement, env)
                     elif eval(cond, env):
-                        return eval(("seq", statement), env)
+                        return eval(statement, env)
             # falls if übersprungen wird
             return None
 
         case ("while", condition, body):
             result = None
             while eval(condition, env):
-                result = eval(("seq", body), env)
+                result = eval(body, env)
             return result
 
         case ("loop", counter, interval, body):
@@ -150,7 +152,7 @@ def eval(expression, env: Environment, debug=False):
             result = None
             for i in arr:
                 local_env[counter] = i
-                result = eval(("seq", body), local_env)
+                result = eval(body, local_env)
             return result
 
         case ("interval", left_interval, expr1, expr2, right_interval):
@@ -189,11 +191,7 @@ def eval(expression, env: Environment, debug=False):
             return eval(body, env2)
 
         case ("array", list_elements):
-            arr = []
-            for elem in list_elements:
-                a = eval(elem, env)
-                arr.append(a)
-            return arr
+            return [eval(elem, env) for elem in list_elements]
 
         case ("array_access", array_ptr, index):
             arr = eval(array_ptr, env)
@@ -227,43 +225,74 @@ def eval(expression, env: Environment, debug=False):
             return eval(("cons", list_elements[0], ("list", list_elements[1:])), env)
 
         case ("cons", expr1, expr2):
-            return (eval(expr1, env), eval(expr2, env))
+            a, b = eval(expr1, env), eval(expr2, env)
+            if isinstance(a, list) and isinstance(b, list):
+                return a+b
+            return (a, b)
 
         case ("leere"):
             return None
 
         case ("import", packages):
-            errmsg = lambda file : f"Es gibt kein{"e" if len(packages)<=1 else ""} Modul{"e" if len(packages)> 1 else ""} mit dem Namen: {file}"
-            for file in packages[:-1]:
-                if file not in loaded_modules:
-                    if not os.path.exists(os.path.curdir + "/" + file):
-                        raise Exception(errmsg(file))
-                    with open(file, "r", encoding="utf-8") as f:
-                        code = f.read()
-                    res = parser.parse(code)
-                    loaded_modules.add(file)
-                    eval(res, env)
-
-            last_path = packages[-1]
-            if last_path not in loaded_modules:
-                last_path: str = last_path
-                if not os.path.exists(os.path.curdir + "/" + last_path):
-                    raise Exception(errmsg(last_path))
-                with open(last_path, "r", encoding="utf-8") as f:
+            # for file in packages[:-1]:
+            #     if file not in loaded_modules:
+            #         if not os.path.exists(os.path.curdir + "/" + file):
+            #             raise Exception(errmsg(file))
+            #         with open(file, "r", encoding="utf-8") as f:
+            #             code = f.read()
+            #         res = parser.parse(code)
+            #         loaded_modules.add(file)
+            #         eval(res, env)
+            #
+            path = packages[0]
+            if path not in loaded_modules:
+                if not os.path.exists(os.path.curdir + "/" + path):
+                    raise Exception(f"Es gibt kein Modul mit dem Namen: {path}")
+                with open(path, "r", encoding="utf-8") as f:
                     code = f.read()
-                loaded_modules.add(last_path)
+                loaded_modules.add(path)
                 res = parser.parse(code)
                 return eval(res, env)
 
-        case ("match", expression, expr_list):
-            expr = eval(expression, env)
-            for c_expr, c_body in expr_list:
-                if expr == eval(c_expr, env):
+        case ("match", expr, cases):
+            expr = eval(expr, env)
+
+            for c_expr, c_body in cases[:-1]:
+                case = eval(c_expr, env)
+
+                if expr == case:
                     return eval(c_body, env)
+
+            last_case, last_body = cases[-1]
+            if last_case[1] == "_":
+                return eval(last_body, env)
+            elif expr == last_case:
+                return eval(last_body, env)
             return None
 
         # TODO:
-        # Stucts oder Standard-Lib
+        # Standard-Lib
+        case ("struct", attributes):
+            # check if assignments
+            lokal_env = Environment(parent=env)
+            for assign in attributes:
+                eval(assign, lokal_env)
+            return ("struct-instance", lokal_env)
+
+        case ("access_struct", struct, attr):
+            struct_expr = eval(struct, env)
+            match struct_expr:
+                case ("struct-instance", struct_env):
+                    match attr:
+                        case ("var", name):
+                            if name in struct_env:
+                                return struct_env[name]
+                            else:
+                                raise Exception(f"Attribut '{name}' nicht gefunden in Struct.")
+                        case _:
+                            raise Exception(f"Ungültiger Attribut-Ausdruck: {attr}")
+                case _:
+                    raise Exception(f"{struct_expr} ist kein Struct.")
 
         case _:
             print(f"unknown expression {expression}")

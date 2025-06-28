@@ -1,5 +1,6 @@
 from ply.yacc import yacc
-from lexer import tokens, print_error_with_caret, assigns
+from lexer import tokens, print_traceback, assigns
+import readline, traceback
 
 look_up_table = {
     "+": "plus",
@@ -157,27 +158,27 @@ def p_assignment2(p):
 
 
 ################ SEQUENCE ################
-
+################ STATEMENTS ################
 
 def p_sequence(p):
     """
     expression : BEGIN statements END
+               | BEGIN END
                | BEGIN statements SEMICOLON END
     """
+    if len(p) == 3:
+        p[2] = []
     p[0] = ("seq", p[2])
 
 
-################ STATEMENTS ################
-
-
-def p_statement0(p):
+def p_statement(p):
     """
     statements : expression
     """
     p[0] = [p[1]]
 
 
-def p_statements0(p):
+def p_statements(p):
     """
     statements : statements SEMICOLON expression
     """
@@ -189,8 +190,8 @@ def p_statements0(p):
 
 def p_if_statements1(p):
     """
-    expression : IF expression THEN statements DOT
-                 | IF expression THEN statements else_elif_body DOT
+    expression : IF expression THEN expression DOT
+               | IF expression THEN expression else_elif_body DOT
     """
     if len(p) == 6:
         p[0] = ("if", p[2], p[4], None)
@@ -200,8 +201,8 @@ def p_if_statements1(p):
 
 def p_if_statements2(p):
     """
-    else_elif_body : ELIF IF expression THEN statements else_elif_body
-                   | ELSE statements
+    else_elif_body : ELIF IF expression THEN expression else_elif_body
+                   | ELSE expression
     """
     if len(p) == 3:
         p[0] = [("else", p[2])]
@@ -214,7 +215,7 @@ def p_if_statements2(p):
 
 def p_while_statement0(p):
     """
-    expression : WHILE expression THEN statements DOT
+    expression : WHILE expression THEN expression DOT
     """
     p[0] = ("while", p[2], p[4])
 
@@ -224,24 +225,14 @@ def p_while_statement0(p):
 
 def p_loop_statement0(p):
     """
-    expression : LOOP IDENTIFIER IN iter LOOPTHEN statements DOT
+    expression : LOOP IDENTIFIER IN expression LOOPTHEN expression DOT
     """
     p[0] = ("loop", p[2], p[4], p[6])
 
 
-def p_loop_iter(p):
-    """
-    iter : interval
-         | expression
-    """
-    # expression muss eine Array oder Liste sein
-    # wird im Interpreter geregelt
-    p[0] = p[1]
-
-
 def p_interval(p):
     """
-    interval : OPEN_BRACKETS   expression ITER expression CLOSED_BRACKETS
+    expression : OPEN_BRACKETS   expression ITER expression CLOSED_BRACKETS
              | CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
              | OPEN_BRACKETS   expression ITER expression OPEN_BRACKETS
              | CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
@@ -252,13 +243,11 @@ def p_interval(p):
 ######################### LAMBDA #########################
 
 
-# TODO: Am Ende DOT hinzufügen
 def p_lambda0(p):
-    "expression : LAMBDA parameter LAMBDA_ARROW expression %prec LAMBDA"
+    "expression : LAMBDA parameter LAMBDA_ARROW expression DOT %prec LAMBDA"
     p[0] = ("lambda", p[2], p[4])
 
 
-# TODO: IDENTIFIER -> expression und dann im interpreter abfangen
 def p_parameter0(p):
     """
     parameter : LPAREN parameter_pos RPAREN
@@ -427,7 +416,7 @@ def p_list(p):
 
 
 def p_list_zugriff(p):
-    """expression : expression OPEN_BRACKETS PLUS CLOSED_BRACKETS
+    """expression : expression OPEN_BRACKETS PLUS       CLOSED_BRACKETS
                   | expression OPEN_BRACKETS expression CLOSED_BRACKETS
     """
     p[0] = ("array_access", p[1], p[3])
@@ -441,44 +430,56 @@ def p_leere_liste(p):
 ######################### ARRAY #########################
 
 
-def p_array(p):
+def p_array0(p):
     """expression : OPEN_BRACKETS param_list CLOSED_BRACKETS
-                  | OPEN_BRACKETS empty      CLOSED_BRACKETS
     """
     p[0] = ("array", p[2])
 
 
+def p_array1(p):
+    """expression : OPEN_BRACKETS expression CLOSED_BRACKETS
+    """
+    p[0] = ("array", [p[2]])
+
+
+def p_array2(p):
+    """expression : OPEN_BRACKETS CLOSED_BRACKETS
+    """
+    p[0] = ("array", [])
+
+
 ######################### STRUCTS #########################
+
+def p_struct(p):
+    "expression : STRUCT BEGIN param_list END"
+    # struct { assignments, ... }
+    # Person := struct { name := "Patrick", alter := 25 }
+    p[0] = ("struct", p[3])
+
+
+# def p_access_structs(p):
+#     "expression : expression DOT expression"
+#     # Person.name
+#     # Person.alter
+#     p[0] = ("access_struct", p[1], p[3])
+
 
 ######################### IMPORT #########################
 
-def p_files(p):
-    "files : STRING COMMA files"
-    p[0] = [p[1][1:-1], *p[3]]
-
-
 def p_file(p):
-    "files : STRING"
+    "file : STRING"
     p[0] = [p[1][1:-1]]
 
 
 def p_import(p):
-    "expression : IMPORT files"
+    "expression : IMPORT file DOT"
     p[0] = ("import", p[2])
 
 ######################### MATCH #########################
 
-# EXAMPLE
-# match expression:
-#     case x: body1 .
-#     case y: body2 .
-#     case z: body3 .
-#     case _: body4 .
-# ("match", expression, [("case", x, body1), ("case", y, body2), ("case", z, body4), ("case", _, body4)])
-
 
 def p_match(p):
-    "expression : MATCH expression COLON cases"
+    "expression : MATCH expression WITH cases DOT"
     p[0] = ("match", p[2], p[4])
 
 
@@ -492,17 +493,13 @@ def p_cases1(p):
     p[0] = [(p[2], p[4])]
 
 
-def p_cases2(p):
-    "cases : CASE '_' COLON expression DOT"
-    p[0] = [('_', p[4])]
-
-########################################################
+######################### TRACEBACK ##############################
 
 
 def p_error(p):
     if p:
+        print_traceback(p.lexer.lexdata, p)
         print(f"Syntaxfehler bei Token '{p.value}' vom Typ {p.type}")
-        print_error_with_caret(p.lexer.lexdata, p.lineno, p.lexpos)
     else:
         print("Syntaxfehler: Unerwartetes Dateiende")
 
@@ -511,7 +508,7 @@ def p_error(p):
 
 precedence = (
     tuple(["right", "ASSIGN"] + [a for a in assigns.values()]),
-    ("left", "LAMBDA", "LET"),
+    ("left", "LAMBDA", "LET", "MATCH"),
     ("left", "OR"),
     ("left", "XOR"),
     ("left", "AND"),

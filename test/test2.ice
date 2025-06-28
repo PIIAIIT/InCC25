@@ -6,5 +6,5 @@ für i in [1..n] wiederhole
   x := x * i
 .;
 assert := x = 2432902008176640000;
-assert;
+assert = 1 # CHECK ALLES RICHTIG #
 }

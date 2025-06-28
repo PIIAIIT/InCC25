@@ -11,7 +11,7 @@ def rule_lexer(doc, name, func=lambda x: x):
     setattr(module, f"t_{name.upper()}", f)
 
 
-literals = "_"
+literals = "_e"
 
 binops = {
     r"\+": "PLUS",
@@ -66,8 +66,11 @@ table = {
     "lambda": "LAMBDA",
     "echo": "PRINT",
     "importiere": "IMPORT",
-    "match": "MATCH", # TODO: 1.
-    "case": "CASE", # TODO: 2.
+    # "match": "MATCH",
+    "vergleiche": "MATCH",
+    "mit": "WITH",
+    "fall": "CASE",
+    "struct": "STRUCT",
     "&": "CONS",
     "leere": "NULL",
     "sei": "LET",  # Ist schon ein Letrec
@@ -89,25 +92,6 @@ for rule, func_name in table.items():
     rule_lexer(rule, func_name)
 
 
-def print_error_with_caret(text, lineno, lexpos):
-    # Zeile ermitteln
-    lines = text.split("\n")
-    if lineno - 1 >= len(lines):
-        print("Ungültige Zeilennummer.")
-        return
-
-    error_line = lines[lineno - 1]
-
-    # Position in Zeile berechnen
-    line_start = sum(len(line) + 1 for line in lines[: lineno - 1])  # +1 für \n
-    column = max(0, lexpos - line_start)
-
-    # Ausgabe mit ^ unter dem Fehler
-    print(f"Syntaxfehler in Zeile {lineno}:")
-    print(error_line)
-    print(" " * column + "^")
-
-
 t_ignore = " \t"
 t_ignore_comment = r"\#[^\#]*\#"
 
@@ -117,8 +101,35 @@ def t_newline(t):
     t.lineno += 1
 
 
+########### TRACEBACK #########
+def print_traceback(input_text: str, token):
+    """
+    Druckt einen gut lesbaren Traceback, wenn ein Parsing-Fehler auftritt.
+    :param input_text: Der gesamte Quelltext als String.
+    :param token: Das Token, das den Fehler ausgelöst hat (kann auch None sein).
+    """
+    if token is None:
+        print("SyntaxError: Unerwartetes Dateiende")
+        return
+
+    line_num = token.lineno
+    pos = token.lexpos
+
+    # Ermittle die aktuelle Zeile aus dem Text
+    lines = input_text.splitlines()
+    line = lines[line_num - 1] if 0 < line_num <= len(lines) else "<unbekannte Zeile>"
+
+    # Spaltenposition berechnen
+    line_start = input_text.rfind('\n', 0, pos) + 1
+    col = pos - line_start
+
+    print(f"SyntaxError: Unerwartetes Token '{token.value}' ({token.type}) in Zeile {line_num}, Spalte {col + 1}:")
+    print(f"    {line}")
+    print(f"    {' ' * col}^")
+
+
 def t_error(t):
-    print_error_with_caret(t.lexer.lexdata, t.lineno, t.lexpos)
+    print_traceback(t.lexer.lexdata, t)
     t.lexer.skip(1)
     return t
 

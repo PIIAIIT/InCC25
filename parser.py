@@ -129,8 +129,13 @@ def p_comparison_op(p):
 
 # TODO: IDENTIFIER -> expression
 def p_assignment1(p):
-    "expression : IDENTIFIER ASSIGN expression %prec ASSIGN"
+    "assign_expression : IDENTIFIER ASSIGN expression %prec ASSIGN"
     p[0] = ("assign", None, p[1], p[3])
+
+
+def p_assignment3(p):
+    "expression : assign_expression"
+    p[0] = p[1]
 
 
 def p_assignment2(p):
@@ -233,9 +238,9 @@ def p_loop_statement0(p):
 def p_interval(p):
     """
     expression : OPEN_BRACKETS   expression ITER expression CLOSED_BRACKETS
-             | CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
-             | OPEN_BRACKETS   expression ITER expression OPEN_BRACKETS
-             | CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
+               | CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
+               | OPEN_BRACKETS   expression ITER expression OPEN_BRACKETS
+               | CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
     """
     p[0] = ("interval", p[1], p[2], p[4], p[5])
 
@@ -450,18 +455,44 @@ def p_array2(p):
 
 ######################### STRUCTS #########################
 
-def p_struct(p):
-    "expression : STRUCT BEGIN param_list END"
-    # struct { assignments, ... }
-    # Person := struct { name := "Patrick", alter := 25 }
+def p_assignment_list0(p):
+    """assignment_list : assign_expression COMMA assignment_list
+                       | assign_expression COMMA assignment_list_end
+    """
+    p[0] = [p[1], *p[3]]
+
+
+def p_assignment_list2(p):
+    "assignment_list_end : assign_expression"
+    p[0] = [p[1]]
+
+
+def p_struct0(p):
+    "expression : STRUCT BEGIN assignment_list END DOT"
+    # struct { assignments, ... } .
+    # Person := struct { name := "Patrick", alter := 25 } .
     p[0] = ("struct", p[3])
 
 
-# def p_access_structs(p):
-#     "expression : expression DOT expression"
-#     # Person.name
-#     # Person.alter
-#     p[0] = ("access_struct", p[1], p[3])
+def p_struct1(p):
+    "expression : STRUCT BEGIN assign_expression END DOT"
+    # struct { assignments } .
+    # Person := struct { name := "Patrick" } .
+    p[0] = ("struct", [p[3]])
+
+
+def p_struct2(p):
+    "expression : STRUCT BEGIN END DOT"
+    # struct { assignments } .
+    # Person := struct { name := "Patrick" } .
+    p[0] = ("struct", [])
+
+
+def p_access_structs(p):
+    "expression : expression LAMBDA_ARROW IDENTIFIER"
+    # Person.name
+    # Person.alter
+    p[0] = ("access_struct", p[1], p[3])
 
 
 ######################### IMPORT #########################

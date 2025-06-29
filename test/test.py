@@ -49,7 +49,7 @@ ALL_TEST_FILES = __read_file()
 def read_file(incc25_file, verbose=False):
     for posix_file, content in ALL_TEST_FILES:
         if posix_file == incc25_file:
-            print(incc25_file, "done.") if verbose else ""
+            print(incc25_file, "wird bearbeitet...") if verbose else ""
             print(content) if verbose else ""
             return content
     return None
@@ -67,6 +67,8 @@ def test_lexer(input_string, verbose=False):
 
         if verbose:
             print("Korrekte Assersion: " + str(token))
+    print("done.") if verbose else ""
+    print("====") if verbose else ""
     return result
 
 
@@ -279,8 +281,8 @@ for path in ALL_PATHS:
 
 ################### PARSER TEST ###################
 for path in ALL_PATHS:
-    assert test_parser(read_file(path), verbose=v)
+    assert test_parser(read_file(path, True), verbose=True)
 
 ################### INTERPRETER TEST ###################
 for path in ALL_PATHS:
-    assert test_interpreter(read_file(path), verbose=v)
+    assert test_interpreter(read_file(path, True), verbose=v)

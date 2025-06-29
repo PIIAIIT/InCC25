@@ -43,9 +43,9 @@ _erg := vergleiche [1, 2, 3] mit
 .;
 assert +:= _erg = "drei-elementig";
 
-Person := struct { name := "Alice", alter := 30 };
+Person := struct { name := "Alice", alter := 30 }.;
 _erg := vergleiche Person mit
-    fall struct { name := "Alice", alter := 30 } : "match" .
+    fall struct { name := "Alice", alter := 30 }. : "match" .
     fall _ : "nomatch" .
 .;
 assert +:= _erg = "match";

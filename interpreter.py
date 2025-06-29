@@ -97,8 +97,6 @@ def eval(expression, env: Environment, debug=False):
             if op is not None:
                 if debug:
                     print("Assign: ", op, var, val)
-                # env[var] = bin_operations[op](env[var], y)
-                # env[var] = eval(("binop", op, var, val), env) # wenn assignments im parser funktioniert wieder entkommentieren
                 env[var] = eval(("binop", op, ("var", var), val), env)
             else:
                 env[var] = y
@@ -270,29 +268,14 @@ def eval(expression, env: Environment, debug=False):
                 return eval(last_body, env)
             return None
 
-        # TODO:
-        # Standard-Lib
         case ("struct", attributes):
-            # check if assignments
-            lokal_env = Environment(parent=env)
-            for assign in attributes:
-                eval(assign, lokal_env)
-            return ("struct-instance", lokal_env)
+            s = {}
+            for _, _, name, expr in attributes:
+                s[name] = eval(expr, env)
+            return s
 
-        case ("access_struct", struct, attr):
-            struct_expr = eval(struct, env)
-            match struct_expr:
-                case ("struct-instance", struct_env):
-                    match attr:
-                        case ("var", name):
-                            if name in struct_env:
-                                return struct_env[name]
-                            else:
-                                raise Exception(f"Attribut '{name}' nicht gefunden in Struct.")
-                        case _:
-                            raise Exception(f"Ungültiger Attribut-Ausdruck: {attr}")
-                case _:
-                    raise Exception(f"{struct_expr} ist kein Struct.")
+        case ("access_struct", struct, name):
+            return eval(struct, env)[name]
 
         case _:
             print(f"unknown expression {expression}")

@@ -1,3 +1,6 @@
+from _builtin import *
+
+
 class Environment(dict):
     def __init__(self, parent=None):
         self.parent = parent
@@ -32,6 +35,22 @@ class Environment(dict):
         assert name is not None
         assert value is not None
         self.__setitem__(name, value)
+
+    def builtins(self):
+        """
+        Definiert eine Variablen auf dem Environment.
+        @arg name: Name der Variable
+        @arg value: Wert der Variable
+        """
+        builtins = {
+            "echo": BuiltinFunction(builtin_print),
+            "länge": BuiltinFunction(builtin_len),
+            "list": BuiltinFunction(builtin_list),
+            "type": BuiltinFunction(lambda pos, key: type(pos[0]))
+        }
+
+        for name, fn in builtins.items():
+            self[name] = fn
 
     def __contains__(self, name):
         if name in self.vars:

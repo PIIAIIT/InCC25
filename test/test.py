@@ -3,19 +3,9 @@ from parser import parser
 from interpreter import eval
 from environment import Environment
 from pathlib import Path
-from _builtin import BuiltinFunction, builtin_print, builtin_len, builtin_list
 
 start_env = Environment()
-builtins = {
-    "echo": BuiltinFunction(builtin_print),
-    "länge": BuiltinFunction(builtin_len),
-    "list": BuiltinFunction(builtin_list),
-    "type": BuiltinFunction(lambda pos, _: type(pos[0]))
-}
-
-for name, fn in builtins.items():
-    start_env[name] = fn
-
+start_env.builtins()
 
 __BASE_DIR = Path(__file__).resolve().parent.parent
 __SEARCH_PATH = __BASE_DIR / "test"

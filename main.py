@@ -2,20 +2,11 @@ from parser import parser
 from environment import Environment
 from interpreter import eval
 from lexer import lexer
-from _builtin import *
 import readline
 import sys
 
 env = Environment()
-builtins = {
-    "echo": BuiltinFunction(builtin_print),
-    "länge": BuiltinFunction(builtin_len),
-    "list": BuiltinFunction(builtin_list),
-    "type": BuiltinFunction(lambda pos, key: type(pos[0]))
-}
-
-for name, fn in builtins.items():
-    env[name] = fn
+env.builtins()
 
 
 def test_code(debug=False):
@@ -26,7 +17,6 @@ def test_code(debug=False):
                 continue
             if i == "q":
                 break
-            # try:
             result = parser.parse("{" + i + "}", debug=debug)
             if debug:
                 print(result)

@@ -168,8 +168,8 @@ def p_assignment2(p):
 def p_sequence(p):
     """
     expression : BEGIN statements END
-               | BEGIN END
                | BEGIN statements SEMICOLON END
+               | BEGIN END
     """
     if len(p) == 3:
         p[2] = []

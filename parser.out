@@ -54,8 +54,8 @@ Rule 48    expression -> IDENTIFIER XOR_ASSIGN expression
 Rule 49    expression -> IDENTIFIER EXP_ASSIGN expression
 Rule 50    expression -> IDENTIFIER MOD_ASSIGN expression
 Rule 51    expression -> BEGIN statements END
-Rule 52    expression -> BEGIN END
-Rule 53    expression -> BEGIN statements SEMICOLON END
+Rule 52    expression -> BEGIN statements SEMICOLON END
+Rule 53    expression -> BEGIN END
 Rule 54    statements -> expression
 Rule 55    statements -> statements SEMICOLON expression
 Rule 56    expression -> IF expression THEN expression DOT
@@ -179,7 +179,7 @@ POWER                : 17
 POWER_ASSIGN         : 36
 PRINT                : 92
 RPAREN               : 5 67 87 91 97
-SEMICOLON            : 53 55
+SEMICOLON            : 52 55
 SMALLER_EQUALS       : 29
 SMALLER_EQUALS_ASSIGN : 43
 SMALLER_THAN         : 26
@@ -222,7 +222,7 @@ parameter_kw_list    : 74 75
 parameter_pos        : 67
 parameter_pos_expr   : 79 81
 parameter_pos_list   : 70 71
-statements           : 51 53 55
+statements           : 51 52 55
 
 Parsing method: LALR
 
@@ -271,8 +271,8 @@ state 0
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -646,8 +646,8 @@ state 6
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -754,8 +754,8 @@ state 7
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -859,8 +859,8 @@ state 8
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -964,8 +964,8 @@ state 9
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -1130,8 +1130,8 @@ state 11
 state 12
 
     (51) expression -> BEGIN . statements END
-    (52) expression -> BEGIN . END
-    (53) expression -> BEGIN . statements SEMICOLON END
+    (52) expression -> BEGIN . statements SEMICOLON END
+    (53) expression -> BEGIN . END
     (54) statements -> . expression
     (55) statements -> . statements SEMICOLON expression
     (1) expression -> . NUMBER
@@ -1176,8 +1176,8 @@ state 12
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -1284,8 +1284,8 @@ state 13
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -1389,8 +1389,8 @@ state 14
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -1505,8 +1505,8 @@ state 16
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -1614,8 +1614,8 @@ state 17
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -1813,8 +1813,8 @@ state 24
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -1925,8 +1925,8 @@ state 26
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -2030,8 +2030,8 @@ state 27
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -2135,8 +2135,8 @@ state 28
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -2240,8 +2240,8 @@ state 29
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -2345,8 +2345,8 @@ state 30
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -2450,8 +2450,8 @@ state 31
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -2555,8 +2555,8 @@ state 32
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -2660,8 +2660,8 @@ state 33
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -2765,8 +2765,8 @@ state 34
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -2870,8 +2870,8 @@ state 35
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -2975,8 +2975,8 @@ state 36
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -3080,8 +3080,8 @@ state 37
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -3235,8 +3235,8 @@ state 39
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -3347,8 +3347,8 @@ state 40
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -3453,8 +3453,8 @@ state 41
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -3565,8 +3565,8 @@ state 43
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -3832,8 +3832,8 @@ state 50
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -3937,8 +3937,8 @@ state 51
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -4042,8 +4042,8 @@ state 52
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -4147,8 +4147,8 @@ state 53
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -4252,8 +4252,8 @@ state 54
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -4357,8 +4357,8 @@ state 55
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -4462,8 +4462,8 @@ state 56
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -4567,8 +4567,8 @@ state 57
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -4672,8 +4672,8 @@ state 58
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -4777,8 +4777,8 @@ state 59
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -4882,8 +4882,8 @@ state 60
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -4987,8 +4987,8 @@ state 61
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -5092,8 +5092,8 @@ state 62
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -5197,8 +5197,8 @@ state 63
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -5302,8 +5302,8 @@ state 64
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -5407,8 +5407,8 @@ state 65
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -5512,8 +5512,8 @@ state 66
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -5617,8 +5617,8 @@ state 67
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -5722,8 +5722,8 @@ state 68
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -6175,8 +6175,8 @@ state 74
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -6238,7 +6238,7 @@ state 74
 state 75
 
     (51) expression -> BEGIN statements . END
-    (53) expression -> BEGIN statements . SEMICOLON END
+    (52) expression -> BEGIN statements . SEMICOLON END
     (55) statements -> statements . SEMICOLON expression
 
     END             shift and go to state 141
@@ -6247,46 +6247,46 @@ state 75
 
 state 76
 
-    (52) expression -> BEGIN END .
+    (53) expression -> BEGIN END .
 
-    PLUS            reduce using rule 52 (expression -> BEGIN END .)
-    MINUS           reduce using rule 52 (expression -> BEGIN END .)
-    TIMES           reduce using rule 52 (expression -> BEGIN END .)
-    DIVIDE          reduce using rule 52 (expression -> BEGIN END .)
-    DIVIDE_CEIL     reduce using rule 52 (expression -> BEGIN END .)
-    DIVIDE_FLOOR    reduce using rule 52 (expression -> BEGIN END .)
-    MOD             reduce using rule 52 (expression -> BEGIN END .)
-    EXP             reduce using rule 52 (expression -> BEGIN END .)
-    AND             reduce using rule 52 (expression -> BEGIN END .)
-    OR              reduce using rule 52 (expression -> BEGIN END .)
-    XOR             reduce using rule 52 (expression -> BEGIN END .)
-    POWER           reduce using rule 52 (expression -> BEGIN END .)
-    IMAG            reduce using rule 52 (expression -> BEGIN END .)
-    LPAREN          reduce using rule 52 (expression -> BEGIN END .)
-    CONS            reduce using rule 52 (expression -> BEGIN END .)
-    OPEN_BRACKETS   reduce using rule 52 (expression -> BEGIN END .)
-    LAMBDA_ARROW    reduce using rule 52 (expression -> BEGIN END .)
-    GREATER_THAN    reduce using rule 52 (expression -> BEGIN END .)
-    SMALLER_THAN    reduce using rule 52 (expression -> BEGIN END .)
-    UNEQUALS        reduce using rule 52 (expression -> BEGIN END .)
-    EQUALS          reduce using rule 52 (expression -> BEGIN END .)
-    SMALLER_EQUALS  reduce using rule 52 (expression -> BEGIN END .)
-    GREATER_EQUALS  reduce using rule 52 (expression -> BEGIN END .)
-    $end            reduce using rule 52 (expression -> BEGIN END .)
-    RPAREN          reduce using rule 52 (expression -> BEGIN END .)
-    COMMA           reduce using rule 52 (expression -> BEGIN END .)
-    END             reduce using rule 52 (expression -> BEGIN END .)
-    SEMICOLON       reduce using rule 52 (expression -> BEGIN END .)
-    THEN            reduce using rule 52 (expression -> BEGIN END .)
-    ITER            reduce using rule 52 (expression -> BEGIN END .)
-    CLOSED_BRACKETS reduce using rule 52 (expression -> BEGIN END .)
-    WITH            reduce using rule 52 (expression -> BEGIN END .)
-    COLON           reduce using rule 52 (expression -> BEGIN END .)
-    DOT             reduce using rule 52 (expression -> BEGIN END .)
-    ELIF            reduce using rule 52 (expression -> BEGIN END .)
-    ELSE            reduce using rule 52 (expression -> BEGIN END .)
-    LOOPTHEN        reduce using rule 52 (expression -> BEGIN END .)
-    IN              reduce using rule 52 (expression -> BEGIN END .)
+    PLUS            reduce using rule 53 (expression -> BEGIN END .)
+    MINUS           reduce using rule 53 (expression -> BEGIN END .)
+    TIMES           reduce using rule 53 (expression -> BEGIN END .)
+    DIVIDE          reduce using rule 53 (expression -> BEGIN END .)
+    DIVIDE_CEIL     reduce using rule 53 (expression -> BEGIN END .)
+    DIVIDE_FLOOR    reduce using rule 53 (expression -> BEGIN END .)
+    MOD             reduce using rule 53 (expression -> BEGIN END .)
+    EXP             reduce using rule 53 (expression -> BEGIN END .)
+    AND             reduce using rule 53 (expression -> BEGIN END .)
+    OR              reduce using rule 53 (expression -> BEGIN END .)
+    XOR             reduce using rule 53 (expression -> BEGIN END .)
+    POWER           reduce using rule 53 (expression -> BEGIN END .)
+    IMAG            reduce using rule 53 (expression -> BEGIN END .)
+    LPAREN          reduce using rule 53 (expression -> BEGIN END .)
+    CONS            reduce using rule 53 (expression -> BEGIN END .)
+    OPEN_BRACKETS   reduce using rule 53 (expression -> BEGIN END .)
+    LAMBDA_ARROW    reduce using rule 53 (expression -> BEGIN END .)
+    GREATER_THAN    reduce using rule 53 (expression -> BEGIN END .)
+    SMALLER_THAN    reduce using rule 53 (expression -> BEGIN END .)
+    UNEQUALS        reduce using rule 53 (expression -> BEGIN END .)
+    EQUALS          reduce using rule 53 (expression -> BEGIN END .)
+    SMALLER_EQUALS  reduce using rule 53 (expression -> BEGIN END .)
+    GREATER_EQUALS  reduce using rule 53 (expression -> BEGIN END .)
+    $end            reduce using rule 53 (expression -> BEGIN END .)
+    RPAREN          reduce using rule 53 (expression -> BEGIN END .)
+    COMMA           reduce using rule 53 (expression -> BEGIN END .)
+    END             reduce using rule 53 (expression -> BEGIN END .)
+    SEMICOLON       reduce using rule 53 (expression -> BEGIN END .)
+    THEN            reduce using rule 53 (expression -> BEGIN END .)
+    ITER            reduce using rule 53 (expression -> BEGIN END .)
+    CLOSED_BRACKETS reduce using rule 53 (expression -> BEGIN END .)
+    WITH            reduce using rule 53 (expression -> BEGIN END .)
+    COLON           reduce using rule 53 (expression -> BEGIN END .)
+    DOT             reduce using rule 53 (expression -> BEGIN END .)
+    ELIF            reduce using rule 53 (expression -> BEGIN END .)
+    ELSE            reduce using rule 53 (expression -> BEGIN END .)
+    LOOPTHEN        reduce using rule 53 (expression -> BEGIN END .)
+    IN              reduce using rule 53 (expression -> BEGIN END .)
 
 
 state 77
@@ -6575,8 +6575,8 @@ state 82
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -6846,8 +6846,8 @@ state 91
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -8411,8 +8411,8 @@ state 115
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -10488,8 +10488,8 @@ state 138
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -10734,7 +10734,7 @@ state 141
 
 state 142
 
-    (53) expression -> BEGIN statements SEMICOLON . END
+    (52) expression -> BEGIN statements SEMICOLON . END
     (55) statements -> statements SEMICOLON . expression
     (1) expression -> . NUMBER
     (2) expression -> . FLOAT
@@ -10778,8 +10778,8 @@ state 142
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -10885,8 +10885,8 @@ state 143
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -10990,8 +10990,8 @@ state 144
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -11095,8 +11095,8 @@ state 145
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -11201,8 +11201,8 @@ state 146
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -11395,8 +11395,8 @@ state 149
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -11500,8 +11500,8 @@ state 150
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -11654,8 +11654,8 @@ state 157
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -11760,8 +11760,8 @@ state 158
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -11960,8 +11960,8 @@ state 166
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -12070,8 +12070,8 @@ state 167
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -12265,8 +12265,8 @@ state 170
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -12442,46 +12442,46 @@ state 173
 
 state 174
 
-    (53) expression -> BEGIN statements SEMICOLON END .
+    (52) expression -> BEGIN statements SEMICOLON END .
 
-    PLUS            reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    MINUS           reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    TIMES           reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    DIVIDE          reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    DIVIDE_CEIL     reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    DIVIDE_FLOOR    reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    MOD             reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    EXP             reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    AND             reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    OR              reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    XOR             reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    POWER           reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    IMAG            reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    LPAREN          reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    CONS            reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    OPEN_BRACKETS   reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    LAMBDA_ARROW    reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    GREATER_THAN    reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    SMALLER_THAN    reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    UNEQUALS        reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    EQUALS          reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    SMALLER_EQUALS  reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    GREATER_EQUALS  reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    $end            reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    RPAREN          reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    COMMA           reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    END             reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    SEMICOLON       reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    THEN            reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    ITER            reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    CLOSED_BRACKETS reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    WITH            reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    COLON           reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    DOT             reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    ELIF            reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    ELSE            reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    LOOPTHEN        reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
-    IN              reduce using rule 53 (expression -> BEGIN statements SEMICOLON END .)
+    PLUS            reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    MINUS           reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    TIMES           reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    DIVIDE          reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    DIVIDE_CEIL     reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    DIVIDE_FLOOR    reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    MOD             reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    EXP             reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    AND             reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    OR              reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    XOR             reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    POWER           reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    IMAG            reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    LPAREN          reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    CONS            reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    OPEN_BRACKETS   reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    LAMBDA_ARROW    reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    GREATER_THAN    reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    SMALLER_THAN    reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    UNEQUALS        reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    EQUALS          reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    SMALLER_EQUALS  reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    GREATER_EQUALS  reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    $end            reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    RPAREN          reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    COMMA           reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    END             reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    SEMICOLON       reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    THEN            reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    ITER            reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    CLOSED_BRACKETS reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    WITH            reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    COLON           reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    DOT             reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    ELIF            reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    ELSE            reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    LOOPTHEN        reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
+    IN              reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
 
 
 state 175
@@ -12957,8 +12957,8 @@ state 184
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -13308,8 +13308,8 @@ state 194
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -13536,8 +13536,8 @@ state 200
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -13685,8 +13685,8 @@ state 202
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -13792,8 +13792,8 @@ state 203
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -14026,8 +14026,8 @@ state 206
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -14548,8 +14548,8 @@ state 219
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -14698,8 +14698,8 @@ state 221
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -14936,8 +14936,8 @@ state 226
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT
@@ -15279,8 +15279,8 @@ state 234
     (49) expression -> . IDENTIFIER EXP_ASSIGN expression
     (50) expression -> . IDENTIFIER MOD_ASSIGN expression
     (51) expression -> . BEGIN statements END
-    (52) expression -> . BEGIN END
-    (53) expression -> . BEGIN statements SEMICOLON END
+    (52) expression -> . BEGIN statements SEMICOLON END
+    (53) expression -> . BEGIN END
     (56) expression -> . IF expression THEN expression DOT
     (57) expression -> . IF expression THEN expression else_elif_body DOT
     (60) expression -> . WHILE expression THEN expression DOT

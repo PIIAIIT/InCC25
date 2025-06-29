@@ -109,8 +109,8 @@ def eval(expression, env: Environment, debug=False):
         case ("seq", body):
             if body == []:
                 return None
-            for expr in body[:-1]:
-                eval(expr, env)
+            for e in body[:-1]:
+               eval(e, env)
             return eval(body[-1], env)
 
         case ("if", condition, then_body, else_body):
@@ -232,16 +232,6 @@ def eval(expression, env: Environment, debug=False):
             return None
 
         case ("import", packages):
-            # for file in packages[:-1]:
-            #     if file not in loaded_modules:
-            #         if not os.path.exists(os.path.curdir + "/" + file):
-            #             raise Exception(errmsg(file))
-            #         with open(file, "r", encoding="utf-8") as f:
-            #             code = f.read()
-            #         res = parser.parse(code)
-            #         loaded_modules.add(file)
-            #         eval(res, env)
-            #
             path = packages[0]
             if path not in loaded_modules:
                 if not os.path.exists(os.path.curdir + "/" + path):

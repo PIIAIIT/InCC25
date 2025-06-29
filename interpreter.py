@@ -255,17 +255,20 @@ def eval(expression, env: Environment, debug=False):
         case ("match", expr, cases):
             expr = eval(expr, env)
 
+            lokal_env = Environment(parent=env)
             for c_expr, c_body in cases[:-1]:
-                case = eval(c_expr, env)
-
-                if expr == case:
-                    return eval(c_body, env)
+                print("match", expr, ": ") if debug else ""
+                print("case", c_expr, ": ") if debug else ""
+                if match_pattern(c_expr, expr, lokal_env):
+                    return eval(c_body, lokal_env)
 
             last_case, last_body = cases[-1]
             if last_case[1] == "_":
-                return eval(last_body, env)
-            elif expr == last_case:
-                return eval(last_body, env)
+                return eval(last_body, lokal_env)
+            elif match_pattern(last_case, expr, lokal_env):
+                print("match", expr, ": ") if debug else ""
+                print("case", last_case, ": ") if debug else ""
+                return eval(last_body, lokal_env)
             return None
 
         case ("struct", attributes):
@@ -322,4 +325,64 @@ def binop_for_tuples(x, y, func):
             return (func(x, a), inner3(x, ls2[1]))
         return inner3(x, y)
     return None
+
+
+def match_pattern(pattern, value, env):
+    """
+    Versucht, das Pattern auf den Wert zu matchen.
+    `pattern`: Das Pattern, z. B. ['list', ['a', 'b']]
+    `value`: Das zu matchende Python-Objekt, z. B. [1, 2]
+    `env`: Dictionary, das gebundene Variablen aufnimmt.
+    Rückgabe: True, wenn das Pattern matched, False sonst.
+    """
+
+    # Literal (int, float, str, complex)
+    # ("num", "2")
+    # ("str", "'Hello'")
+    # ("float", "3.14")
+    # ("complex", "3 + 2j")
+    if pattern[0] in ["num", "str", "float", "complex"]:
+        return eval(pattern, env) == value
+
+    if pattern[0] == "var":
+        env[pattern[1]] = value
+        return True
+
+    # Liste: ['list', [p1, p2, p3]]
+    # value: (p1, (p2, (p3, None)))
+    if pattern and pattern[0] == 'list':
+        subpatterns = pattern[1]
+        list_len = lambda lst : 1 if lst[1] is None else 1 + list_len(lst[1])
+        if not isinstance(value, tuple) or len(subpatterns) != list_len(value):
+            return False
+        for subp, subv in zip(subpatterns, value):
+            if not match_pattern(subp, subv, env):
+                return False
+        return True
+
+    # Tuple: ['array', [(var, a), (num, 3), (var, c)]]
+    # value: [1, 2, 3]
+    if pattern and pattern[0] == 'array':
+        subpatterns = pattern[1]
+        if not isinstance(value, list) or len(subpatterns) != len(value):
+            return False
+        for subp, subv in zip(subpatterns, value):
+            if not match_pattern(subp, subv, env):
+                return False
+        return True
+
+    # Struct: ['struct', [('a', '123'), ('b', 'x')]]
+    # value: {a: 123, b : 5} .
+    if pattern and pattern[0] == 'struct':
+        subpatterns = pattern[1]
+        if not isinstance(value, dict) or len(subpatterns) != len(value):
+            return False
+        for _, _, key, subp in subpatterns:
+            if key not in value:
+                return False
+            if not match_pattern(subp, value[key], env):
+                return False
+        return True
+
+    return False
 

@@ -58,11 +58,6 @@ lookup_table = {
     "xor": "XOR",
     "mod": "MOD",
     "e": "EXP",
-    "and:=": "AND_ASSIGN",
-    "or:=": "OR_ASSIGN",
-    "xor:=": "XOR_ASSIGN",
-    "mod:=": "MOD_ASSIGN",
-    "e:=": "EXP_ASSIGN",
     "wenn": "IF",
     "gilt": "THEN",
     "aber": "ELIF",
@@ -72,7 +67,6 @@ lookup_table = {
     "wiederhole": "LOOPTHEN",
     "in": "IN",
     "lambda": "LAMBDA",
-    # "echo": "PRINT",
     "importiere": "IMPORT",
     "vergleiche": "MATCH",
     "mit": "WITH",
@@ -82,6 +76,13 @@ lookup_table = {
     "sei": "LET",  # Ist schon ein Letrec
 }
 tokens += lookup_table.values()
+
+for rule, tkn in {"and:=": "AND_ASSIGN",
+                  "or:=": "OR_ASSIGN",
+                  "xor:=": "XOR_ASSIGN",
+                  "mod:=": "MOD_ASSIGN",
+                  "e:=": "EXP_ASSIGN"}.items():
+    rule_lexer(rule, tkn)
 
 
 def check_if_keyword(token):

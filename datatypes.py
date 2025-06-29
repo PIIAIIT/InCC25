@@ -2,6 +2,7 @@ from environment import Environment
 DEBUG = False
 
 
+########## LABMDA ##########
 class Lambda:
     """Repräsentiert eine Lambda-Funktion mit Parametern, Defaults und Closure"""
 
@@ -74,11 +75,6 @@ def call_lambda(lambda_obj: Lambda, pos_args, keyword_args, eval_func, env):
     new_params = lambda_obj.params.copy()
     new_defaults = lambda_obj.defaults.copy()
     print("NEW PARAMS ", new_params, "NEW DEFAULTS", new_defaults) if DEBUG else 0
-# >>> format := lambda (a,b,c) -> +(a|b -(c:=2))
-# LAMBDA OBJ: {[{'a', 'c', 'b'}, None, dict_items([])]}
-# >>> x := format(1,2,c:3)
-# LAMBDA OBJ: {[{'b'}, None, dict_items([('c', 3)])]}
-# >>> x
 
     # Zuerst Keyword Args auf lambda env binden
     bound_keys = []
@@ -111,3 +107,9 @@ def call_lambda(lambda_obj: Lambda, pos_args, keyword_args, eval_func, env):
     # Wenn ja, execute Lambda
     print("DEBUG -- Execute Lambda") if DEBUG else 0
     return eval_func(lambda_obj.body, lokal_env)
+
+
+########## STRUCT ##########
+class Struct(dict):
+    def __init__(self):
+        super().__init__()

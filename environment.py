@@ -1,6 +1,3 @@
-from _builtin import *
-
-
 class Environment(dict):
     def __init__(self, parent=None):
         self.parent = parent
@@ -46,7 +43,7 @@ class Environment(dict):
             "echo": BuiltinFunction(builtin_print),
             "länge": BuiltinFunction(builtin_len),
             "list": BuiltinFunction(builtin_list),
-            "type": BuiltinFunction(lambda pos, key: type(pos[0]))
+            "type": BuiltinFunction(builtin_type)
         }
 
         for name, fn in builtins.items():
@@ -78,3 +75,44 @@ class Environment(dict):
 
     def __str__(self):
         return str(self.vars) + "\n" + str(self.parent) if self.parent is not None else ""
+
+
+class BuiltinFunction:
+    def __init__(self, fn):
+        self.fn = fn
+
+    def __call__(self, pos, key):
+        return self.fn(pos, key)
+
+
+def builtin_print(pos_args, key_args):
+    """Ausgabe in der Kommandozeile"""
+    print(*pos_args)
+    return None
+
+
+def builtin_len(pos_args, key_args):
+    """Länge einer Liste/Array bestimmen"""
+    return len(pos_args[0])
+
+
+def builtin_list(pos_args, key_args):
+    """Lisp Liste wird erstellt
+    Example : list(1,2,3) == (1, (2, (3, None)))
+            | list(1) == (1, None)
+            | list() == (None)
+    """
+    if len(pos_args) == 0:
+        return None
+    if len(pos_args) == 1:
+        return pos_args[0], None
+    return (pos_args[0], builtin_list(pos_args[1:], None))
+
+
+def builtin_type(pos_args, key_args):
+    """Lisp Liste wird erstellt
+    Example : list(1,2,3) == (1, (2, (3, None)))
+            | list(1) == (1, None)
+            | list() == (None)
+    """
+    return type(pos_args[0])

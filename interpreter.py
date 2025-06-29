@@ -1,10 +1,9 @@
 import os
 from parser import parser
-
 import numpy as np
-
-from _lambda import (
+from datatypes import (
     Lambda,
+    Struct,
     call_lambda,
     parse_call_arguments,
     parse_lambda_parameters,
@@ -34,7 +33,7 @@ bin_operations = {
 
 unary_operations = {
     "not": lambda x: int(not x),
-    "uplus": lambda x: np.abs(x),
+    "uplus": lambda x: x if x > 0 else -x,
     "uminus": lambda x: -x,
     "imag": lambda x: np.complex64(0, x),
 }
@@ -256,7 +255,7 @@ def eval(expression, env: Environment, debug=False):
             return None
 
         case ("struct", attributes):
-            s = {}
+            s = Struct()
             for _, _, name, expr in attributes:
                 s[name] = eval(expr, env)
             return s

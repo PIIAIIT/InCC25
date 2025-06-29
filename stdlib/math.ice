@@ -17,10 +17,10 @@ fac := lambda x ->
 .;
 
 # Exponentialfunktion #
-_exp := sei _eps = 60 in
+exp := sei eps = 60 in
     lambda x -> {
         sum := 0;
-        für n in [0.._eps] wiederhole
+        für n in [0..eps] wiederhole
             sum +:= x**n | fac(n)
         .;
         sum

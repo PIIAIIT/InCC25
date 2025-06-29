@@ -1,5 +1,5 @@
 from ply.yacc import yacc
-from lexer import tokens, print_traceback, assigns
+from lexer import tokens, print_traceback, op_assigns
 import readline, traceback
 
 look_up_table = {
@@ -195,24 +195,24 @@ def p_statements(p):
 
 def p_if_statements1(p):
     """
-    expression : IF expression THEN expression DOT
-               | IF expression THEN expression else_elif_body DOT
+    expression : IF expression THEN COMMA expression DOT
+               | IF expression THEN COMMA expression else_elif_body DOT
     """
-    if len(p) == 6:
-        p[0] = ("if", p[2], p[4], None)
+    if len(p) == 7:
+        p[0] = ("if", p[2], p[5], None)
     else:
-        p[0] = ("if", p[2], p[4], p[5])  # elif
+        p[0] = ("if", p[2], p[5], p[6])  # elif
 
 
 def p_if_statements2(p):
     """
-    else_elif_body : ELIF IF expression THEN expression else_elif_body
+    else_elif_body : COMMA ELIF IF expression THEN COMMA expression else_elif_body
                    | ELSE expression
     """
     if len(p) == 3:
         p[0] = [("else", p[2])]
     else:
-        p[0] = [(p[3], p[5]), *p[6]]
+        p[0] = [(p[4], p[7]), *p[8]]
 
 
 ######################### WHILE #########################
@@ -220,9 +220,9 @@ def p_if_statements2(p):
 
 def p_while_statement0(p):
     """
-    expression : WHILE expression THEN expression DOT
+    expression : WHILE expression THEN COMMA expression DOT
     """
-    p[0] = ("while", p[2], p[4])
+    p[0] = ("while", p[2], p[5])
 
 
 ######################### LOOP #########################
@@ -249,7 +249,7 @@ def p_interval(p):
 
 
 def p_lambda0(p):
-    "expression : LAMBDA parameter LAMBDA_ARROW expression DOT %prec LAMBDA"
+    "expression : LAMBDA parameter LAMBDA_ARROW expression DOT"
     p[0] = ("lambda", p[2], p[4])
 
 
@@ -380,18 +380,18 @@ def p_let(p):
 ######################### BUILTIN #########################
 
 
-def p_builtin_func(p):
-    """
-    expression : function LPAREN parameter_expr RPAREN
-    """
-    p[0] = ("call", p[1], p[3])
-
-
-# TODO: e in literals
-def p_func(p):
-    """function : PRINT
-    """
-    p[0] = ("var", p[1])
+# def p_builtin_func(p):
+#     """
+#     expression : function LPAREN parameter_expr RPAREN
+#     """
+#     p[0] = ("call", p[1], p[3])
+#
+#
+# # TODO: e in literals
+# def p_func(p):
+#     """function : PRINT
+#     """
+#     p[0] = ("var", p[1])
 
 
 ######################### LISTS #########################
@@ -468,30 +468,30 @@ def p_assignment_list2(p):
 
 
 def p_struct0(p):
-    "expression : STRUCT BEGIN assignment_list END DOT"
-    # struct { assignments, ... } .
-    # Person := struct { name := "Patrick", alter := 25 } .
+    "expression : STRUCT BEGIN assignment_list END"
+    # struct { assignments, ... }
+    # Person := struct { name := "Patrick", alter := 25 }
     p[0] = ("struct", p[3])
 
 
 def p_struct1(p):
-    "expression : STRUCT BEGIN assign_expression END DOT"
-    # struct { assignments } .
-    # Person := struct { name := "Patrick" } .
+    "expression : STRUCT BEGIN assign_expression END"
+    # struct { assignments }
+    # Person := struct { name := "Patrick" }
     p[0] = ("struct", [p[3]])
 
 
 def p_struct2(p):
-    "expression : STRUCT BEGIN END DOT"
-    # struct { assignments } .
-    # Person := struct { name := "Patrick" } .
+    "expression : STRUCT BEGIN END"
+    # struct { assignments }
+    # Person := struct { name := "Patrick" }
     p[0] = ("struct", [])
 
 
 def p_access_structs(p):
-    "expression : expression LAMBDA_ARROW IDENTIFIER"
-    # Person.name
-    # Person.alter
+    "expression : expression LAMBDA_ARROW expression"
+    # Person->name
+    # Person->alter
     p[0] = ("access_struct", p[1], p[3])
 
 
@@ -538,8 +538,8 @@ def p_error(p):
 ########################################################
 
 precedence = (
-    tuple(["right", "ASSIGN"] + [a for a in assigns.values()]),
-    ("left", "LAMBDA", "LET", "MATCH"),
+    ("right", "ASSIGN"),
+    ("right", *(a for a in op_assigns.values())),
     ("left", "OR"),
     ("left", "XOR"),
     ("left", "AND"),
@@ -559,8 +559,8 @@ precedence = (
     ("left", "IMAG"),
     ("right", "NOT", "UPLUS", "UMINUS"),
     ("left", "CONS"),
-    ("right", "IMPORT"),
-    ("nonassoc", "OPEN_BRACKETS", "CLOSED_BRACKETS", "LPAREN", "RPAREN", "BEGIN", "END"),
+    ("left", "LAMBDA_ARROW"),
+    ("left", "OPEN_BRACKETS", "CLOSED_BRACKETS", "LPAREN", "RPAREN", "BEGIN", "END"),
 )
 
 ########################################################

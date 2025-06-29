@@ -281,7 +281,7 @@ for path in ALL_PATHS:
 
 ################### PARSER TEST ###################
 for path in ALL_PATHS:
-    assert test_parser(read_file(path, True), verbose=True)
+    assert test_parser(read_file(path, True), verbose=v)
 
 ################### INTERPRETER TEST ###################
 for path in ALL_PATHS:

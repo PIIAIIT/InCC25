@@ -1,5 +1,6 @@
 import os
 from parser import parser
+
 import numpy as np
 
 from _lambda import (
@@ -94,13 +95,14 @@ def eval(expression, env: Environment, debug=False):
 
         case ("assign", op, var, val):
             y = eval(val, env)
+            print("Assign: ", op, var, val) if debug else ""
             if op is not None:
-                if debug:
-                    print("Assign: ", op, var, val)
-                env[var] = eval(("binop", op, ("var", var), val), env)
+                erg = eval(("binop", op, ("var", var), val), env)
+                env[var] = erg
+                return erg
             else:
                 env[var] = y
-            return env[var]
+                return y
 
         case ("unary", op, expr):
             x = eval(expr, env)
@@ -110,7 +112,7 @@ def eval(expression, env: Environment, debug=False):
             if body == []:
                 return None
             for e in body[:-1]:
-               eval(e, env)
+                eval(e, env)
             return eval(body[-1], env)
 
         case ("if", condition, then_body, else_body):
@@ -193,27 +195,19 @@ def eval(expression, env: Environment, debug=False):
 
         case ("array_access", array_ptr, index):
             arr = eval(array_ptr, env)
-
-            if isinstance(arr, tuple):
-                match index:
-                    case '+':
-                        return arr[1]
-                    case _:
-                        i = eval(index, env)
-                        tmp = arr
-                        for _ in range(i):
-                            if tmp[1] is None:
-                                raise IndexError("Index out of Bounds")
-                            tmp = tmp[1]
-                        return tmp[0]
-            elif isinstance(arr, list):
-                match index:
-                    case '+':
-                        return arr[1:]
-                    case _:
-                        return arr[eval(index, env)]
+            assert isinstance(arr, (list, tuple)), f"{type(arr)} {arr} ist nicht veränderlich."
+            if index == '+':
+                return arr[1:]
             else:
-                raise Exception(f"{type(arr)} {arr} ist nicht veränderlich.")
+                i = eval(index, env) # expression
+                if isinstance(arr, tuple):
+                    tmp = arr
+                    for _ in range(i):
+                        if tmp[1] is None:
+                            raise IndexError("List Index out of range")
+                        tmp = tmp[1]
+                    return tmp[0]
+                return arr[i]
 
         case ("list", list_elements):
             if len(list_elements) == 0:
@@ -268,7 +262,8 @@ def eval(expression, env: Environment, debug=False):
             return s
 
         case ("access_struct", struct, name):
-            return eval(struct, env)[name]
+            assert isinstance(name, tuple) and name[0] == "var", f"Du kannst nicht auf {name} in {struct} zugreifen."
+            return eval(struct, env)[name[1]]
 
         case _:
             print(f"unknown expression {expression}")
@@ -327,10 +322,6 @@ def match_pattern(pattern, value, env):
     """
 
     # Literal (int, float, str, complex)
-    # ("num", "2")
-    # ("str", "'Hello'")
-    # ("float", "3.14")
-    # ("complex", "3 + 2j")
     if pattern[0] in ["num", "str", "float", "complex"]:
         return eval(pattern, env) == value
 
@@ -362,7 +353,7 @@ def match_pattern(pattern, value, env):
         return True
 
     # Struct: ['struct', [('a', '123'), ('b', 'x')]]
-    # value: {a: 123, b : 5} .
+    # value: {a: 123, b : 5}
     if pattern and pattern[0] == 'struct':
         subpatterns = pattern[1]
         if not isinstance(value, dict) or len(subpatterns) != len(value):

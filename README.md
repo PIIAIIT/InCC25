@@ -1,13 +1,62 @@
-# UNDER DEVELOPMENT
+# InCC25 – Interpreter für Interpreter und Compilerbau
 
-# Ausführen
+Dieses Projekt implementiert einen Interpreter im Rahmen der Veranstaltung „Interpreter und Compilerbau“ an der PIIAIIT. Der Code dient als praktisches Beispiel für die Entwicklung von Interpretern und bietet eine Grundlage für das Verständnis von Compilerbau.
 
-Zum ausführen des Codes kann man machen:
 
+
+## 📦 Übersicht
+
+- Das Repository enthält die folgenden Hauptkomponenten:
+- **Lexer**: Tokenisiert den Quellcode in lexikalische Einheiten.
+- **Parser**: Analysiert die Syntax des Quellcodes und erstellt eine abstrakte Syntaxbaum (AST).
+- **Interpreter**: Führt den AST aus und gibt die Ergebnisse aus.
+- **Standardbibliothek**: Enthält grundlegende Funktionen.
+- **Testumgebung**: Stellt sicher, dass der Interpreter korrekt funktioniert.
+## ⚙️ Installation
+
+Clone das Repository und navigiere in das Projektverzeichnis:
+
+```bash
+  git clone https://github.com/PIIAIIT/InCC25.git
+  cd InCC25
 ```
-make [command]
-```
 
-es gibt folgende Befehle für `make`: `lexer`, `parser`, `test`, `debug`
-diese Führen die jeweiligen Files in einem Interaktiven Shell, wenn kein Befehl
-angegeben wird, wird die interaktive Shell für den Interpreter ausgeführt.
+Stelle sicher, dass Python 3 installiert ist.
+
+
+## 🚀 Nutzung
+
+Verwende `make`, um verschiedene Teile des Interpreters auszuführen:
+
+```bash
+  make [command]
+```
+Verfügbare Befehle:
+- `lexer`: Führt den Lexer aus.
+- `parser`: Führt den Parser aus.
+- `test`: Führt die Tests aus.
+- `debug`: Startet den Debugger. Mit allen Debug Infos.
+Wenn kein Befehl angegeben wird, startet die interaktive Shell des Interpreters.
+
+
+
+## 🧪 Tests
+
+Das Projekt enthält eine Testumgebung, um die Funktionalität des Interpreters zu überprüfen. Führe die Tests mit dem folgenden Befehl aus:
+
+
+```bash
+  make test
+```
+Dies stellt sicher, dass alle Komponenten wie erwartet funktionieren.
+
+
+
+## 📚 Weitere Informationen
+
+Für eine detaillierte Beschreibung der Implementierung und der verwendeten Techniken siehe die einzelnen Moduldateien im Repository.
+
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)

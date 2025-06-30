@@ -503,7 +503,7 @@ def p_file(p):
 
 
 def p_import(p):
-    "expression : IMPORT file DOT"
+    "expression : IMPORT file"
     p[0] = ("import", p[2])
 
 ######################### MATCH #########################

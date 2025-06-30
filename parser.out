@@ -112,7 +112,7 @@ Rule 106   expression -> STRUCT BEGIN assign_expression END
 Rule 107   expression -> STRUCT BEGIN END
 Rule 108   expression -> expression LAMBDA_ARROW expression
 Rule 109   file -> STRING
-Rule 110   expression -> IMPORT file DOT
+Rule 110   expression -> IMPORT file
 Rule 111   expression -> MATCH expression WITH cases DOT
 Rule 112   cases -> CASE expression COLON expression DOT cases
 Rule 113   cases -> CASE expression COLON expression DOT
@@ -134,7 +134,7 @@ DIVIDE_CEIL          : 10
 DIVIDE_CEIL_ASSIGN   : 39
 DIVIDE_FLOOR         : 11
 DIVIDE_FLOOR_ASSIGN  : 38
-DOT                  : 56 57 60 61 66 90 110 111 112 113
+DOT                  : 56 57 60 61 66 90 111 112 113
 DOTS                 : 78
 ELIF                 : 58
 ELSE                 : 59
@@ -292,7 +292,7 @@ state 0
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -659,7 +659,7 @@ state 6
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (91) param_list -> . expression COMMA param_list
     (92) param_list -> . expression COMMA param_list_end
@@ -763,7 +763,7 @@ state 7
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -864,7 +864,7 @@ state 8
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -965,7 +965,7 @@ state 9
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -1171,7 +1171,7 @@ state 12
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -1275,7 +1275,7 @@ state 13
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -1376,7 +1376,7 @@ state 14
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -1488,7 +1488,7 @@ state 16
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (91) param_list -> . expression COMMA param_list
     (92) param_list -> . expression COMMA param_list_end
@@ -1593,7 +1593,7 @@ state 17
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -1703,7 +1703,7 @@ state 21
 
 state 22
 
-    (110) expression -> IMPORT . file DOT
+    (110) expression -> IMPORT . file
     (109) file -> . STRING
 
     STRING          shift and go to state 91
@@ -1780,7 +1780,7 @@ state 23
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -1881,7 +1881,7 @@ state 24
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -1982,7 +1982,7 @@ state 25
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -2083,7 +2083,7 @@ state 26
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -2184,7 +2184,7 @@ state 27
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -2285,7 +2285,7 @@ state 28
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -2386,7 +2386,7 @@ state 29
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -2487,7 +2487,7 @@ state 30
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -2588,7 +2588,7 @@ state 31
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -2689,7 +2689,7 @@ state 32
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -2790,7 +2790,7 @@ state 33
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -2891,7 +2891,7 @@ state 34
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -2992,7 +2992,7 @@ state 35
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -3142,7 +3142,7 @@ state 37
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (84) parameter_keywords_expr -> . expression COLON expression COMMA parameter_keywords_expr
     (85) parameter_keywords_expr -> . expression COLON expression
@@ -3250,7 +3250,7 @@ state 38
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -3352,7 +3352,7 @@ state 39
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -3453,7 +3453,7 @@ state 40
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -3554,7 +3554,7 @@ state 41
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -3811,7 +3811,7 @@ state 48
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -3912,7 +3912,7 @@ state 49
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -4013,7 +4013,7 @@ state 50
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -4114,7 +4114,7 @@ state 51
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -4215,7 +4215,7 @@ state 52
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -4316,7 +4316,7 @@ state 53
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -4417,7 +4417,7 @@ state 54
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -4518,7 +4518,7 @@ state 55
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -4619,7 +4619,7 @@ state 56
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -4720,7 +4720,7 @@ state 57
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -4821,7 +4821,7 @@ state 58
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -4922,7 +4922,7 @@ state 59
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -5023,7 +5023,7 @@ state 60
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -5124,7 +5124,7 @@ state 61
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -5225,7 +5225,7 @@ state 62
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -5326,7 +5326,7 @@ state 63
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -5427,7 +5427,7 @@ state 64
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -5528,7 +5528,7 @@ state 65
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -5629,7 +5629,7 @@ state 66
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -6075,7 +6075,7 @@ state 72
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -6470,7 +6470,7 @@ state 80
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -6677,16 +6677,88 @@ state 89
 
 state 90
 
-    (110) expression -> IMPORT file . DOT
+    (110) expression -> IMPORT file .
 
-    DOT             shift and go to state 160
+    PLUS            reduce using rule 110 (expression -> IMPORT file .)
+    MINUS           reduce using rule 110 (expression -> IMPORT file .)
+    TIMES           reduce using rule 110 (expression -> IMPORT file .)
+    DIVIDE          reduce using rule 110 (expression -> IMPORT file .)
+    DIVIDE_CEIL     reduce using rule 110 (expression -> IMPORT file .)
+    DIVIDE_FLOOR    reduce using rule 110 (expression -> IMPORT file .)
+    MOD             reduce using rule 110 (expression -> IMPORT file .)
+    EXP             reduce using rule 110 (expression -> IMPORT file .)
+    AND             reduce using rule 110 (expression -> IMPORT file .)
+    OR              reduce using rule 110 (expression -> IMPORT file .)
+    XOR             reduce using rule 110 (expression -> IMPORT file .)
+    POWER           reduce using rule 110 (expression -> IMPORT file .)
+    IMAG            reduce using rule 110 (expression -> IMPORT file .)
+    LPAREN          reduce using rule 110 (expression -> IMPORT file .)
+    CONS            reduce using rule 110 (expression -> IMPORT file .)
+    OPEN_BRACKETS   reduce using rule 110 (expression -> IMPORT file .)
+    LAMBDA_ARROW    reduce using rule 110 (expression -> IMPORT file .)
+    GREATER_THAN    reduce using rule 110 (expression -> IMPORT file .)
+    SMALLER_THAN    reduce using rule 110 (expression -> IMPORT file .)
+    UNEQUALS        reduce using rule 110 (expression -> IMPORT file .)
+    EQUALS          reduce using rule 110 (expression -> IMPORT file .)
+    SMALLER_EQUALS  reduce using rule 110 (expression -> IMPORT file .)
+    GREATER_EQUALS  reduce using rule 110 (expression -> IMPORT file .)
+    $end            reduce using rule 110 (expression -> IMPORT file .)
+    RPAREN          reduce using rule 110 (expression -> IMPORT file .)
+    COMMA           reduce using rule 110 (expression -> IMPORT file .)
+    END             reduce using rule 110 (expression -> IMPORT file .)
+    SEMICOLON       reduce using rule 110 (expression -> IMPORT file .)
+    THEN            reduce using rule 110 (expression -> IMPORT file .)
+    ITER            reduce using rule 110 (expression -> IMPORT file .)
+    CLOSED_BRACKETS reduce using rule 110 (expression -> IMPORT file .)
+    WITH            reduce using rule 110 (expression -> IMPORT file .)
+    COLON           reduce using rule 110 (expression -> IMPORT file .)
+    LOOPTHEN        reduce using rule 110 (expression -> IMPORT file .)
+    DOT             reduce using rule 110 (expression -> IMPORT file .)
+    IN              reduce using rule 110 (expression -> IMPORT file .)
+    ELSE            reduce using rule 110 (expression -> IMPORT file .)
 
 
 state 91
 
     (109) file -> STRING .
 
+    PLUS            reduce using rule 109 (file -> STRING .)
+    MINUS           reduce using rule 109 (file -> STRING .)
+    TIMES           reduce using rule 109 (file -> STRING .)
+    DIVIDE          reduce using rule 109 (file -> STRING .)
+    DIVIDE_CEIL     reduce using rule 109 (file -> STRING .)
+    DIVIDE_FLOOR    reduce using rule 109 (file -> STRING .)
+    MOD             reduce using rule 109 (file -> STRING .)
+    EXP             reduce using rule 109 (file -> STRING .)
+    AND             reduce using rule 109 (file -> STRING .)
+    OR              reduce using rule 109 (file -> STRING .)
+    XOR             reduce using rule 109 (file -> STRING .)
+    POWER           reduce using rule 109 (file -> STRING .)
+    IMAG            reduce using rule 109 (file -> STRING .)
+    LPAREN          reduce using rule 109 (file -> STRING .)
+    CONS            reduce using rule 109 (file -> STRING .)
+    OPEN_BRACKETS   reduce using rule 109 (file -> STRING .)
+    LAMBDA_ARROW    reduce using rule 109 (file -> STRING .)
+    GREATER_THAN    reduce using rule 109 (file -> STRING .)
+    SMALLER_THAN    reduce using rule 109 (file -> STRING .)
+    UNEQUALS        reduce using rule 109 (file -> STRING .)
+    EQUALS          reduce using rule 109 (file -> STRING .)
+    SMALLER_EQUALS  reduce using rule 109 (file -> STRING .)
+    GREATER_EQUALS  reduce using rule 109 (file -> STRING .)
+    $end            reduce using rule 109 (file -> STRING .)
+    RPAREN          reduce using rule 109 (file -> STRING .)
+    COMMA           reduce using rule 109 (file -> STRING .)
+    END             reduce using rule 109 (file -> STRING .)
+    SEMICOLON       reduce using rule 109 (file -> STRING .)
+    THEN            reduce using rule 109 (file -> STRING .)
+    ITER            reduce using rule 109 (file -> STRING .)
+    CLOSED_BRACKETS reduce using rule 109 (file -> STRING .)
+    WITH            reduce using rule 109 (file -> STRING .)
+    COLON           reduce using rule 109 (file -> STRING .)
+    LOOPTHEN        reduce using rule 109 (file -> STRING .)
     DOT             reduce using rule 109 (file -> STRING .)
+    IN              reduce using rule 109 (file -> STRING .)
+    ELSE            reduce using rule 109 (file -> STRING .)
 
 
 state 92
@@ -6718,7 +6790,7 @@ state 92
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    WITH            shift and go to state 161
+    WITH            shift and go to state 160
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -7893,7 +7965,7 @@ state 105
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    COMMA           shift and go to state 162
+    COMMA           shift and go to state 161
     RPAREN          reduce using rule 82 (parameter_pos_expr -> expression .)
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
@@ -7912,7 +7984,7 @@ state 105
     CONS            shift and go to state 38
     OPEN_BRACKETS   shift and go to state 39
     LAMBDA_ARROW    shift and go to state 40
-    COLON           shift and go to state 163
+    COLON           shift and go to state 162
     GREATER_THAN    shift and go to state 42
     SMALLER_THAN    shift and go to state 43
     UNEQUALS        shift and go to state 44
@@ -7926,7 +7998,7 @@ state 106
 
     (87) expression -> expression LPAREN parameter_expr . RPAREN
 
-    RPAREN          shift and go to state 164
+    RPAREN          shift and go to state 163
 
 
 state 107
@@ -8072,7 +8144,7 @@ state 111
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    CLOSED_BRACKETS shift and go to state 165
+    CLOSED_BRACKETS shift and go to state 164
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -8170,13 +8242,13 @@ state 112
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
     (31) assign_expression -> . IDENTIFIER ASSIGN expression
 
-    CLOSED_BRACKETS shift and go to state 166
+    CLOSED_BRACKETS shift and go to state 165
     NUMBER          shift and go to state 2
     FLOAT           shift and go to state 3
     STRING          shift and go to state 4
@@ -10271,7 +10343,7 @@ state 135
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -10298,9 +10370,9 @@ state 135
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 167
-    param_list                     shift and go to state 168
-    param_list_end                 shift and go to state 169
+    expression                     shift and go to state 166
+    param_list                     shift and go to state 167
+    param_list_end                 shift and go to state 168
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
@@ -10554,13 +10626,13 @@ state 139
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
     (31) assign_expression -> . IDENTIFIER ASSIGN expression
 
-    END             shift and go to state 170
+    END             shift and go to state 169
     NUMBER          shift and go to state 2
     FLOAT           shift and go to state 3
     STRING          shift and go to state 4
@@ -10582,7 +10654,7 @@ state 139
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 171
+    expression                     shift and go to state 170
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
@@ -10591,14 +10663,14 @@ state 140
     (56) expression -> IF expression THEN . COMMA expression DOT
     (57) expression -> IF expression THEN . COMMA expression else_elif_body DOT
 
-    COMMA           shift and go to state 172
+    COMMA           shift and go to state 171
 
 
 state 141
 
     (60) expression -> WHILE expression THEN . COMMA expression DOT
 
-    COMMA           shift and go to state 173
+    COMMA           shift and go to state 172
 
 
 state 142
@@ -10671,7 +10743,7 @@ state 142
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -10698,7 +10770,7 @@ state 142
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 174
+    expression                     shift and go to state 173
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
@@ -10773,7 +10845,7 @@ state 143
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -10800,7 +10872,7 @@ state 143
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 175
+    expression                     shift and go to state 174
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
@@ -10961,7 +11033,7 @@ state 146
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -10988,7 +11060,7 @@ state 146
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 176
+    expression                     shift and go to state 175
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
@@ -11062,7 +11134,7 @@ state 147
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -11089,7 +11161,7 @@ state 147
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 177
+    expression                     shift and go to state 176
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
@@ -11097,7 +11169,7 @@ state 148
 
     (67) parameter -> LPAREN parameter_pos . RPAREN
 
-    RPAREN          shift and go to state 178
+    RPAREN          shift and go to state 177
 
 
 state 149
@@ -11115,10 +11187,10 @@ state 150
     (76) parameter_kw_list -> IDENTIFIER . COLON expression
     (78) parameter_infty -> IDENTIFIER . DOTS
 
-    COMMA           shift and go to state 179
+    COMMA           shift and go to state 178
     RPAREN          reduce using rule 72 (parameter_pos_list -> IDENTIFIER .)
-    COLON           shift and go to state 180
-    DOTS            shift and go to state 181
+    COLON           shift and go to state 179
+    DOTS            shift and go to state 180
 
 
 state 151
@@ -11212,7 +11284,7 @@ state 154
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -11239,7 +11311,7 @@ state 154
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 182
+    expression                     shift and go to state 181
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
@@ -11314,7 +11386,7 @@ state 155
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -11341,7 +11413,7 @@ state 155
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 183
+    expression                     shift and go to state 182
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
@@ -11349,7 +11421,7 @@ state 156
 
     (105) expression -> STRUCT BEGIN assignment_list . END
 
-    END             shift and go to state 184
+    END             shift and go to state 183
 
 
 state 157
@@ -11401,8 +11473,8 @@ state 158
     (102) assignment_list -> assign_expression . COMMA assignment_list
     (103) assignment_list -> assign_expression . COMMA assignment_list_end
 
-    END             shift and go to state 185
-    COMMA           shift and go to state 186
+    END             shift and go to state 184
+    COMMA           shift and go to state 185
 
 
 state 159
@@ -11414,58 +11486,15 @@ state 159
 
 state 160
 
-    (110) expression -> IMPORT file DOT .
-
-    PLUS            reduce using rule 110 (expression -> IMPORT file DOT .)
-    MINUS           reduce using rule 110 (expression -> IMPORT file DOT .)
-    TIMES           reduce using rule 110 (expression -> IMPORT file DOT .)
-    DIVIDE          reduce using rule 110 (expression -> IMPORT file DOT .)
-    DIVIDE_CEIL     reduce using rule 110 (expression -> IMPORT file DOT .)
-    DIVIDE_FLOOR    reduce using rule 110 (expression -> IMPORT file DOT .)
-    MOD             reduce using rule 110 (expression -> IMPORT file DOT .)
-    EXP             reduce using rule 110 (expression -> IMPORT file DOT .)
-    AND             reduce using rule 110 (expression -> IMPORT file DOT .)
-    OR              reduce using rule 110 (expression -> IMPORT file DOT .)
-    XOR             reduce using rule 110 (expression -> IMPORT file DOT .)
-    POWER           reduce using rule 110 (expression -> IMPORT file DOT .)
-    IMAG            reduce using rule 110 (expression -> IMPORT file DOT .)
-    LPAREN          reduce using rule 110 (expression -> IMPORT file DOT .)
-    CONS            reduce using rule 110 (expression -> IMPORT file DOT .)
-    OPEN_BRACKETS   reduce using rule 110 (expression -> IMPORT file DOT .)
-    LAMBDA_ARROW    reduce using rule 110 (expression -> IMPORT file DOT .)
-    GREATER_THAN    reduce using rule 110 (expression -> IMPORT file DOT .)
-    SMALLER_THAN    reduce using rule 110 (expression -> IMPORT file DOT .)
-    UNEQUALS        reduce using rule 110 (expression -> IMPORT file DOT .)
-    EQUALS          reduce using rule 110 (expression -> IMPORT file DOT .)
-    SMALLER_EQUALS  reduce using rule 110 (expression -> IMPORT file DOT .)
-    GREATER_EQUALS  reduce using rule 110 (expression -> IMPORT file DOT .)
-    $end            reduce using rule 110 (expression -> IMPORT file DOT .)
-    RPAREN          reduce using rule 110 (expression -> IMPORT file DOT .)
-    COMMA           reduce using rule 110 (expression -> IMPORT file DOT .)
-    END             reduce using rule 110 (expression -> IMPORT file DOT .)
-    SEMICOLON       reduce using rule 110 (expression -> IMPORT file DOT .)
-    THEN            reduce using rule 110 (expression -> IMPORT file DOT .)
-    ITER            reduce using rule 110 (expression -> IMPORT file DOT .)
-    CLOSED_BRACKETS reduce using rule 110 (expression -> IMPORT file DOT .)
-    WITH            reduce using rule 110 (expression -> IMPORT file DOT .)
-    COLON           reduce using rule 110 (expression -> IMPORT file DOT .)
-    LOOPTHEN        reduce using rule 110 (expression -> IMPORT file DOT .)
-    DOT             reduce using rule 110 (expression -> IMPORT file DOT .)
-    IN              reduce using rule 110 (expression -> IMPORT file DOT .)
-    ELSE            reduce using rule 110 (expression -> IMPORT file DOT .)
-
-
-state 161
-
     (111) expression -> MATCH expression WITH . cases DOT
     (112) cases -> . CASE expression COLON expression DOT cases
     (113) cases -> . CASE expression COLON expression DOT
 
-    CASE            shift and go to state 188
+    CASE            shift and go to state 187
 
-    cases                          shift and go to state 187
+    cases                          shift and go to state 186
 
-state 162
+state 161
 
     (81) parameter_pos_expr -> expression COMMA . parameter_pos_expr
     (81) parameter_pos_expr -> . expression COMMA parameter_pos_expr
@@ -11538,7 +11567,7 @@ state 162
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (84) parameter_keywords_expr -> . expression COLON expression COMMA parameter_keywords_expr
     (85) parameter_keywords_expr -> . expression COLON expression
@@ -11568,12 +11597,12 @@ state 162
     MATCH           shift and go to state 23
 
     expression                     shift and go to state 105
-    parameter_pos_expr             shift and go to state 189
+    parameter_pos_expr             shift and go to state 188
     parameter_keywords_expr        shift and go to state 109
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 163
+state 162
 
     (84) parameter_keywords_expr -> expression COLON . expression COMMA parameter_keywords_expr
     (85) parameter_keywords_expr -> expression COLON . expression
@@ -11644,7 +11673,7 @@ state 163
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -11671,11 +11700,11 @@ state 163
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 190
+    expression                     shift and go to state 189
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 164
+state 163
 
     (87) expression -> expression LPAREN parameter_expr RPAREN .
 
@@ -11718,7 +11747,7 @@ state 164
     ELSE            reduce using rule 87 (expression -> expression LPAREN parameter_expr RPAREN .)
 
 
-state 165
+state 164
 
     (97) expression -> expression OPEN_BRACKETS expression CLOSED_BRACKETS .
 
@@ -11761,7 +11790,7 @@ state 165
     ELSE            reduce using rule 97 (expression -> expression OPEN_BRACKETS expression CLOSED_BRACKETS .)
 
 
-state 166
+state 165
 
     (96) expression -> expression OPEN_BRACKETS PLUS CLOSED_BRACKETS .
     (63) expression -> CLOSED_BRACKETS . expression ITER expression CLOSED_BRACKETS
@@ -11833,7 +11862,7 @@ state 166
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -11902,7 +11931,7 @@ state 166
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 167
+state 166
 
     (91) param_list -> expression . COMMA param_list
     (92) param_list -> expression . COMMA param_list_end
@@ -11962,7 +11991,7 @@ state 167
 
     comparison_op                  shift and go to state 41
 
-state 168
+state 167
 
     (91) param_list -> expression COMMA param_list .
 
@@ -11970,7 +11999,7 @@ state 168
     CLOSED_BRACKETS reduce using rule 91 (param_list -> expression COMMA param_list .)
 
 
-state 169
+state 168
 
     (92) param_list -> expression COMMA param_list_end .
 
@@ -11978,7 +12007,7 @@ state 169
     CLOSED_BRACKETS reduce using rule 92 (param_list -> expression COMMA param_list_end .)
 
 
-state 170
+state 169
 
     (52) expression -> BEGIN statements SEMICOLON END .
 
@@ -12021,7 +12050,7 @@ state 170
     ELSE            reduce using rule 52 (expression -> BEGIN statements SEMICOLON END .)
 
 
-state 171
+state 170
 
     (55) statements -> statements SEMICOLON expression .
     (6) expression -> expression . PLUS expression
@@ -12078,7 +12107,7 @@ state 171
 
     comparison_op                  shift and go to state 41
 
-state 172
+state 171
 
     (56) expression -> IF expression THEN COMMA . expression DOT
     (57) expression -> IF expression THEN COMMA . expression else_elif_body DOT
@@ -12149,7 +12178,7 @@ state 172
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -12176,11 +12205,11 @@ state 172
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 191
+    expression                     shift and go to state 190
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 173
+state 172
 
     (60) expression -> WHILE expression THEN COMMA . expression DOT
     (1) expression -> . NUMBER
@@ -12250,7 +12279,7 @@ state 173
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -12277,11 +12306,11 @@ state 173
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 192
+    expression                     shift and go to state 191
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 174
+state 173
 
     (61) expression -> LOOP IDENTIFIER IN expression . LOOPTHEN expression DOT
     (6) expression -> expression . PLUS expression
@@ -12310,7 +12339,7 @@ state 174
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    LOOPTHEN        shift and go to state 193
+    LOOPTHEN        shift and go to state 192
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -12337,7 +12366,7 @@ state 174
 
     comparison_op                  shift and go to state 41
 
-state 175
+state 174
 
     (62) expression -> OPEN_BRACKETS expression ITER expression . CLOSED_BRACKETS
     (64) expression -> OPEN_BRACKETS expression ITER expression . OPEN_BRACKETS
@@ -12367,8 +12396,8 @@ state 175
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    CLOSED_BRACKETS shift and go to state 195
-    OPEN_BRACKETS   shift and go to state 194
+    CLOSED_BRACKETS shift and go to state 194
+    OPEN_BRACKETS   shift and go to state 193
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -12394,7 +12423,7 @@ state 175
 
     comparison_op                  shift and go to state 41
 
-state 176
+state 175
 
     (63) expression -> CLOSED_BRACKETS expression ITER expression . CLOSED_BRACKETS
     (65) expression -> CLOSED_BRACKETS expression ITER expression . OPEN_BRACKETS
@@ -12424,8 +12453,8 @@ state 176
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    CLOSED_BRACKETS shift and go to state 196
-    OPEN_BRACKETS   shift and go to state 197
+    CLOSED_BRACKETS shift and go to state 195
+    OPEN_BRACKETS   shift and go to state 196
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -12451,7 +12480,7 @@ state 176
 
     comparison_op                  shift and go to state 41
 
-state 177
+state 176
 
     (66) expression -> LAMBDA parameter LAMBDA_ARROW expression . DOT
     (6) expression -> expression . PLUS expression
@@ -12480,7 +12509,7 @@ state 177
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    DOT             shift and go to state 198
+    DOT             shift and go to state 197
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -12507,14 +12536,14 @@ state 177
 
     comparison_op                  shift and go to state 41
 
-state 178
+state 177
 
     (67) parameter -> LPAREN parameter_pos RPAREN .
 
     LAMBDA_ARROW    reduce using rule 67 (parameter -> LPAREN parameter_pos RPAREN .)
 
 
-state 179
+state 178
 
     (71) parameter_pos_list -> IDENTIFIER COMMA . parameter_pos_list
     (71) parameter_pos_list -> . IDENTIFIER COMMA parameter_pos_list
@@ -12528,12 +12557,12 @@ state 179
 
     IDENTIFIER      shift and go to state 150
 
-    parameter_pos_list             shift and go to state 199
+    parameter_pos_list             shift and go to state 198
     parameter_keywords             shift and go to state 151
     parameter_kw_list              shift and go to state 152
     parameter_infty                shift and go to state 153
 
-state 180
+state 179
 
     (75) parameter_kw_list -> IDENTIFIER COLON . expression COMMA parameter_kw_list
     (76) parameter_kw_list -> IDENTIFIER COLON . expression
@@ -12604,7 +12633,7 @@ state 180
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -12631,18 +12660,18 @@ state 180
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 200
+    expression                     shift and go to state 199
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 181
+state 180
 
     (78) parameter_infty -> IDENTIFIER DOTS .
 
     RPAREN          reduce using rule 78 (parameter_infty -> IDENTIFIER DOTS .)
 
 
-state 182
+state 181
 
     (90) expression -> LET let_assign IN expression . DOT
     (6) expression -> expression . PLUS expression
@@ -12671,7 +12700,7 @@ state 182
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    DOT             shift and go to state 201
+    DOT             shift and go to state 200
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -12698,7 +12727,7 @@ state 182
 
     comparison_op                  shift and go to state 41
 
-state 183
+state 182
 
     (88) let_assign -> IDENTIFIER EQUALS expression . COMMA let_assign
     (89) let_assign -> IDENTIFIER EQUALS expression .
@@ -12728,7 +12757,7 @@ state 183
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    COMMA           shift and go to state 202
+    COMMA           shift and go to state 201
     IN              reduce using rule 89 (let_assign -> IDENTIFIER EQUALS expression .)
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
@@ -12756,7 +12785,7 @@ state 183
 
     comparison_op                  shift and go to state 41
 
-state 184
+state 183
 
     (105) expression -> STRUCT BEGIN assignment_list END .
 
@@ -12799,7 +12828,7 @@ state 184
     ELSE            reduce using rule 105 (expression -> STRUCT BEGIN assignment_list END .)
 
 
-state 185
+state 184
 
     (106) expression -> STRUCT BEGIN assign_expression END .
 
@@ -12842,7 +12871,7 @@ state 185
     ELSE            reduce using rule 106 (expression -> STRUCT BEGIN assign_expression END .)
 
 
-state 186
+state 185
 
     (102) assignment_list -> assign_expression COMMA . assignment_list
     (103) assignment_list -> assign_expression COMMA . assignment_list_end
@@ -12853,18 +12882,18 @@ state 186
 
     IDENTIFIER      shift and go to state 159
 
-    assign_expression              shift and go to state 203
-    assignment_list                shift and go to state 204
-    assignment_list_end            shift and go to state 205
+    assign_expression              shift and go to state 202
+    assignment_list                shift and go to state 203
+    assignment_list_end            shift and go to state 204
 
-state 187
+state 186
 
     (111) expression -> MATCH expression WITH cases . DOT
 
-    DOT             shift and go to state 206
+    DOT             shift and go to state 205
 
 
-state 188
+state 187
 
     (112) cases -> CASE . expression COLON expression DOT cases
     (113) cases -> CASE . expression COLON expression DOT
@@ -12935,7 +12964,7 @@ state 188
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -12962,18 +12991,18 @@ state 188
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 207
+    expression                     shift and go to state 206
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 189
+state 188
 
     (81) parameter_pos_expr -> expression COMMA parameter_pos_expr .
 
     RPAREN          reduce using rule 81 (parameter_pos_expr -> expression COMMA parameter_pos_expr .)
 
 
-state 190
+state 189
 
     (84) parameter_keywords_expr -> expression COLON expression . COMMA parameter_keywords_expr
     (85) parameter_keywords_expr -> expression COLON expression .
@@ -13003,7 +13032,7 @@ state 190
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    COMMA           shift and go to state 208
+    COMMA           shift and go to state 207
     RPAREN          reduce using rule 85 (parameter_keywords_expr -> expression COLON expression .)
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
@@ -13031,7 +13060,7 @@ state 190
 
     comparison_op                  shift and go to state 41
 
-state 191
+state 190
 
     (56) expression -> IF expression THEN COMMA expression . DOT
     (57) expression -> IF expression THEN COMMA expression . else_elif_body DOT
@@ -13063,7 +13092,7 @@ state 191
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    DOT             shift and go to state 210
+    DOT             shift and go to state 209
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -13081,8 +13110,8 @@ state 191
     CONS            shift and go to state 38
     OPEN_BRACKETS   shift and go to state 39
     LAMBDA_ARROW    shift and go to state 40
-    COMMA           shift and go to state 209
-    ELSE            shift and go to state 212
+    COMMA           shift and go to state 208
+    ELSE            shift and go to state 211
     GREATER_THAN    shift and go to state 42
     SMALLER_THAN    shift and go to state 43
     UNEQUALS        shift and go to state 44
@@ -13090,10 +13119,10 @@ state 191
     SMALLER_EQUALS  shift and go to state 46
     GREATER_EQUALS  shift and go to state 47
 
-    else_elif_body                 shift and go to state 211
+    else_elif_body                 shift and go to state 210
     comparison_op                  shift and go to state 41
 
-state 192
+state 191
 
     (60) expression -> WHILE expression THEN COMMA expression . DOT
     (6) expression -> expression . PLUS expression
@@ -13122,7 +13151,7 @@ state 192
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    DOT             shift and go to state 213
+    DOT             shift and go to state 212
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -13149,7 +13178,7 @@ state 192
 
     comparison_op                  shift and go to state 41
 
-state 193
+state 192
 
     (61) expression -> LOOP IDENTIFIER IN expression LOOPTHEN . expression DOT
     (1) expression -> . NUMBER
@@ -13219,7 +13248,7 @@ state 193
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -13246,11 +13275,11 @@ state 193
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 214
+    expression                     shift and go to state 213
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 194
+state 193
 
     (64) expression -> OPEN_BRACKETS expression ITER expression OPEN_BRACKETS .
     (96) expression -> expression OPEN_BRACKETS . PLUS CLOSED_BRACKETS
@@ -13322,7 +13351,7 @@ state 194
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -13391,7 +13420,7 @@ state 194
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 195
+state 194
 
     (62) expression -> OPEN_BRACKETS expression ITER expression CLOSED_BRACKETS .
 
@@ -13434,7 +13463,7 @@ state 195
     ELSE            reduce using rule 62 (expression -> OPEN_BRACKETS expression ITER expression CLOSED_BRACKETS .)
 
 
-state 196
+state 195
 
     (63) expression -> CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS .
 
@@ -13477,7 +13506,7 @@ state 196
     ELSE            reduce using rule 63 (expression -> CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS .)
 
 
-state 197
+state 196
 
     (65) expression -> CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS .
     (96) expression -> expression OPEN_BRACKETS . PLUS CLOSED_BRACKETS
@@ -13549,7 +13578,7 @@ state 197
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -13618,7 +13647,7 @@ state 197
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 198
+state 197
 
     (66) expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .
 
@@ -13661,14 +13690,14 @@ state 198
     ELSE            reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
 
 
-state 199
+state 198
 
     (71) parameter_pos_list -> IDENTIFIER COMMA parameter_pos_list .
 
     RPAREN          reduce using rule 71 (parameter_pos_list -> IDENTIFIER COMMA parameter_pos_list .)
 
 
-state 200
+state 199
 
     (75) parameter_kw_list -> IDENTIFIER COLON expression . COMMA parameter_kw_list
     (76) parameter_kw_list -> IDENTIFIER COLON expression .
@@ -13698,7 +13727,7 @@ state 200
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    COMMA           shift and go to state 215
+    COMMA           shift and go to state 214
     RPAREN          reduce using rule 76 (parameter_kw_list -> IDENTIFIER COLON expression .)
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
@@ -13726,7 +13755,7 @@ state 200
 
     comparison_op                  shift and go to state 41
 
-state 201
+state 200
 
     (90) expression -> LET let_assign IN expression DOT .
 
@@ -13769,7 +13798,7 @@ state 201
     ELSE            reduce using rule 90 (expression -> LET let_assign IN expression DOT .)
 
 
-state 202
+state 201
 
     (88) let_assign -> IDENTIFIER EQUALS expression COMMA . let_assign
     (88) let_assign -> . IDENTIFIER EQUALS expression COMMA let_assign
@@ -13777,33 +13806,33 @@ state 202
 
     IDENTIFIER      shift and go to state 88
 
-    let_assign                     shift and go to state 216
+    let_assign                     shift and go to state 215
 
-state 203
+state 202
 
     (102) assignment_list -> assign_expression . COMMA assignment_list
     (103) assignment_list -> assign_expression . COMMA assignment_list_end
     (104) assignment_list_end -> assign_expression .
 
-    COMMA           shift and go to state 186
+    COMMA           shift and go to state 185
     END             reduce using rule 104 (assignment_list_end -> assign_expression .)
 
 
-state 204
+state 203
 
     (102) assignment_list -> assign_expression COMMA assignment_list .
 
     END             reduce using rule 102 (assignment_list -> assign_expression COMMA assignment_list .)
 
 
-state 205
+state 204
 
     (103) assignment_list -> assign_expression COMMA assignment_list_end .
 
     END             reduce using rule 103 (assignment_list -> assign_expression COMMA assignment_list_end .)
 
 
-state 206
+state 205
 
     (111) expression -> MATCH expression WITH cases DOT .
 
@@ -13846,7 +13875,7 @@ state 206
     ELSE            reduce using rule 111 (expression -> MATCH expression WITH cases DOT .)
 
 
-state 207
+state 206
 
     (112) cases -> CASE expression . COLON expression DOT cases
     (113) cases -> CASE expression . COLON expression DOT
@@ -13876,7 +13905,7 @@ state 207
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    COLON           shift and go to state 217
+    COLON           shift and go to state 216
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -13903,7 +13932,7 @@ state 207
 
     comparison_op                  shift and go to state 41
 
-state 208
+state 207
 
     (84) parameter_keywords_expr -> expression COLON expression COMMA . parameter_keywords_expr
     (84) parameter_keywords_expr -> . expression COLON expression COMMA parameter_keywords_expr
@@ -13975,7 +14004,7 @@ state 208
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -14002,19 +14031,19 @@ state 208
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 218
-    parameter_keywords_expr        shift and go to state 219
+    expression                     shift and go to state 217
+    parameter_keywords_expr        shift and go to state 218
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 209
+state 208
 
     (58) else_elif_body -> COMMA . ELIF IF expression THEN COMMA expression else_elif_body
 
-    ELIF            shift and go to state 220
+    ELIF            shift and go to state 219
 
 
-state 210
+state 209
 
     (56) expression -> IF expression THEN COMMA expression DOT .
 
@@ -14057,14 +14086,14 @@ state 210
     ELSE            reduce using rule 56 (expression -> IF expression THEN COMMA expression DOT .)
 
 
-state 211
+state 210
 
     (57) expression -> IF expression THEN COMMA expression else_elif_body . DOT
 
-    DOT             shift and go to state 221
+    DOT             shift and go to state 220
 
 
-state 212
+state 211
 
     (59) else_elif_body -> ELSE . expression
     (1) expression -> . NUMBER
@@ -14134,7 +14163,7 @@ state 212
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -14161,11 +14190,11 @@ state 212
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 222
+    expression                     shift and go to state 221
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 213
+state 212
 
     (60) expression -> WHILE expression THEN COMMA expression DOT .
 
@@ -14208,7 +14237,7 @@ state 213
     ELSE            reduce using rule 60 (expression -> WHILE expression THEN COMMA expression DOT .)
 
 
-state 214
+state 213
 
     (61) expression -> LOOP IDENTIFIER IN expression LOOPTHEN expression . DOT
     (6) expression -> expression . PLUS expression
@@ -14237,7 +14266,7 @@ state 214
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    DOT             shift and go to state 223
+    DOT             shift and go to state 222
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -14264,7 +14293,7 @@ state 214
 
     comparison_op                  shift and go to state 41
 
-state 215
+state 214
 
     (75) parameter_kw_list -> IDENTIFIER COLON expression COMMA . parameter_kw_list
     (75) parameter_kw_list -> . IDENTIFIER COLON expression COMMA parameter_kw_list
@@ -14272,19 +14301,19 @@ state 215
     (77) parameter_kw_list -> . parameter_infty
     (78) parameter_infty -> . IDENTIFIER DOTS
 
-    IDENTIFIER      shift and go to state 224
+    IDENTIFIER      shift and go to state 223
 
-    parameter_kw_list              shift and go to state 225
+    parameter_kw_list              shift and go to state 224
     parameter_infty                shift and go to state 153
 
-state 216
+state 215
 
     (88) let_assign -> IDENTIFIER EQUALS expression COMMA let_assign .
 
     IN              reduce using rule 88 (let_assign -> IDENTIFIER EQUALS expression COMMA let_assign .)
 
 
-state 217
+state 216
 
     (112) cases -> CASE expression COLON . expression DOT cases
     (113) cases -> CASE expression COLON . expression DOT
@@ -14355,7 +14384,7 @@ state 217
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -14382,11 +14411,11 @@ state 217
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 226
+    expression                     shift and go to state 225
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 218
+state 217
 
     (84) parameter_keywords_expr -> expression . COLON expression COMMA parameter_keywords_expr
     (85) parameter_keywords_expr -> expression . COLON expression
@@ -14416,7 +14445,7 @@ state 218
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    COLON           shift and go to state 163
+    COLON           shift and go to state 162
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -14443,21 +14472,21 @@ state 218
 
     comparison_op                  shift and go to state 41
 
-state 219
+state 218
 
     (84) parameter_keywords_expr -> expression COLON expression COMMA parameter_keywords_expr .
 
     RPAREN          reduce using rule 84 (parameter_keywords_expr -> expression COLON expression COMMA parameter_keywords_expr .)
 
 
-state 220
+state 219
 
     (58) else_elif_body -> COMMA ELIF . IF expression THEN COMMA expression else_elif_body
 
-    IF              shift and go to state 227
+    IF              shift and go to state 226
 
 
-state 221
+state 220
 
     (57) expression -> IF expression THEN COMMA expression else_elif_body DOT .
 
@@ -14500,7 +14529,7 @@ state 221
     ELSE            reduce using rule 57 (expression -> IF expression THEN COMMA expression else_elif_body DOT .)
 
 
-state 222
+state 221
 
     (59) else_elif_body -> ELSE expression .
     (6) expression -> expression . PLUS expression
@@ -14556,7 +14585,7 @@ state 222
 
     comparison_op                  shift and go to state 41
 
-state 223
+state 222
 
     (61) expression -> LOOP IDENTIFIER IN expression LOOPTHEN expression DOT .
 
@@ -14599,24 +14628,24 @@ state 223
     ELSE            reduce using rule 61 (expression -> LOOP IDENTIFIER IN expression LOOPTHEN expression DOT .)
 
 
-state 224
+state 223
 
     (75) parameter_kw_list -> IDENTIFIER . COLON expression COMMA parameter_kw_list
     (76) parameter_kw_list -> IDENTIFIER . COLON expression
     (78) parameter_infty -> IDENTIFIER . DOTS
 
-    COLON           shift and go to state 180
-    DOTS            shift and go to state 181
+    COLON           shift and go to state 179
+    DOTS            shift and go to state 180
 
 
-state 225
+state 224
 
     (75) parameter_kw_list -> IDENTIFIER COLON expression COMMA parameter_kw_list .
 
     RPAREN          reduce using rule 75 (parameter_kw_list -> IDENTIFIER COLON expression COMMA parameter_kw_list .)
 
 
-state 226
+state 225
 
     (112) cases -> CASE expression COLON expression . DOT cases
     (113) cases -> CASE expression COLON expression . DOT
@@ -14646,7 +14675,7 @@ state 226
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    DOT             shift and go to state 228
+    DOT             shift and go to state 227
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -14673,7 +14702,7 @@ state 226
 
     comparison_op                  shift and go to state 41
 
-state 227
+state 226
 
     (58) else_elif_body -> COMMA ELIF IF . expression THEN COMMA expression else_elif_body
     (1) expression -> . NUMBER
@@ -14743,7 +14772,7 @@ state 227
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -14770,11 +14799,11 @@ state 227
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 229
+    expression                     shift and go to state 228
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 228
+state 227
 
     (112) cases -> CASE expression COLON expression DOT . cases
     (113) cases -> CASE expression COLON expression DOT .
@@ -14782,11 +14811,11 @@ state 228
     (113) cases -> . CASE expression COLON expression DOT
 
     DOT             reduce using rule 113 (cases -> CASE expression COLON expression DOT .)
-    CASE            shift and go to state 188
+    CASE            shift and go to state 187
 
-    cases                          shift and go to state 230
+    cases                          shift and go to state 229
 
-state 229
+state 228
 
     (58) else_elif_body -> COMMA ELIF IF expression . THEN COMMA expression else_elif_body
     (6) expression -> expression . PLUS expression
@@ -14815,7 +14844,7 @@ state 229
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    THEN            shift and go to state 231
+    THEN            shift and go to state 230
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -14842,21 +14871,21 @@ state 229
 
     comparison_op                  shift and go to state 41
 
-state 230
+state 229
 
     (112) cases -> CASE expression COLON expression DOT cases .
 
     DOT             reduce using rule 112 (cases -> CASE expression COLON expression DOT cases .)
 
 
-state 231
+state 230
 
     (58) else_elif_body -> COMMA ELIF IF expression THEN . COMMA expression else_elif_body
 
-    COMMA           shift and go to state 232
+    COMMA           shift and go to state 231
 
 
-state 232
+state 231
 
     (58) else_elif_body -> COMMA ELIF IF expression THEN COMMA . expression else_elif_body
     (1) expression -> . NUMBER
@@ -14926,7 +14955,7 @@ state 232
     (106) expression -> . STRUCT BEGIN assign_expression END
     (107) expression -> . STRUCT BEGIN END
     (108) expression -> . expression LAMBDA_ARROW expression
-    (110) expression -> . IMPORT file DOT
+    (110) expression -> . IMPORT file
     (111) expression -> . MATCH expression WITH cases DOT
     (22) comparison -> . expression comparison_op expression
     (23) comparison -> . comparison comparison_op expression
@@ -14953,11 +14982,11 @@ state 232
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 233
+    expression                     shift and go to state 232
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 233
+state 232
 
     (58) else_elif_body -> COMMA ELIF IF expression THEN COMMA expression . else_elif_body
     (6) expression -> expression . PLUS expression
@@ -15005,8 +15034,8 @@ state 233
     CONS            shift and go to state 38
     OPEN_BRACKETS   shift and go to state 39
     LAMBDA_ARROW    shift and go to state 40
-    COMMA           shift and go to state 209
-    ELSE            shift and go to state 212
+    COMMA           shift and go to state 208
+    ELSE            shift and go to state 211
     GREATER_THAN    shift and go to state 42
     SMALLER_THAN    shift and go to state 43
     UNEQUALS        shift and go to state 44
@@ -15014,10 +15043,10 @@ state 233
     SMALLER_EQUALS  shift and go to state 46
     GREATER_EQUALS  shift and go to state 47
 
-    else_elif_body                 shift and go to state 234
+    else_elif_body                 shift and go to state 233
     comparison_op                  shift and go to state 41
 
-state 234
+state 233
 
     (58) else_elif_body -> COMMA ELIF IF expression THEN COMMA expression else_elif_body .
 

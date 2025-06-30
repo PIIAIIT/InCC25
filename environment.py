@@ -93,6 +93,10 @@ def builtin_print(pos_args, key_args):
 
 def builtin_len(pos_args, key_args):
     """Länge einer Liste/Array bestimmen"""
+    # (1, (2, (3, None))) => 3
+    if isinstance(pos_args[0], tuple):
+        list_len = lambda lst : 1 if lst[1] is None else 1 + list_len(lst[1])
+        return list_len(pos_args[0])
     return len(pos_args[0])
 
 

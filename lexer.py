@@ -149,6 +149,7 @@ def t_error(t):
 lexer: Lexer = lex()
 
 if __name__ == "__main__":
+    # Interaktives Menu
     while True:
         try:
             s = input(">>> ")

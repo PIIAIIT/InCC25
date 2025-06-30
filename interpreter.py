@@ -139,12 +139,7 @@ def eval(expression, env: Environment, debug=False):
 
             # Normalisiere das arr zu einem Iterierbaren Objekt
             if isinstance(arr, tuple):
-                res_list = []
-                tmp = arr # (2, (3, (4, None)))
-                while tmp is not None and isinstance(tmp, tuple):
-                    res_list.append(tmp[0])
-                    tmp = tmp[1]
-                arr = res_list
+                arr = list(iter_tuple(arr))
 
             local_env = Environment(env)
             local_env.put(counter)
@@ -195,18 +190,15 @@ def eval(expression, env: Environment, debug=False):
         case ("array_access", array_ptr, index):
             arr = eval(array_ptr, env)
             assert isinstance(arr, (list, tuple)), f"{type(arr)} {arr} ist nicht veränderlich."
+
             if index == '+':
-                return arr[1:]
-            else:
-                i = eval(index, env) # expression
-                if isinstance(arr, tuple):
-                    tmp = arr
-                    for _ in range(i):
-                        if tmp[1] is None:
-                            raise IndexError("List Index out of range")
-                        tmp = tmp[1]
-                    return tmp[0]
+                return arr[1:] if isinstance(arr, list) else arr[1]
+
+            i = eval(index, env) # expression
+            if isinstance(arr, list):
                 return arr[i]
+
+            return list(iter_tuple(arr))[i]
 
         case ("list", list_elements):
             if len(list_elements) == 0:
@@ -224,91 +216,70 @@ def eval(expression, env: Environment, debug=False):
         case ("leere"):
             return None
 
-        case ("import", packages):
-            path = packages[0]
-            if path not in loaded_modules:
-                if not os.path.exists(os.path.curdir + "/" + path):
-                    raise Exception(f"Es gibt kein Modul mit dem Namen: {path}")
-                with open(path, "r", encoding="utf-8") as f:
-                    code = f.read()
-                loaded_modules.add(path)
-                res = parser.parse(code)
-                return eval(res, env)
+        case ("import", [path]):
+            if path in loaded_modules:
+                return
+            full_path = os.path.join(os.curdir, path)
+            if not os.path.exists(full_path):
+                raise Exception(f"Es gibt kein Modul mit dem Namen: {path}")
+            with open(path, "r", encoding="utf-8") as f:
+                code = f.read()
+            loaded_modules.add(path)
+            return eval(parser.parse(code), env)
 
         case ("match", expr, cases):
-            expr = eval(expr, env)
+            value = eval(expr, env)
+            local_env = Environment(parent=env)
 
-            lokal_env = Environment(parent=env)
-            for c_expr, c_body in cases[:-1]:
-                print("match", expr, ": ") if debug else ""
-                print("case", c_expr, ": ") if debug else ""
-                if match_pattern(c_expr, expr, lokal_env):
-                    return eval(c_body, lokal_env)
-
-            last_case, last_body = cases[-1]
-            if last_case[1] == "_":
-                return eval(last_body, lokal_env)
-            elif match_pattern(last_case, expr, lokal_env):
-                print("match", expr, ": ") if debug else ""
-                print("case", last_case, ": ") if debug else ""
-                return eval(last_body, lokal_env)
+            for pattern, body in cases:
+                if debug:
+                    print("match", value, ": ") if debug else ""
+                    print("case", pattern, ": ") if debug else ""
+                if pattern[1] == "_" or match_pattern(pattern, value, local_env):
+                    return eval(body, local_env)
             return None
 
         case ("struct", attributes):
             s = Struct()
-            for _, _, name, expr in attributes:
+            for *_, name, expr in attributes:
                 s[name] = eval(expr, env)
             return s
 
-        case ("access_struct", struct, name):
-            assert isinstance(name, tuple) and name[0] == "var", f"Du kannst nicht auf {name} in {struct} zugreifen."
-            return eval(struct, env)[name[1]]
+        case ("access_struct", struct, ("var", name)):
+            return eval(struct, env)[name]
 
         case _:
             print(f"unknown expression {expression}")
             return -1
 
 
+def iter_tuple(t):
+    while isinstance(t, tuple):
+        yield t[0]
+        t = t[1]
+
+
 # PRIVATE FUNKTIONS
 def binop_for_lists(x, y, func):
     if isinstance(x, list) and isinstance(y, list):
-        return [func(i, j) for i, j in zip(x, y)]
-    elif isinstance(x, list):
-        return [func(i, y) for i in x]
-    elif isinstance(y, list):
-        return [func(x, i) for i in y]
+        return [func(i, j) for i, j in zip(x if isinstance(x, list) else [x] * len(y),
+                                           y if isinstance(y, list) else [y] * len(x))]
     return None
 
 
 def binop_for_tuples(x, y, func):
     if isinstance(x, tuple) and isinstance(y, tuple):
-        def inner(ls1, ls2):
-            a, b = ls1[0], ls2[0]
-            if a is None or b is None:
-                return ls2 if b is None else ls1
-            if ls1[1] is None or ls2[1] is None:
-                return (func(a, b), None)
-            return (func(a, b), inner(ls1[1], ls2[1]))
-        return inner(x, y)
-    elif isinstance(x, tuple):
-        def inner2(ls1, y):
-            a = ls1[0]
-            if a is None:
-                return ls1
-            if ls1[1] is None:
-                return (func(a, y), None)
-            return (func(a, y), inner2(ls1[1], y))
-        return inner2(x, y)
-    elif isinstance(y, tuple):
-        def inner3(x, ls2):
-            a = ls2[0]
-            if a is None:
-                return ls2
-            if ls2[1] is None:
-                return (func(x, a), None)
-            return (func(x, a), inner3(x, ls2[1]))
-        return inner3(x, y)
-    return None
+        a = x[0] if isinstance(x, tuple) else x
+        b = y[0] if isinstance(y, tuple) else y
+
+        if a is None or b is None:
+            return y if b is None else x
+
+        next_x = x[1] if isinstance(x, tuple) and x[1] is not None else None
+        next_y = y[1] if isinstance(y, tuple) and y[1] is not None else None
+
+        next_pair = binop_for_tuples(next_x, next_y, func) if next_x or next_y else None
+        return (func(a, b), next_pair)
 
 
 def match_pattern(pattern, value, env):
@@ -319,48 +290,41 @@ def match_pattern(pattern, value, env):
     `env`: Dictionary, das gebundene Variablen aufnimmt.
     Rückgabe: True, wenn das Pattern matched, False sonst.
     """
+    kind = pattern[0]
 
     # Literal (int, float, str, complex)
-    if pattern[0] in ["num", "str", "float", "complex"]:
+    if kind in ("num", "str", "float", "complex"):
         return eval(pattern, env) == value
 
-    if pattern[0] == "var":
+    if kind == "var":
         env[pattern[1]] = value
         return True
 
-    # Liste: ['list', [p1, p2, p3]]
+    # pattern: ['list', [p1, p2, p3]]
     # value: (p1, (p2, (p3, None)))
-    if pattern and pattern[0] == 'list':
+    if kind == 'list':
         subpatterns = pattern[1]
-        list_len = lambda lst : 1 if lst[1] is None else 1 + list_len(lst[1])
-        if not isinstance(value, tuple) or len(subpatterns) != list_len(value):
+        list_len = sum(1 for _ in iter_tuple(value))
+        if not isinstance(value, tuple) or len(subpatterns) != list_len:
             return False
-        for subp, subv in zip(subpatterns, value):
-            if not match_pattern(subp, subv, env):
-                return False
-        return True
+        return all(match_pattern(p, v, env) for p, v in zip(subpatterns, iter_tuple(value)))
 
     # Tuple: ['array', [(var, a), (num, 3), (var, c)]]
     # value: [1, 2, 3]
-    if pattern and pattern[0] == 'array':
+    if kind == 'array':
         subpatterns = pattern[1]
         if not isinstance(value, list) or len(subpatterns) != len(value):
             return False
-        for subp, subv in zip(subpatterns, value):
-            if not match_pattern(subp, subv, env):
-                return False
-        return True
+        return all(match_pattern(v, p, env) for v, p in zip(subpatterns, value))
 
     # Struct: ['struct', [('a', '123'), ('b', 'x')]]
     # value: {a: 123, b : 5}
-    if pattern and pattern[0] == 'struct':
+    if kind == 'struct':
         subpatterns = pattern[1]
-        if not isinstance(value, dict) or len(subpatterns) != len(value):
+        if not isinstance(value, dict):# or len(subpatterns) != len(value):
             return False
-        for _, _, key, subp in subpatterns:
-            if key not in value:
-                return False
-            if not match_pattern(subp, value[key], env):
+        for *_, key, subp in subpatterns:
+            if key not in value or not match_pattern(subp, value[key], env):
                 return False
         return True
 

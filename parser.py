@@ -127,7 +127,6 @@ def p_comparison_op(p):
 ################ ASSIGNMENTS ################
 
 
-# TODO: IDENTIFIER -> expression
 def p_assignment1(p):
     "assign_expression : IDENTIFIER ASSIGN expression %prec ASSIGN"
     p[0] = ("assign", None, p[1], p[3])
@@ -377,23 +376,6 @@ def p_let(p):
     p[0] = ("let", p[2], p[4])
 
 
-######################### BUILTIN #########################
-
-
-# def p_builtin_func(p):
-#     """
-#     expression : function LPAREN parameter_expr RPAREN
-#     """
-#     p[0] = ("call", p[1], p[3])
-#
-#
-# # TODO: e in literals
-# def p_func(p):
-#     """function : PRINT
-#     """
-#     p[0] = ("var", p[1])
-
-
 ######################### LISTS #########################
 ###################### WIE IN LISP mit KOMMA ######################
 
@@ -483,8 +465,8 @@ def p_struct1(p):
 
 def p_struct2(p):
     "expression : STRUCT BEGIN END"
-    # struct { assignments }
-    # Person := struct { name := "Patrick" }
+    # struct { }
+    # Person := struct { }
     p[0] = ("struct", [])
 
 
@@ -568,7 +550,7 @@ precedence = (
 parser = yacc(start="expression")
 
 if __name__ == "__main__":
-    # Eigene Cases
+    # Interaktives Menu
     while True:
         try:
             s = input(">>> ")

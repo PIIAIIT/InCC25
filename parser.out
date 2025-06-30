@@ -68,7 +68,7 @@ Rule 62    expression -> OPEN_BRACKETS expression ITER expression CLOSED_BRACKET
 Rule 63    expression -> CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
 Rule 64    expression -> OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
 Rule 65    expression -> CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-Rule 66    expression -> LAMBDA parameter LAMBDA_ARROW expression DOT
+Rule 66    expression -> LAMBDA parameter LAMBDA_ARROW expression
 Rule 67    parameter -> LPAREN parameter_pos RPAREN
 Rule 68    parameter -> IDENTIFIER
 Rule 69    parameter -> empty
@@ -134,7 +134,7 @@ DIVIDE_CEIL          : 10
 DIVIDE_CEIL_ASSIGN   : 39
 DIVIDE_FLOOR         : 11
 DIVIDE_FLOOR_ASSIGN  : 38
-DOT                  : 56 57 60 61 66 90 111 112 113
+DOT                  : 56 57 60 61 90 111 112 113
 DOTS                 : 78
 ELIF                 : 58
 ELSE                 : 59
@@ -277,7 +277,7 @@ state 0
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -644,7 +644,7 @@ state 6
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -748,7 +748,7 @@ state 7
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -849,7 +849,7 @@ state 8
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -950,7 +950,7 @@ state 9
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -1156,7 +1156,7 @@ state 12
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -1260,7 +1260,7 @@ state 13
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -1361,7 +1361,7 @@ state 14
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -1473,7 +1473,7 @@ state 16
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -1578,7 +1578,7 @@ state 17
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -1626,7 +1626,7 @@ state 17
 
 state 18
 
-    (66) expression -> LAMBDA . parameter LAMBDA_ARROW expression DOT
+    (66) expression -> LAMBDA . parameter LAMBDA_ARROW expression
     (67) parameter -> . LPAREN parameter_pos RPAREN
     (68) parameter -> . IDENTIFIER
     (69) parameter -> . empty
@@ -1765,7 +1765,7 @@ state 23
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -1866,7 +1866,7 @@ state 24
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -1967,7 +1967,7 @@ state 25
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -2068,7 +2068,7 @@ state 26
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -2169,7 +2169,7 @@ state 27
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -2270,7 +2270,7 @@ state 28
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -2371,7 +2371,7 @@ state 29
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -2472,7 +2472,7 @@ state 30
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -2573,7 +2573,7 @@ state 31
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -2674,7 +2674,7 @@ state 32
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -2775,7 +2775,7 @@ state 33
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -2876,7 +2876,7 @@ state 34
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -2977,7 +2977,7 @@ state 35
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -3127,7 +3127,7 @@ state 37
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -3235,7 +3235,7 @@ state 38
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -3337,7 +3337,7 @@ state 39
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -3438,7 +3438,7 @@ state 40
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -3539,7 +3539,7 @@ state 41
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -3796,7 +3796,7 @@ state 48
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -3897,7 +3897,7 @@ state 49
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -3998,7 +3998,7 @@ state 50
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -4099,7 +4099,7 @@ state 51
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -4200,7 +4200,7 @@ state 52
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -4301,7 +4301,7 @@ state 53
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -4402,7 +4402,7 @@ state 54
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -4503,7 +4503,7 @@ state 55
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -4604,7 +4604,7 @@ state 56
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -4705,7 +4705,7 @@ state 57
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -4806,7 +4806,7 @@ state 58
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -4907,7 +4907,7 @@ state 59
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -5008,7 +5008,7 @@ state 60
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -5109,7 +5109,7 @@ state 61
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -5210,7 +5210,7 @@ state 62
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -5311,7 +5311,7 @@ state 63
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -5412,7 +5412,7 @@ state 64
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -5513,7 +5513,7 @@ state 65
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -5614,7 +5614,7 @@ state 66
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -6060,7 +6060,7 @@ state 72
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -6455,7 +6455,7 @@ state 80
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -6605,7 +6605,7 @@ state 82
 
 state 83
 
-    (66) expression -> LAMBDA parameter . LAMBDA_ARROW expression DOT
+    (66) expression -> LAMBDA parameter . LAMBDA_ARROW expression
 
     LAMBDA_ARROW    shift and go to state 147
 
@@ -8227,7 +8227,7 @@ state 112
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -8315,7 +8315,9 @@ state 113
     XOR             reduce using rule 108 (expression -> expression LAMBDA_ARROW expression .)
     POWER           reduce using rule 108 (expression -> expression LAMBDA_ARROW expression .)
     IMAG            reduce using rule 108 (expression -> expression LAMBDA_ARROW expression .)
+    LPAREN          reduce using rule 108 (expression -> expression LAMBDA_ARROW expression .)
     CONS            reduce using rule 108 (expression -> expression LAMBDA_ARROW expression .)
+    OPEN_BRACKETS   reduce using rule 108 (expression -> expression LAMBDA_ARROW expression .)
     LAMBDA_ARROW    reduce using rule 108 (expression -> expression LAMBDA_ARROW expression .)
     GREATER_THAN    reduce using rule 108 (expression -> expression LAMBDA_ARROW expression .)
     SMALLER_THAN    reduce using rule 108 (expression -> expression LAMBDA_ARROW expression .)
@@ -8337,11 +8339,7 @@ state 113
     DOT             reduce using rule 108 (expression -> expression LAMBDA_ARROW expression .)
     IN              reduce using rule 108 (expression -> expression LAMBDA_ARROW expression .)
     ELSE            reduce using rule 108 (expression -> expression LAMBDA_ARROW expression .)
-    LPAREN          shift and go to state 37
-    OPEN_BRACKETS   shift and go to state 39
 
-  ! LPAREN          [ reduce using rule 108 (expression -> expression LAMBDA_ARROW expression .) ]
-  ! OPEN_BRACKETS   [ reduce using rule 108 (expression -> expression LAMBDA_ARROW expression .) ]
   ! PLUS            [ shift and go to state 24 ]
   ! MINUS           [ shift and go to state 25 ]
   ! TIMES           [ shift and go to state 26 ]
@@ -8355,7 +8353,9 @@ state 113
   ! XOR             [ shift and go to state 34 ]
   ! POWER           [ shift and go to state 35 ]
   ! IMAG            [ shift and go to state 36 ]
+  ! LPAREN          [ shift and go to state 37 ]
   ! CONS            [ shift and go to state 38 ]
+  ! OPEN_BRACKETS   [ shift and go to state 39 ]
   ! LAMBDA_ARROW    [ shift and go to state 40 ]
   ! GREATER_THAN    [ shift and go to state 42 ]
   ! SMALLER_THAN    [ shift and go to state 43 ]
@@ -10328,7 +10328,7 @@ state 135
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -10611,7 +10611,7 @@ state 139
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -10728,7 +10728,7 @@ state 142
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -10830,7 +10830,7 @@ state 143
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -11018,7 +11018,7 @@ state 146
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -11066,7 +11066,7 @@ state 146
 
 state 147
 
-    (66) expression -> LAMBDA parameter LAMBDA_ARROW . expression DOT
+    (66) expression -> LAMBDA parameter LAMBDA_ARROW . expression
     (1) expression -> . NUMBER
     (2) expression -> . FLOAT
     (3) expression -> . STRING
@@ -11119,7 +11119,7 @@ state 147
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -11269,7 +11269,7 @@ state 154
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -11371,7 +11371,7 @@ state 155
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -11552,7 +11552,7 @@ state 161
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -11658,7 +11658,7 @@ state 162
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -11847,7 +11847,7 @@ state 165
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -12163,7 +12163,7 @@ state 171
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -12264,7 +12264,7 @@ state 172
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -12482,7 +12482,7 @@ state 175
 
 state 176
 
-    (66) expression -> LAMBDA parameter LAMBDA_ARROW expression . DOT
+    (66) expression -> LAMBDA parameter LAMBDA_ARROW expression .
     (6) expression -> expression . PLUS expression
     (7) expression -> expression . MINUS expression
     (8) expression -> expression . TIMES expression
@@ -12509,7 +12509,20 @@ state 176
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    DOT             shift and go to state 197
+    $end            reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .)
+    RPAREN          reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .)
+    COMMA           reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .)
+    END             reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .)
+    SEMICOLON       reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .)
+    THEN            reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .)
+    ITER            reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .)
+    CLOSED_BRACKETS reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .)
+    WITH            reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .)
+    COLON           reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .)
+    LOOPTHEN        reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .)
+    DOT             reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .)
+    IN              reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .)
+    ELSE            reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .)
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -12534,6 +12547,30 @@ state 176
     SMALLER_EQUALS  shift and go to state 46
     GREATER_EQUALS  shift and go to state 47
 
+  ! PLUS            [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! MINUS           [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! TIMES           [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! DIVIDE          [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! DIVIDE_CEIL     [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! DIVIDE_FLOOR    [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! MOD             [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! EXP             [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! AND             [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! OR              [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! XOR             [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! POWER           [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! IMAG            [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! LPAREN          [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! CONS            [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! OPEN_BRACKETS   [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! LAMBDA_ARROW    [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! GREATER_THAN    [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! SMALLER_THAN    [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! UNEQUALS        [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! EQUALS          [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! SMALLER_EQUALS  [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+  ! GREATER_EQUALS  [ reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression .) ]
+
     comparison_op                  shift and go to state 41
 
 state 177
@@ -12557,7 +12594,7 @@ state 178
 
     IDENTIFIER      shift and go to state 150
 
-    parameter_pos_list             shift and go to state 198
+    parameter_pos_list             shift and go to state 197
     parameter_keywords             shift and go to state 151
     parameter_kw_list              shift and go to state 152
     parameter_infty                shift and go to state 153
@@ -12618,7 +12655,7 @@ state 179
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -12660,7 +12697,7 @@ state 179
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 199
+    expression                     shift and go to state 198
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
@@ -12700,7 +12737,7 @@ state 181
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    DOT             shift and go to state 200
+    DOT             shift and go to state 199
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -12757,7 +12794,7 @@ state 182
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    COMMA           shift and go to state 201
+    COMMA           shift and go to state 200
     IN              reduce using rule 89 (let_assign -> IDENTIFIER EQUALS expression .)
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
@@ -12882,15 +12919,15 @@ state 185
 
     IDENTIFIER      shift and go to state 159
 
-    assign_expression              shift and go to state 202
-    assignment_list                shift and go to state 203
-    assignment_list_end            shift and go to state 204
+    assign_expression              shift and go to state 201
+    assignment_list                shift and go to state 202
+    assignment_list_end            shift and go to state 203
 
 state 186
 
     (111) expression -> MATCH expression WITH cases . DOT
 
-    DOT             shift and go to state 205
+    DOT             shift and go to state 204
 
 
 state 187
@@ -12949,7 +12986,7 @@ state 187
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -12991,7 +13028,7 @@ state 187
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 206
+    expression                     shift and go to state 205
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
@@ -13032,7 +13069,7 @@ state 189
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    COMMA           shift and go to state 207
+    COMMA           shift and go to state 206
     RPAREN          reduce using rule 85 (parameter_keywords_expr -> expression COLON expression .)
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
@@ -13092,7 +13129,7 @@ state 190
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    DOT             shift and go to state 209
+    DOT             shift and go to state 208
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -13110,8 +13147,8 @@ state 190
     CONS            shift and go to state 38
     OPEN_BRACKETS   shift and go to state 39
     LAMBDA_ARROW    shift and go to state 40
-    COMMA           shift and go to state 208
-    ELSE            shift and go to state 211
+    COMMA           shift and go to state 207
+    ELSE            shift and go to state 210
     GREATER_THAN    shift and go to state 42
     SMALLER_THAN    shift and go to state 43
     UNEQUALS        shift and go to state 44
@@ -13119,7 +13156,7 @@ state 190
     SMALLER_EQUALS  shift and go to state 46
     GREATER_EQUALS  shift and go to state 47
 
-    else_elif_body                 shift and go to state 210
+    else_elif_body                 shift and go to state 209
     comparison_op                  shift and go to state 41
 
 state 191
@@ -13151,7 +13188,7 @@ state 191
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    DOT             shift and go to state 212
+    DOT             shift and go to state 211
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -13233,7 +13270,7 @@ state 192
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -13275,7 +13312,7 @@ state 192
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 213
+    expression                     shift and go to state 212
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
@@ -13336,7 +13373,7 @@ state 193
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -13563,7 +13600,7 @@ state 196
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -13649,55 +13686,12 @@ state 196
 
 state 197
 
-    (66) expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .
-
-    PLUS            reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    MINUS           reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    TIMES           reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    DIVIDE          reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    DIVIDE_CEIL     reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    DIVIDE_FLOOR    reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    MOD             reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    EXP             reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    AND             reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    OR              reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    XOR             reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    POWER           reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    IMAG            reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    LPAREN          reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    CONS            reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    OPEN_BRACKETS   reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    LAMBDA_ARROW    reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    GREATER_THAN    reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    SMALLER_THAN    reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    UNEQUALS        reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    EQUALS          reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    SMALLER_EQUALS  reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    GREATER_EQUALS  reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    $end            reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    RPAREN          reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    COMMA           reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    END             reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    SEMICOLON       reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    THEN            reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    ITER            reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    CLOSED_BRACKETS reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    WITH            reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    COLON           reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    LOOPTHEN        reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    DOT             reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    IN              reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-    ELSE            reduce using rule 66 (expression -> LAMBDA parameter LAMBDA_ARROW expression DOT .)
-
-
-state 198
-
     (71) parameter_pos_list -> IDENTIFIER COMMA parameter_pos_list .
 
     RPAREN          reduce using rule 71 (parameter_pos_list -> IDENTIFIER COMMA parameter_pos_list .)
 
 
-state 199
+state 198
 
     (75) parameter_kw_list -> IDENTIFIER COLON expression . COMMA parameter_kw_list
     (76) parameter_kw_list -> IDENTIFIER COLON expression .
@@ -13727,7 +13721,7 @@ state 199
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    COMMA           shift and go to state 214
+    COMMA           shift and go to state 213
     RPAREN          reduce using rule 76 (parameter_kw_list -> IDENTIFIER COLON expression .)
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
@@ -13755,7 +13749,7 @@ state 199
 
     comparison_op                  shift and go to state 41
 
-state 200
+state 199
 
     (90) expression -> LET let_assign IN expression DOT .
 
@@ -13798,7 +13792,7 @@ state 200
     ELSE            reduce using rule 90 (expression -> LET let_assign IN expression DOT .)
 
 
-state 201
+state 200
 
     (88) let_assign -> IDENTIFIER EQUALS expression COMMA . let_assign
     (88) let_assign -> . IDENTIFIER EQUALS expression COMMA let_assign
@@ -13806,9 +13800,9 @@ state 201
 
     IDENTIFIER      shift and go to state 88
 
-    let_assign                     shift and go to state 215
+    let_assign                     shift and go to state 214
 
-state 202
+state 201
 
     (102) assignment_list -> assign_expression . COMMA assignment_list
     (103) assignment_list -> assign_expression . COMMA assignment_list_end
@@ -13818,21 +13812,21 @@ state 202
     END             reduce using rule 104 (assignment_list_end -> assign_expression .)
 
 
-state 203
+state 202
 
     (102) assignment_list -> assign_expression COMMA assignment_list .
 
     END             reduce using rule 102 (assignment_list -> assign_expression COMMA assignment_list .)
 
 
-state 204
+state 203
 
     (103) assignment_list -> assign_expression COMMA assignment_list_end .
 
     END             reduce using rule 103 (assignment_list -> assign_expression COMMA assignment_list_end .)
 
 
-state 205
+state 204
 
     (111) expression -> MATCH expression WITH cases DOT .
 
@@ -13875,7 +13869,7 @@ state 205
     ELSE            reduce using rule 111 (expression -> MATCH expression WITH cases DOT .)
 
 
-state 206
+state 205
 
     (112) cases -> CASE expression . COLON expression DOT cases
     (113) cases -> CASE expression . COLON expression DOT
@@ -13905,7 +13899,7 @@ state 206
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    COLON           shift and go to state 216
+    COLON           shift and go to state 215
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -13932,7 +13926,7 @@ state 206
 
     comparison_op                  shift and go to state 41
 
-state 207
+state 206
 
     (84) parameter_keywords_expr -> expression COLON expression COMMA . parameter_keywords_expr
     (84) parameter_keywords_expr -> . expression COLON expression COMMA parameter_keywords_expr
@@ -13989,7 +13983,7 @@ state 207
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -14031,19 +14025,19 @@ state 207
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 217
-    parameter_keywords_expr        shift and go to state 218
+    expression                     shift and go to state 216
+    parameter_keywords_expr        shift and go to state 217
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 208
+state 207
 
     (58) else_elif_body -> COMMA . ELIF IF expression THEN COMMA expression else_elif_body
 
-    ELIF            shift and go to state 219
+    ELIF            shift and go to state 218
 
 
-state 209
+state 208
 
     (56) expression -> IF expression THEN COMMA expression DOT .
 
@@ -14086,14 +14080,14 @@ state 209
     ELSE            reduce using rule 56 (expression -> IF expression THEN COMMA expression DOT .)
 
 
-state 210
+state 209
 
     (57) expression -> IF expression THEN COMMA expression else_elif_body . DOT
 
-    DOT             shift and go to state 220
+    DOT             shift and go to state 219
 
 
-state 211
+state 210
 
     (59) else_elif_body -> ELSE . expression
     (1) expression -> . NUMBER
@@ -14148,7 +14142,7 @@ state 211
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -14190,11 +14184,11 @@ state 211
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 221
+    expression                     shift and go to state 220
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 212
+state 211
 
     (60) expression -> WHILE expression THEN COMMA expression DOT .
 
@@ -14237,7 +14231,7 @@ state 212
     ELSE            reduce using rule 60 (expression -> WHILE expression THEN COMMA expression DOT .)
 
 
-state 213
+state 212
 
     (61) expression -> LOOP IDENTIFIER IN expression LOOPTHEN expression . DOT
     (6) expression -> expression . PLUS expression
@@ -14266,7 +14260,7 @@ state 213
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    DOT             shift and go to state 222
+    DOT             shift and go to state 221
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -14293,7 +14287,7 @@ state 213
 
     comparison_op                  shift and go to state 41
 
-state 214
+state 213
 
     (75) parameter_kw_list -> IDENTIFIER COLON expression COMMA . parameter_kw_list
     (75) parameter_kw_list -> . IDENTIFIER COLON expression COMMA parameter_kw_list
@@ -14301,19 +14295,19 @@ state 214
     (77) parameter_kw_list -> . parameter_infty
     (78) parameter_infty -> . IDENTIFIER DOTS
 
-    IDENTIFIER      shift and go to state 223
+    IDENTIFIER      shift and go to state 222
 
-    parameter_kw_list              shift and go to state 224
+    parameter_kw_list              shift and go to state 223
     parameter_infty                shift and go to state 153
 
-state 215
+state 214
 
     (88) let_assign -> IDENTIFIER EQUALS expression COMMA let_assign .
 
     IN              reduce using rule 88 (let_assign -> IDENTIFIER EQUALS expression COMMA let_assign .)
 
 
-state 216
+state 215
 
     (112) cases -> CASE expression COLON . expression DOT cases
     (113) cases -> CASE expression COLON . expression DOT
@@ -14369,7 +14363,7 @@ state 216
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -14411,11 +14405,11 @@ state 216
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 225
+    expression                     shift and go to state 224
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 217
+state 216
 
     (84) parameter_keywords_expr -> expression . COLON expression COMMA parameter_keywords_expr
     (85) parameter_keywords_expr -> expression . COLON expression
@@ -14472,21 +14466,21 @@ state 217
 
     comparison_op                  shift and go to state 41
 
-state 218
+state 217
 
     (84) parameter_keywords_expr -> expression COLON expression COMMA parameter_keywords_expr .
 
     RPAREN          reduce using rule 84 (parameter_keywords_expr -> expression COLON expression COMMA parameter_keywords_expr .)
 
 
-state 219
+state 218
 
     (58) else_elif_body -> COMMA ELIF . IF expression THEN COMMA expression else_elif_body
 
-    IF              shift and go to state 226
+    IF              shift and go to state 225
 
 
-state 220
+state 219
 
     (57) expression -> IF expression THEN COMMA expression else_elif_body DOT .
 
@@ -14529,7 +14523,7 @@ state 220
     ELSE            reduce using rule 57 (expression -> IF expression THEN COMMA expression else_elif_body DOT .)
 
 
-state 221
+state 220
 
     (59) else_elif_body -> ELSE expression .
     (6) expression -> expression . PLUS expression
@@ -14585,7 +14579,7 @@ state 221
 
     comparison_op                  shift and go to state 41
 
-state 222
+state 221
 
     (61) expression -> LOOP IDENTIFIER IN expression LOOPTHEN expression DOT .
 
@@ -14628,7 +14622,7 @@ state 222
     ELSE            reduce using rule 61 (expression -> LOOP IDENTIFIER IN expression LOOPTHEN expression DOT .)
 
 
-state 223
+state 222
 
     (75) parameter_kw_list -> IDENTIFIER . COLON expression COMMA parameter_kw_list
     (76) parameter_kw_list -> IDENTIFIER . COLON expression
@@ -14638,14 +14632,14 @@ state 223
     DOTS            shift and go to state 180
 
 
-state 224
+state 223
 
     (75) parameter_kw_list -> IDENTIFIER COLON expression COMMA parameter_kw_list .
 
     RPAREN          reduce using rule 75 (parameter_kw_list -> IDENTIFIER COLON expression COMMA parameter_kw_list .)
 
 
-state 225
+state 224
 
     (112) cases -> CASE expression COLON expression . DOT cases
     (113) cases -> CASE expression COLON expression . DOT
@@ -14675,7 +14669,7 @@ state 225
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    DOT             shift and go to state 227
+    DOT             shift and go to state 226
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -14702,7 +14696,7 @@ state 225
 
     comparison_op                  shift and go to state 41
 
-state 226
+state 225
 
     (58) else_elif_body -> COMMA ELIF IF . expression THEN COMMA expression else_elif_body
     (1) expression -> . NUMBER
@@ -14757,7 +14751,7 @@ state 226
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -14799,11 +14793,11 @@ state 226
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 228
+    expression                     shift and go to state 227
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 227
+state 226
 
     (112) cases -> CASE expression COLON expression DOT . cases
     (113) cases -> CASE expression COLON expression DOT .
@@ -14813,9 +14807,9 @@ state 227
     DOT             reduce using rule 113 (cases -> CASE expression COLON expression DOT .)
     CASE            shift and go to state 187
 
-    cases                          shift and go to state 229
+    cases                          shift and go to state 228
 
-state 228
+state 227
 
     (58) else_elif_body -> COMMA ELIF IF expression . THEN COMMA expression else_elif_body
     (6) expression -> expression . PLUS expression
@@ -14844,7 +14838,7 @@ state 228
     (29) comparison_op -> . SMALLER_EQUALS
     (30) comparison_op -> . GREATER_EQUALS
 
-    THEN            shift and go to state 230
+    THEN            shift and go to state 229
     PLUS            shift and go to state 24
     MINUS           shift and go to state 25
     TIMES           shift and go to state 26
@@ -14871,21 +14865,21 @@ state 228
 
     comparison_op                  shift and go to state 41
 
-state 229
+state 228
 
     (112) cases -> CASE expression COLON expression DOT cases .
 
     DOT             reduce using rule 112 (cases -> CASE expression COLON expression DOT cases .)
 
 
-state 230
+state 229
 
     (58) else_elif_body -> COMMA ELIF IF expression THEN . COMMA expression else_elif_body
 
-    COMMA           shift and go to state 231
+    COMMA           shift and go to state 230
 
 
-state 231
+state 230
 
     (58) else_elif_body -> COMMA ELIF IF expression THEN COMMA . expression else_elif_body
     (1) expression -> . NUMBER
@@ -14940,7 +14934,7 @@ state 231
     (63) expression -> . CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
     (64) expression -> . OPEN_BRACKETS expression ITER expression OPEN_BRACKETS
     (65) expression -> . CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
-    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression DOT
+    (66) expression -> . LAMBDA parameter LAMBDA_ARROW expression
     (87) expression -> . expression LPAREN parameter_expr RPAREN
     (90) expression -> . LET let_assign IN expression DOT
     (94) expression -> . expression CONS expression
@@ -14982,11 +14976,11 @@ state 231
     IMPORT          shift and go to state 22
     MATCH           shift and go to state 23
 
-    expression                     shift and go to state 232
+    expression                     shift and go to state 231
     comparison                     shift and go to state 10
     assign_expression              shift and go to state 11
 
-state 232
+state 231
 
     (58) else_elif_body -> COMMA ELIF IF expression THEN COMMA expression . else_elif_body
     (6) expression -> expression . PLUS expression
@@ -15034,8 +15028,8 @@ state 232
     CONS            shift and go to state 38
     OPEN_BRACKETS   shift and go to state 39
     LAMBDA_ARROW    shift and go to state 40
-    COMMA           shift and go to state 208
-    ELSE            shift and go to state 211
+    COMMA           shift and go to state 207
+    ELSE            shift and go to state 210
     GREATER_THAN    shift and go to state 42
     SMALLER_THAN    shift and go to state 43
     UNEQUALS        shift and go to state 44
@@ -15043,10 +15037,10 @@ state 232
     SMALLER_EQUALS  shift and go to state 46
     GREATER_EQUALS  shift and go to state 47
 
-    else_elif_body                 shift and go to state 233
+    else_elif_body                 shift and go to state 232
     comparison_op                  shift and go to state 41
 
-state 233
+state 232
 
     (58) else_elif_body -> COMMA ELIF IF expression THEN COMMA expression else_elif_body .
 

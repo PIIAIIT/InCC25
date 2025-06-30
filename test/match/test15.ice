@@ -11,7 +11,7 @@ arith := lambda exp -> {
         fall ('+', a) : +arith(a) .
         fall _ : exp .
     .
-}.;
+};
 
 # TEST arith #
 assert := arith(('+', 5, 6)) = 5+6;

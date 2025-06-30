@@ -248,7 +248,7 @@ def p_interval(p):
 
 
 def p_lambda0(p):
-    "expression : LAMBDA parameter LAMBDA_ARROW expression DOT"
+    "expression : LAMBDA parameter LAMBDA_ARROW expression %prec LAMBDA"
     p[0] = ("lambda", p[2], p[4])
 
 
@@ -522,6 +522,7 @@ def p_error(p):
 precedence = (
     ("right", "ASSIGN"),
     ("right", *(a for a in op_assigns.values())),
+    ("left", "LAMBDA"),
     ("left", "OR"),
     ("left", "XOR"),
     ("left", "AND"),
@@ -541,8 +542,7 @@ precedence = (
     ("left", "IMAG"),
     ("right", "NOT", "UPLUS", "UMINUS"),
     ("left", "CONS"),
-    ("left", "LAMBDA_ARROW"),
-    ("left", "OPEN_BRACKETS", "CLOSED_BRACKETS", "LPAREN", "RPAREN", "BEGIN", "END"),
+    ("left", "OPEN_BRACKETS", "CLOSED_BRACKETS", "LPAREN", "RPAREN", "BEGIN", "LAMBDA_ARROW", "END"),
 )
 
 ########################################################

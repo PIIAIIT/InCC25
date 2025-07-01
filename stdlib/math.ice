@@ -1,4 +1,4 @@
-{
+math := struct {
 # Für die ganzen Mathe Definitionen. #
 # Arithmetik, Konstanten #
 
@@ -14,7 +14,7 @@ fac := lambda x ->
     sonst
         1
     .
-.;
+;
 
 # Exponentialfunktion #
 exp := sei eps = 60 in
@@ -24,11 +24,11 @@ exp := sei eps = 60 in
             sum +:= x**n | fac(n)
         .;
         sum
-    }.
+    }
 .;
 
 # ABS #
-abs := lambda x -> wenn x < 0 gilt, -x sonst x . .;
+abs := lambda x -> wenn x < 0 gilt, -x sonst x .;
 
 # SQRT #
 # Heron-Verfahren #
@@ -40,5 +40,5 @@ sqrt := lambda x -> {
         b := (a + b) | 2
     }.;
     a
-}.
+}
 }

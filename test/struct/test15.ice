@@ -2,7 +2,7 @@
 P := struct { x := 42 };
 assert := P->x = 42;
 
-P := struct { x:= 10, y:=20};
+P := struct { x:= 10; y:=20};
 assert +:= P->x + P->y = 30;
 
 P := struct { inner:= struct { val:= 99} };

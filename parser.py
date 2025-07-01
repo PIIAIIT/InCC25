@@ -436,8 +436,8 @@ def p_array(p):
 ######################### STRUCTS #########################
 
 def p_assignment_list0(p):
-    """assignment_list : assign_expression COMMA assignment_list
-                       | assign_expression COMMA assign_expression
+    """assignment_list : assign_expression SEMICOLON assignment_list
+                       | assign_expression SEMICOLON assign_expression
     """
     if isinstance(p[3], list):
         p[0] = [p[1], *p[3]]

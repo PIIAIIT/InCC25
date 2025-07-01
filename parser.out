@@ -104,8 +104,8 @@ Rule 98    expression -> NULL
 Rule 99    expression -> OPEN_BRACKETS param_list CLOSED_BRACKETS
 Rule 100   expression -> OPEN_BRACKETS expression CLOSED_BRACKETS
 Rule 101   expression -> OPEN_BRACKETS CLOSED_BRACKETS
-Rule 102   assignment_list -> assign_expression COMMA assignment_list
-Rule 103   assignment_list -> assign_expression COMMA assign_expression
+Rule 102   assignment_list -> assign_expression SEMICOLON assignment_list
+Rule 103   assignment_list -> assign_expression SEMICOLON assign_expression
 Rule 104   expression -> STRUCT BEGIN assignment_list END
 Rule 105   expression -> STRUCT BEGIN assign_expression END
 Rule 106   expression -> STRUCT BEGIN END
@@ -125,7 +125,7 @@ BEGIN                : 51 52 53 104 105 106
 CASE                 : 111 112
 CLOSED_BRACKETS      : 63 64 64 66 96 97 99 100 101
 COLON                : 76 77 85 86 111 112
-COMMA                : 56 57 58 58 60 60 61 72 76 82 85 89 92 93 102 103
+COMMA                : 56 57 58 58 60 60 61 72 76 82 85 89 92 93
 CONS                 : 94
 DIVIDE               : 9
 DIVIDE_ASSIGN        : 37
@@ -175,7 +175,7 @@ PLUS_ASSIGN          : 33
 POWER                : 17
 POWER_ASSIGN         : 36
 RPAREN               : 5 68 88 95
-SEMICOLON            : 52 55
+SEMICOLON            : 52 55 102 103
 SMALLER_EQUALS       : 29
 SMALLER_EQUALS_ASSIGN : 43
 SMALLER_THAN         : 26
@@ -6662,8 +6662,8 @@ state 89
     (104) expression -> STRUCT BEGIN . assignment_list END
     (105) expression -> STRUCT BEGIN . assign_expression END
     (106) expression -> STRUCT BEGIN . END
-    (102) assignment_list -> . assign_expression COMMA assignment_list
-    (103) assignment_list -> . assign_expression COMMA assign_expression
+    (102) assignment_list -> . assign_expression SEMICOLON assignment_list
+    (103) assignment_list -> . assign_expression SEMICOLON assign_expression
     (31) assign_expression -> . IDENTIFIER ASSIGN expression
 
     END             shift and go to state 157
@@ -11465,11 +11465,11 @@ state 157
 state 158
 
     (105) expression -> STRUCT BEGIN assign_expression . END
-    (102) assignment_list -> assign_expression . COMMA assignment_list
-    (103) assignment_list -> assign_expression . COMMA assign_expression
+    (102) assignment_list -> assign_expression . SEMICOLON assignment_list
+    (103) assignment_list -> assign_expression . SEMICOLON assign_expression
 
     END             shift and go to state 183
-    COMMA           shift and go to state 184
+    SEMICOLON       shift and go to state 184
 
 
 state 159
@@ -12897,10 +12897,10 @@ state 183
 
 state 184
 
-    (102) assignment_list -> assign_expression COMMA . assignment_list
-    (103) assignment_list -> assign_expression COMMA . assign_expression
-    (102) assignment_list -> . assign_expression COMMA assignment_list
-    (103) assignment_list -> . assign_expression COMMA assign_expression
+    (102) assignment_list -> assign_expression SEMICOLON . assignment_list
+    (103) assignment_list -> assign_expression SEMICOLON . assign_expression
+    (102) assignment_list -> . assign_expression SEMICOLON assignment_list
+    (103) assignment_list -> . assign_expression SEMICOLON assign_expression
     (31) assign_expression -> . IDENTIFIER ASSIGN expression
 
     IDENTIFIER      shift and go to state 159
@@ -13790,19 +13790,19 @@ state 199
 
 state 200
 
-    (103) assignment_list -> assign_expression COMMA assign_expression .
-    (102) assignment_list -> assign_expression . COMMA assignment_list
-    (103) assignment_list -> assign_expression . COMMA assign_expression
+    (103) assignment_list -> assign_expression SEMICOLON assign_expression .
+    (102) assignment_list -> assign_expression . SEMICOLON assignment_list
+    (103) assignment_list -> assign_expression . SEMICOLON assign_expression
 
-    END             reduce using rule 103 (assignment_list -> assign_expression COMMA assign_expression .)
-    COMMA           shift and go to state 184
+    END             reduce using rule 103 (assignment_list -> assign_expression SEMICOLON assign_expression .)
+    SEMICOLON       shift and go to state 184
 
 
 state 201
 
-    (102) assignment_list -> assign_expression COMMA assignment_list .
+    (102) assignment_list -> assign_expression SEMICOLON assignment_list .
 
-    END             reduce using rule 102 (assignment_list -> assign_expression COMMA assignment_list .)
+    END             reduce using rule 102 (assignment_list -> assign_expression SEMICOLON assignment_list .)
 
 
 state 202

@@ -45,9 +45,9 @@ erg := vergleiche [1, 2, 3] mit
 .;
 assert +:= erg = "korrekt";
 
-Person := struct { name := "Alice", alter := 30 };
+Person := struct { name := "Alice"; alter := 30 };
 erg := vergleiche Person mit
-    fall struct { name := alt, alter := 30 } : alt .
+    fall struct { name := alt; alter := 30 } : alt .
     fall _ : "nomatch" .
 .;
 assert +:= erg = "Alice";

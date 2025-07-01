@@ -46,26 +46,20 @@ loaded_modules = set()
 def eval(expression, env: Environment, debug=False):
     match expression:
         case ("num", n):
-            print("num", n) if debug else ""
+            base = 10
             if n.startswith("0b"):
-                print("num", int(n, 2)) if debug else ""
-                return int(n, 2)
+                base = 2
             if n.startswith("0x"):
-                print("num", int(n, 16)) if debug else ""
-                return int(n, 16)
-            return int(n)
+                base = 16
+            return int(n, base)
         case ("float", n):
-            print("float", n) if debug else ""
             return float(n)
         case ("str", n):
-            print("str", n) if debug else ""
             return str(n[1:-1])
         case ("complex", imag):
-            print("complex", imag) if debug else ""
             a = eval(imag, env)
             return unary_operations["imag"](a)
         case ("var", n):
-            print("var", n) if debug else ""
             if n not in env:
                 raise Exception(f"variable {n} not found in environment {env}")
             return env[n]
@@ -81,9 +75,7 @@ def eval(expression, env: Environment, debug=False):
             return func(x, y)
 
         case ("comparison", f, x, y):
-            ops = [f]
-            exprs = [x]
-            tmp = y
+            ops, exprs, tmp = [f], [x], y
             while tmp[0] == 'comparison':
                 ops.append(tmp[1])
                 exprs.append(tmp[2])
@@ -261,7 +253,7 @@ def iter_tuple(t):
 
 # PRIVATE FUNKTIONS
 def binop_for_lists(x, y, func):
-    if isinstance(x, list) and isinstance(y, list):
+    if isinstance(x, list) or isinstance(y, list):
         return [func(i, j) for i, j in zip(x if isinstance(x, list) else [x] * len(y),
                                            y if isinstance(y, list) else [y] * len(x))]
     return None
@@ -269,6 +261,7 @@ def binop_for_lists(x, y, func):
 
 def binop_for_tuples(x, y, func):
     if isinstance(x, tuple) and isinstance(y, tuple):
+        # (1, (2, (3, None))) + (2, (3, (4, None)))
         a = x[0] if isinstance(x, tuple) else x
         b = y[0] if isinstance(y, tuple) else y
 
@@ -280,6 +273,21 @@ def binop_for_tuples(x, y, func):
 
         next_pair = binop_for_tuples(next_x, next_y, func) if next_x or next_y else None
         return (func(a, b), next_pair)
+    if isinstance(x, tuple) or isinstance(y, tuple):
+        # (1, (2, (3, None))) + 2
+        # 2 + (1, (2, (3, None)))
+        a = x[0] if isinstance(x, tuple) else y[0]
+        b = x if not isinstance(x, tuple) else y
+
+        next = x[1] if isinstance(x, tuple) and x[1] is not None \
+                    else y[1] \
+                    if isinstance(y, tuple) and y[1] is not None \
+                    else None
+
+        next_pair = binop_for_tuples(next, b, func) if next else None
+        return (func(a, b), next_pair)
+
+    return None
 
 
 def match_pattern(pattern, value, env):

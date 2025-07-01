@@ -263,6 +263,16 @@ i_me:=420.69
 }"""
 assert test_interpreter(test_code) == 420.69
 
+test_prec = r"""
+{
+func := lambda x -> 3 + 5 or 7imag ** 2 xor {1 + -10 <= -5} - +12 and 2<3<4<5 and 1 * 9 e (not 1 | 2 mod 5 + 5) / x = 1 \ 5;
+y := func(1);
+y +:= [1,2];
+}
+"""
+
+assert test_interpreter(test_prec) == [3, 4]
+
 ALL_PATHS = [x for x, _ in ALL_TEST_FILES]
 v = False
 ################### LEXER TEST ###################

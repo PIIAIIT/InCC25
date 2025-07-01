@@ -49,6 +49,7 @@ rule_lexer(r"->", "LAMBDA_ARROW")
 rule_lexer(r"\.\.\.", "DOTS")
 rule_lexer(r"\.\.", "ITER")
 rule_lexer(r"\.", "DOT")
+rule_lexer(r",", "COMMA")
 
 lookup_table = {
     "not": "NOT",
@@ -91,8 +92,6 @@ def check_if_keyword(token):
 
 
 rule_lexer(r"(?:[^\W\d_]|[\U0001F300-\U0001FAFF_])(?:[^\W_]|[\d_]|[\U0001F300-\U0001FAFF])*", "IDENTIFIER", check_if_keyword)
-rule_lexer(r",", "COMMA")
-# erste nach identifiert check, weil `,aber` ein TOKEN ist
 
 op_assigns = {k + ":=": v + "_ASSIGN" for k, v in binops.items()}
 for doc, token in op_assigns.items():

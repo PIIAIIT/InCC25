@@ -5,6 +5,7 @@ DEBUG = False
 ########## LABMDA ##########
 class Lambda:
     """Repräsentiert eine Lambda-Funktion mit Parametern, Defaults und Closure"""
+    # FIX: ist rekursive irgendwie ??
 
     def __init__(self, params, varargs, defaults, body, closure_env):
         self.params: list = params  # Liste der Parameter-Namen

@@ -265,10 +265,10 @@ def p_parameter0(p):
     """
     if len(p) == 4:
         p[0] = ("parameter", p[2])
-    elif isinstance(p[1], list):
-        p[0] = ("parameter", p[1])
-    else:
+    elif p.slice[1].type == "IDENTIFIER":
         p[0] = ("parameter", [("pos", p[1])])
+    else:
+        p[0] = ("parameter", [])
 
 
 def p_parameter1(p):
@@ -286,10 +286,10 @@ def p_parameter2(p):
     """
     if len(p) == 4:
         p[0] = [("pos", p[1]), *p[3]]
-    elif isinstance(p[1], list):
-        p[0] = p[1]
-    else:
+    elif p.slice[1].type == "IDENTIFIER":
         p[0] = [("pos", p[1])]
+    else:
+        p[0] = p[1]
 
 
 def p_parameter3(p):

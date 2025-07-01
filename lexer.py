@@ -100,6 +100,7 @@ op_assigns.update({"and:=": "AND_ASSIGN", "or:=": "OR_ASSIGN", "xor:=": "XOR_ASS
 
 for doc, token in binops.items():
     rule_lexer(doc, token)
+binops.update({"and": "AND", "or": "OR", "xor": "XOR", "mod": "MOD", "e": "EXP"})
 rule_lexer("&", "CONS")
 
 

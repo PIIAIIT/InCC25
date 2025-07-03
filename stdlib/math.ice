@@ -8,16 +8,22 @@ EXP := 2.718281828;
 PHI := 1.61803398874;
 
 # Fakultät #
-fac := lambda x ->
+# fac := lambda x ->
     wenn x > 0 gilt,
         fac(x-1) * x
     sonst
         1
     .
-;
+.; #
 
 # Exponentialfunktion #
-exp := sei eps = 60 in
+exp := sei eps = 60, fac = lambda x -> 
+    wenn x > 0 gilt,
+      fac(x-1) * x
+    sonst
+      1
+    .
+in
     lambda x -> {
         sum := 0;
         für n in [0..eps] wiederhole

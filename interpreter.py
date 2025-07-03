@@ -148,7 +148,6 @@ def eval(expression, env: Environment, debug=False):
 
         case ("lambda", parameter, body):
             # Lambda-Objekt mit aktuellem Closure zurückgeben
-            # print("Lambda", parameter, env)
             return Lambda(parameter, body, env.copy())
 
         case ("call", func, args_expr):
@@ -156,7 +155,6 @@ def eval(expression, env: Environment, debug=False):
 
             # Closure
             func_obj = eval(func, env)
-            # print("CALL", func_obj, env)
 
             if not callable(func_obj):
                 raise TypeError(f"Cannot call object of type {type(func_obj)}")
@@ -172,8 +170,6 @@ def eval(expression, env: Environment, debug=False):
                 lambda_obj = eval(("assign", None, var, val), env2)
                 if isinstance(lambda_obj, Lambda):
                     lambda_obj.override_env(env2)
-                print(env2)
-                # env2[var] = y
 
             return eval(body, env2)
 

@@ -14,7 +14,6 @@ S' ::= expression
 
 ## Ausdrucksregeln
 ```bnf
-```bnf
 `expression` ::= NUMBER
                | FLOAT
                | STRING

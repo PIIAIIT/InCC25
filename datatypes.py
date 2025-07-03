@@ -15,6 +15,9 @@ class Lambda:
     def __repr__(self):
         return f"<Lambda params={self.params}, defaults={list(self.defaults.keys())}, varargs={self.varargs}>"
 
+    def override_env(self, env):
+        self.closure_env = env
+
     def __call__(self, pos_args, keyword_args, eval_func):
         """Führt einen Lambda-Ausdruck aus oder erstellt Partial Application"""
         # Lokales Environment mit den Definitions Variblen erstellen mit Wert
@@ -25,7 +28,10 @@ class Lambda:
         lokal_env = Environment(parent=self.closure_env)
         for k, v in self.defaults.items():
             lokal_env.put(k)
-            lokal_env[k] = eval_func(v, lokal_env) if not isinstance(v, (int, str, float, complex64)) else v
+            if isinstance(v, (tuple, list, dict)):
+                lokal_env[k] = eval_func(v, lokal_env)
+            else:
+                lokal_env[k] = v
 
         lokal_env.put(self.params)
         if self.varargs:

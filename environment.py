@@ -1,4 +1,4 @@
-class Environment(dict):
+class Environment:
     def __init__(self, parent=None):
         self.parent = parent
         self.vars = {}
@@ -14,6 +14,8 @@ class Environment(dict):
         @arg names: Kann eine Liste oder Tuple sein
         @return gibt sich selber als Object aus
         """
+        if not isinstance(names, (list, tuple, set)):
+            name = [names]
         for name in names:
             if name not in self.vars:
                 self.vars[name] = None
@@ -115,7 +117,15 @@ class Environment(dict):
             self.parent[name] = value
 
     def __str__(self):
-        return str(self.vars) if len(self.vars) != 0 else "Leer" + "\n" + str(self.parent) if self.parent is not None else ""
+        s = str(self.vars)
+        if self.parent:
+            s += "\n" + str(self.parent)
+        return s
+
+    def clear(self):
+        self.parent = None
+        self.vars = {}
+        self.builtins()
 
 
 class BuiltinFunction:

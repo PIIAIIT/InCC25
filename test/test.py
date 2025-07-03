@@ -74,7 +74,7 @@ def test_parser(input_string, verbose=False):
     return res is not None
 
 
-def test_interpreter(input_string, env=start_env, verbose=False):
+def test_interpreter(input_string, env=start_env, verbose=False, clear=False):
     if input_string is None:
         print("Es ist ein Fehler mit dem InputStream.")
 
@@ -82,6 +82,8 @@ def test_interpreter(input_string, env=start_env, verbose=False):
     print(ast, end=" === ") if verbose else ""
     res = eval(ast, env, verbose)
     print(res) if verbose else ""
+    if clear:
+        env.clear()
     return res
 
 
@@ -285,4 +287,4 @@ for path in ALL_PATHS:
 
 ################### INTERPRETER TEST ###################
 for path in ALL_PATHS:
-    assert test_interpreter(read_file(path, True), verbose=v)
+    assert test_interpreter(read_file(path, True), verbose=v, clear=True)

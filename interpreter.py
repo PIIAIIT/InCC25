@@ -83,11 +83,7 @@ def eval(expression, env: Environment, debug=False):
             return int(all([bin_operations[ops[i]](values[i], values[i+1]) for i in range(len(ops))]))
 
         case ("assign", op, var, val):
-            if var not in env:
-                env.put(var)
-
             y = eval(val, env)
-
             print("Assign: ", op, var, val) if debug else ""
             if op is not None:
                 y = eval(("binop", op, ("var", var), val), env)
@@ -152,13 +148,15 @@ def eval(expression, env: Environment, debug=False):
 
         case ("lambda", parameter, body):
             # Lambda-Objekt mit aktuellem Closure zurückgeben
-            return Lambda(parameter, body, env)
+            # print("Lambda", parameter, env)
+            return Lambda(parameter, body, env.copy())
 
         case ("call", func, args_expr):
             pos_arg, key_arg = parse_call_arguments(args_expr, eval, env)
 
             # Closure
             func_obj = eval(func, env)
+            # print("CALL", func_obj, env)
 
             if not callable(func_obj):
                 raise TypeError(f"Cannot call object of type {type(func_obj)}")
@@ -166,12 +164,17 @@ def eval(expression, env: Environment, debug=False):
 
         case ("let", assignments, body):
             env2 = Environment(parent=env)
+
             for _, op, var, val in assignments:
                 if op is not None:
                     raise Exception(f"Cannot Operation Assign in a let.")
                 env2.put(var)
-                y = eval(val, env2)
-                env2[var] = y
+                lambda_obj = eval(("assign", None, var, val), env2)
+                if isinstance(lambda_obj, Lambda):
+                    lambda_obj.override_env(env2)
+                print(env2)
+                # env2[var] = y
+
             return eval(body, env2)
 
         case ("array", list_elements):

@@ -1,6 +1,6 @@
 {
 # ARITHMETIC ENTSCHEIDER #
-arith := lambda exp -> {
+sei arith = lambda exp -> {
     vergleiche exp mit
         fall ('+', a, b) : arith(a) + arith(b) .
         fall ('-', a, b) : arith(a) - arith(b) .
@@ -11,8 +11,9 @@ arith := lambda exp -> {
         fall ('+', a) : +arith(a) .
         fall _ : exp .
     .
-};
-
+}
+in 
+{
 # TEST arith #
 assert := arith(('+', 5, 6)) = 5+6;
 echo(assert);
@@ -30,4 +31,5 @@ assert +:= arith(('--', 5)) = ('--', 5);
 echo(assert);
 
 assert = 7
+}.
 }

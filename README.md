@@ -37,6 +37,8 @@ Verfügbare Befehle:
 - `test`: Führt die Tests aus.
 - `debug`: Startet den Debugger. Mit allen Debug Infos.
 Wenn kein Befehl angegeben wird, startet die interaktive Shell des Interpreters.
+> Für die Semantik der Sprache verweise ich auf die [Datei](HOW_TO_CODE.md).
+
 
 
 

@@ -3,10 +3,8 @@ from parser import parser
 import numpy as np
 from datatypes import (
     Lambda,
-    Struct,
-    call_lambda,
     parse_call_arguments,
-    parse_lambda_parameters,
+    Struct,
 )
 from environment import Environment
 
@@ -85,15 +83,17 @@ def eval(expression, env: Environment, debug=False):
             return int(all([bin_operations[ops[i]](values[i], values[i+1]) for i in range(len(ops))]))
 
         case ("assign", op, var, val):
+            if var not in env:
+                env.put(var)
+
             y = eval(val, env)
+
             print("Assign: ", op, var, val) if debug else ""
             if op is not None:
-                erg = eval(("binop", op, ("var", var), val), env)
-                env[var] = erg
-                return erg
-            else:
-                env[var] = y
-                return y
+                y = eval(("binop", op, ("var", var), val), env)
+
+            env[var] = y
+            return y
 
         case ("unary", op, expr):
             x = eval(expr, env)
@@ -151,29 +151,27 @@ def eval(expression, env: Environment, debug=False):
             return range(a, b+1)
 
         case ("lambda", parameter, body):
-            params, defaults, varargs = parse_lambda_parameters(parameter, eval, env)
-            return Lambda(params, varargs, defaults, body, env)
+            # Lambda-Objekt mit aktuellem Closure zurückgeben
+            return Lambda(parameter, body, env)
 
         case ("call", func, args_expr):
-            func_obj = eval(func, env)
-
             pos_arg, key_arg = parse_call_arguments(args_expr, eval, env)
 
-            # Fall 1: eigene Lambda-Funktionen
-            if isinstance(func_obj, Lambda):
-                return call_lambda(func_obj, pos_arg, key_arg, eval, env)
-            # Fall 2: Python-Built-in (z.B als Funktion mit __call__)
-            elif callable(func_obj):
-                print("CALL", func_obj, args_expr) if debug else ""
-                return func_obj(pos_arg, key_arg)
-            else:
+            # Closure
+            func_obj = eval(func, env)
+
+            if not callable(func_obj):
                 raise TypeError(f"Cannot call object of type {type(func_obj)}")
+            return func_obj(pos_arg, key_arg, eval)
 
         case ("let", assignments, body):
-            env2 = Environment(env)
+            env2 = Environment(parent=env)
             for _, op, var, val in assignments:
+                if op is not None:
+                    raise Exception(f"Cannot Operation Assign in a let.")
                 env2.put(var)
-                eval(("assign", op, var, val), env2)
+                y = eval(val, env2)
+                env2[var] = y
             return eval(body, env2)
 
         case ("array", list_elements):

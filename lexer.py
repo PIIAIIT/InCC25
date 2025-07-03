@@ -114,7 +114,7 @@ def t_newline(t):
 
 
 ########### TRACEBACK #########
-def print_traceback(input_text: str, token):
+def print_traceback(input_text: str, token, silent=False):
     """
     Druckt einen gut lesbaren Traceback, wenn ein Parsing-Fehler auftritt.
     :param input_text: Der gesamte Quelltext als String.
@@ -135,9 +135,13 @@ def print_traceback(input_text: str, token):
     line_start = input_text.rfind('\n', 0, pos) + 1
     col = pos - line_start
 
-    print(f"SyntaxError: Unerwartetes Token '{token.value}' ({token.type}) in Zeile {line_num}, Spalte {col + 1}:")
-    print(f"    {line}")
-    print(f"    {' ' * col}^")
+    if not silent:
+        print(f"SyntaxError: Unerwartetes Token '{token.value}' ({token.type}) in Zeile {line_num}, Spalte {col + 1}:")
+        print(f"    {line}")
+        print(f"    {' ' * col}^")
+    return f"SyntaxError: Unerwartetes Token '{token.value}' ({token.type}) in Zeile {line_num}, Spalte {col + 1}:" + "\n" + \
+        f"    {line}" + "\n" + \
+        f"    {' ' * col}^"
 
 
 def t_error(t):

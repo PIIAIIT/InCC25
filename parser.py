@@ -1,6 +1,8 @@
 from ply.yacc import yacc
 from lexer import tokens, print_traceback, op_assigns
 import readline, traceback
+debug = True
+write_tables = False
 
 look_up_table = {
     "+": "plus",
@@ -264,11 +266,11 @@ def p_parameter0(p):
               | empty
     """
     if len(p) == 4:
-        p[0] = ("parameter", p[2])
+        p[0] = p[2]
     elif p.slice[1].type == "IDENTIFIER":
-        p[0] = ("parameter", [("pos", p[1])])
+        p[0] = [("pos", p[1])]
     else:
-        p[0] = ("parameter", [])
+        p[0] = []
 
 
 def p_parameter1(p):
@@ -325,7 +327,7 @@ def p_parameter6(p):
     parameter_expr : parameter_pos_expr
                    | empty
     """
-    p[0] = ("parameter_expr", p[1])
+    p[0] = p[1]
 
 
 def p_parameter7(p):
@@ -533,7 +535,7 @@ precedence = (
 
 ########################################################
 
-parser = yacc(start="expression")
+parser = yacc(start="expression", debug=debug, write_tables=write_tables)
 
 if __name__ == "__main__":
     # Interaktives Menu

@@ -3,6 +3,11 @@ class Environment(dict):
         self.parent = parent
         self.vars = {}
 
+    def push(self, names: list | tuple | set):
+        """
+        """
+        return Environment(self).put(names)
+
     def put(self, names: list | tuple | set):
         """
         Packt Jedes Element der Liste als undefiniert auf dem Environment.
@@ -13,6 +18,14 @@ class Environment(dict):
             if name not in self.vars:
                 self.vars[name] = None
         return self
+
+    def root(self):
+        """
+        """
+        t = self
+        while t.parent:
+            t = t.parent
+        return t
 
     def copy(self):
         """
@@ -33,6 +46,33 @@ class Environment(dict):
         assert value is not None
         self.__setitem__(name, value)
 
+    def assign(self, name: list, value: list):
+        """
+        @arg name: Liste von pos, keyword und infty Argument (kein eval)
+        @arg value: Liste von pos, keyword Argument (eval)
+        @return void
+        """
+        # [('pos', 'x'), ('keyword', 'y', 3), ('keyword', 'z', 5), ('infty', 'c')]
+        # Zuerst Keyword Args auf lambda env binden
+        positional_args = [elem for elem in name if elem[0] == "pos"]
+        keyword_args = [elem for elem in name if elem[0] == "keyword"]
+        infty = name[-1][1] if name[-1][0] == "infty" else None
+
+        call_positional, call_keywords = value
+
+        for k, v in call_keywords.items():
+            if k not in self:
+                raise Exception("Invalid Argument Exception")
+            self[k] = v
+
+        # Dann Pos Args auf restliche lambda env binden
+        all_param_names = positional_args + [elem[1] for elem in keyword_args]
+        for key, val in zip(all_param_names, call_positional):
+            self[key] = val
+
+        if name[-1][0] == "infty":
+            self[infty] = call_positional[len(positional_args):]
+
     def builtins(self):
         """
         Definiert eine Variablen auf dem Environment.
@@ -40,14 +80,15 @@ class Environment(dict):
         @arg value: Wert der Variable
         """
         builtins = {
-            "echo": BuiltinFunction(builtin_print),
-            "länge": BuiltinFunction(builtin_len),
-            "list": BuiltinFunction(builtin_list),
-            "type": BuiltinFunction(builtin_type)
+            "echo": builtin_print,
+            "länge": builtin_len,
+            "list": builtin_list,
+            "type": builtin_type,
+            "assert": builtin_assert,
         }
-
         for name, fn in builtins.items():
-            self[name] = fn
+            self.put([name])
+            self[name] = BuiltinFunction(name, fn)
 
     def __contains__(self, name):
         if name in self.vars:
@@ -74,24 +115,28 @@ class Environment(dict):
             self.parent[name] = value
 
     def __str__(self):
-        return str(self.vars) + "\n" + str(self.parent) if self.parent is not None else ""
+        return str(self.vars) if len(self.vars) != 0 else "Leer" + "\n" + str(self.parent) if self.parent is not None else ""
 
 
 class BuiltinFunction:
-    def __init__(self, fn):
+    def __init__(self, name, fn):
         self.fn = fn
+        self.name = name
 
-    def __call__(self, pos, key):
-        return self.fn(pos, key)
+    def __call__(self, pos, key, eval):
+        return self.fn(pos, key, eval)
+
+    def __repr__(self):
+        return f"<built-in {self.name}>"
 
 
-def builtin_print(pos_args, key_args):
+def builtin_print(pos_args, key_args, _):
     """Ausgabe in der Kommandozeile"""
     print(*pos_args)
     return None
 
 
-def builtin_len(pos_args, key_args):
+def builtin_len(pos_args, key_args, _):
     """Länge einer Liste/Array bestimmen"""
     # (1, (2, (3, None))) => 3
     if isinstance(pos_args[0], tuple):
@@ -100,7 +145,7 @@ def builtin_len(pos_args, key_args):
     return len(pos_args[0])
 
 
-def builtin_list(pos_args, key_args):
+def builtin_list(pos_args, key_args, _):
     """Lisp Liste wird erstellt
     Example : list(1,2,3) == (1, (2, (3, None)))
             | list(1) == (1, None)
@@ -110,13 +155,23 @@ def builtin_list(pos_args, key_args):
         return None
     if len(pos_args) == 1:
         return pos_args[0], None
-    return (pos_args[0], builtin_list(pos_args[1:], None))
+    return (pos_args[0], builtin_list(pos_args[1:], None, _))
 
 
-def builtin_type(pos_args, key_args):
+def builtin_type(pos_args, key_args, _):
     """Lisp Liste wird erstellt
     Example : list(1,2,3) == (1, (2, (3, None)))
             | list(1) == (1, None)
             | list() == (None)
     """
     return type(pos_args[0])
+
+
+def builtin_assert(pos_args, key_args, _):
+    """Assert a Statement
+    assert(statement, erwartung)
+    """
+    statement = pos_args[0]
+    erwartet = pos_args[1]
+    assert statement == erwartet
+    return int(statement == erwartet)

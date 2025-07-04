@@ -59,7 +59,7 @@ def eval(expression, env: Environment, debug=False):
             return unary_operations["imag"](a)
         case ("var", n):
             if n not in env:
-                raise Exception(f"variable {n} not found in environment {env}")
+                raise Exception(f"variable {n} not found in environment")
             return env[n]
 
         case ("binop", op, expr1, expr2):
@@ -74,13 +74,20 @@ def eval(expression, env: Environment, debug=False):
 
         case ("comparison", f, x, y):
             ops, exprs, tmp = [f], [x], y
-            while tmp[0] == 'comparison':
+            while tmp[0] == "comparison":
                 ops.append(tmp[1])
                 exprs.append(tmp[2])
                 tmp = tmp[3]
             exprs.append(tmp)
             values = [eval(e, env) for e in exprs]
-            return int(all([bin_operations[ops[i]](values[i], values[i+1]) for i in range(len(ops))]))
+            return int(
+                all(
+                    [
+                        bin_operations[ops[i]](values[i], values[i + 1])
+                        for i in range(len(ops))
+                    ]
+                )
+            )
 
         case ("assign", op, var, val):
             y = eval(val, env)
@@ -144,7 +151,7 @@ def eval(expression, env: Environment, debug=False):
                 raise TypeError("Non-Int Type is not supported!")
             a += 1 if left_interval == "]" else 0
             b -= 1 if right_interval == "[" else 0
-            return range(a, b+1)
+            return range(a, b + 1)
 
         case ("lambda", parameter, body):
             # Lambda-Objekt mit aktuellem Closure zurückgeben
@@ -178,12 +185,14 @@ def eval(expression, env: Environment, debug=False):
 
         case ("array_access", array_ptr, index):
             arr = eval(array_ptr, env)
-            assert isinstance(arr, (list, tuple)), f"{type(arr)} {arr} ist nicht veränderlich."
+            assert isinstance(
+                arr, (list, tuple)
+            ), f"{type(arr)} {arr} ist nicht veränderlich."
 
-            if index == '+':
+            if index == "+":
                 return arr[1:] if isinstance(arr, list) else arr[1]
 
-            i = eval(index, env) # expression
+            i = eval(index, env)  # expression
             if isinstance(arr, list):
                 return arr[i]
 
@@ -191,7 +200,7 @@ def eval(expression, env: Environment, debug=False):
 
         case ("list", list_elements):
             if len(list_elements) == 0:
-                return (None)
+                return None
             if len(list_elements) == 1:
                 return eval(("cons", list_elements[0], ("leere")), env)
             return eval(("cons", list_elements[0], ("list", list_elements[1:])), env)
@@ -199,10 +208,10 @@ def eval(expression, env: Environment, debug=False):
         case ("cons", expr1, expr2):
             a, b = eval(expr1, env), eval(expr2, env)
             if isinstance(a, list) and isinstance(b, list):
-                return a+b
+                return a + b
             return (a, b)
 
-        case ("leere"):
+        case "leere":
             return None
 
         case ("import", [path]):
@@ -251,8 +260,13 @@ def iter_tuple(t):
 # PRIVATE FUNKTIONS
 def binop_for_lists(x, y, func):
     if isinstance(x, list) or isinstance(y, list):
-        return [func(i, j) for i, j in zip(x if isinstance(x, list) else [x] * len(y),
-                                           y if isinstance(y, list) else [y] * len(x))]
+        return [
+            func(i, j)
+            for i, j in zip(
+                x if isinstance(x, list) else [x] * len(y),
+                y if isinstance(y, list) else [y] * len(x),
+            )
+        ]
     return None
 
 
@@ -276,10 +290,11 @@ def binop_for_tuples(x, y, func):
         a = x[0] if isinstance(x, tuple) else y[0]
         b = x if not isinstance(x, tuple) else y
 
-        next = x[1] if isinstance(x, tuple) and x[1] is not None \
-                    else y[1] \
-                    if isinstance(y, tuple) and y[1] is not None \
-                    else None
+        next = (
+            x[1]
+            if isinstance(x, tuple) and x[1] is not None
+            else y[1] if isinstance(y, tuple) and y[1] is not None else None
+        )
 
         next_pair = binop_for_tuples(next, b, func) if next else None
         return (func(a, b), next_pair)
@@ -307,16 +322,18 @@ def match_pattern(pattern, value, env):
 
     # pattern: ['list', [p1, p2, p3]]
     # value: (p1, (p2, (p3, None)))
-    if kind == 'list':
+    if kind == "list":
         subpatterns = pattern[1]
         list_len = sum(1 for _ in iter_tuple(value))
         if not isinstance(value, tuple) or len(subpatterns) != list_len:
             return False
-        return all(match_pattern(p, v, env) for p, v in zip(subpatterns, iter_tuple(value)))
+        return all(
+            match_pattern(p, v, env) for p, v in zip(subpatterns, iter_tuple(value))
+        )
 
     # Tuple: ['array', [(var, a), (num, 3), (var, c)]]
     # value: [1, 2, 3]
-    if kind == 'array':
+    if kind == "array":
         subpatterns = pattern[1]
         if not isinstance(value, list) or len(subpatterns) != len(value):
             return False
@@ -324,9 +341,9 @@ def match_pattern(pattern, value, env):
 
     # Struct: ['struct', [('a', '123'), ('b', 'x')]]
     # value: {a: 123, b : 5}
-    if kind == 'struct':
+    if kind == "struct":
         subpatterns = pattern[1]
-        if not isinstance(value, dict):# or len(subpatterns) != len(value):
+        if not isinstance(value, dict):  # or len(subpatterns) != len(value):
             return False
         for *_, key, subp in subpatterns:
             if key not in value or not match_pattern(subp, value[key], env):
@@ -334,4 +351,3 @@ def match_pattern(pattern, value, env):
         return True
 
     return False
-

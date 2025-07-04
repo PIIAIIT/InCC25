@@ -16,19 +16,12 @@ in
 {
 # TEST arith #
 assert := arith(('+', 5, 6)) = 5+6;
-echo(assert);
 assert +:= arith(('-', 5, 6)) = 5-6;
-echo(assert);
 assert +:= arith(('/', 5, 6)) = 5/6;
-echo(assert);
 assert +:= arith(('^', 5, 6)) = 5**6;
-echo(assert);
 assert +:= arith(('-', 5)) = -5;
-echo(assert);
 assert +:= arith(('+', 5)) = +5;
-echo(assert);
 assert +:= arith(('--', 5)) = ('--', 5);
-echo(assert);
 
 assert = 7
 }.

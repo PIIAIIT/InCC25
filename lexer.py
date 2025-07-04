@@ -2,22 +2,60 @@ from ply.lex import Lexer, lex
 
 module = __import__(__name__)
 
-tokens = []
+tokens = list()
+op_assigns = list()
 
 
-def rule_lexer(doc, name, func=lambda x: x):
+def rule_lexer(doc, name, func=lambda x: x, b_assign=False):
     def f(t):
         return func(t)
 
+    if b_assign:
+        op_assigns.append(name)
     tokens.append(name)
     f.__doc__ = doc
     setattr(module, f"t_{name.upper()}", f)
 
 
-literals = "_e"
+literals = "e"
 
-# OHNE ALPHABETISCHE ZEICHEN
-binops = {
+
+rule_lexer(r"(\d+\.\d+)", "FLOAT")
+rule_lexer(r"0x[0-9a-fA-F]+|0b(0|1[01]*)|\d+", "NUMBER")
+rule_lexer(r'"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'', "STRING")
+rule_lexer(r":=", "ASSIGN")
+rule_lexer(r";", "SEMICOLON")
+rule_lexer(r":", "COLON")
+rule_lexer(r"\(", "LPAREN")
+rule_lexer(r"\)", "RPAREN")
+rule_lexer(r"\]", "CLOSED_BRACKETS")
+rule_lexer(r"\[", "OPEN_BRACKETS")
+rule_lexer(r"\{", "BEGIN")
+rule_lexer(r"\}", "END")
+rule_lexer(r"->", "LAMBDA_ARROW")
+rule_lexer(r"\.\.\.", "DOTS")
+rule_lexer(r"\.\.", "ITER")
+rule_lexer(r"\.", "DOT")
+rule_lexer(r",", "COMMA")
+
+for op, name in {
+    r"\+:=": "PLUS_ASSIGN",
+    r"-:=": "MINUS_ASSIGN",
+    r"\*\*:=": "POWER_ASSIGN",
+    r"\*:=": "TIMES_ASSIGN",
+    r"/:=": "DIVIDE_CEIL_ASSIGN",
+    r"\\:=": "DIVIDE_FLOOR_ASSIGN",
+    r"\|:=": "DIVIDE_ASSIGN",
+    r"=:=": "EQUALS_ASSIGN",
+    r"!=:=": "UNEQUALS_ASSIGN",
+    r">=:=": "GREATER_EQUALS_ASSIGN",
+    r"<=:=": "SMALLER_EQUALS_ASSIGN",
+    r">:=": "GREATER_THAN_ASSIGN",
+    r"<:=": "SMALLER_THAN_ASSIGN",
+}.items():
+    rule_lexer(op, name, b_assign=True)
+
+for op, name in {
     r"\+": "PLUS",
     r"-": "MINUS",
     r"\*\*": "POWER",
@@ -31,29 +69,18 @@ binops = {
     r"<=": "SMALLER_EQUALS",
     r">": "GREATER_THAN",
     r"<": "SMALLER_THAN",
-}
+    "&": "CONS",
+}.items():
+    rule_lexer(op, name)
 
-rule_lexer(r"(\d+\.\d+)", "FLOAT")
-rule_lexer(r"0x[0-9a-fA-F]+|0b(0|1[01]*)|\d+", "NUMBER")
-rule_lexer(r'"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'', "STRING")
-rule_lexer(r":=", "ASSIGN")
-rule_lexer(r";", "SEMICOLON")
-rule_lexer(r":", "COLON")
-rule_lexer(r"\(", "LPAREN")
-rule_lexer(r"\)", "RPAREN")
-rule_lexer(r"\]", "CLOSED_BRACKETS")
-rule_lexer(r"\[", "OPEN_BRACKETS")
-rule_lexer(r"\{", "BEGIN")  # Sequence Begin
-rule_lexer(r"\}", "END")  # Sequence End
-rule_lexer(r"->", "LAMBDA_ARROW")
-rule_lexer(r"\.\.\.", "DOTS")
-rule_lexer(r"\.\.", "ITER")
-rule_lexer(r"\.", "DOT")
-rule_lexer(r",", "COMMA")
-
-lookup_table = {
+reserved = {
     "not": "NOT",
     "imag": "IMAG",
+    "and:=": "AND_ASSIGN",
+    "or:=": "OR_ASSIGN",
+    "xor:=": "XOR_ASSIGN",
+    "mod:=": "MOD_ASSIGN",
+    "e:=": "EXP_ASSIGN",
     "and": "AND",
     "or": "OR",
     "xor": "XOR",
@@ -74,34 +101,22 @@ lookup_table = {
     "fall": "CASE",
     "struct": "STRUCT",
     "leere": "NULL",
-    "sei": "LET",  # Ist schon ein Letrec
+    "sei": "LET",  # letrec
 }
-tokens += lookup_table.values()
-
-for rule, tkn in {"and:=": "AND_ASSIGN",
-                  "or:=": "OR_ASSIGN",
-                  "xor:=": "XOR_ASSIGN",
-                  "mod:=": "MOD_ASSIGN",
-                  "e:=": "EXP_ASSIGN"}.items():
-    rule_lexer(rule, tkn)
+tokens += reserved.values()
+op_assigns += ["AND_ASSIGN", "OR_ASSIGN", "XOR_ASSIGN", "MOD_ASSIGN", "EXP_ASSIGN"]
 
 
-def check_if_keyword(token):
-    token.type = lookup_table.get(token.value, "IDENTIFIER")
+def assign_token_type(token):
+    token.type = reserved.get(token.value, "IDENTIFIER")
     return token
 
 
-rule_lexer(r"(?:[^\W\d_]|[\U0001F300-\U0001FAFF_])(?:[^\W_]|[\d_]|[\U0001F300-\U0001FAFF])*", "IDENTIFIER", check_if_keyword)
-
-op_assigns = {k + ":=": v + "_ASSIGN" for k, v in binops.items()}
-for doc, token in op_assigns.items():
-    rule_lexer(doc, token)
-op_assigns.update({"and:=": "AND_ASSIGN", "or:=": "OR_ASSIGN", "xor:=": "XOR_ASSIGN", "mod:=": "MOD_ASSIGN", "e:=": "EXP_ASSIGN"})
-
-for doc, token in binops.items():
-    rule_lexer(doc, token)
-binops.update({"and": "AND", "or": "OR", "xor": "XOR", "mod": "MOD", "e": "EXP"})
-rule_lexer("&", "CONS")
+rule_lexer(
+    r"(?:[^\W\d_]|[\U0001F300-\U0001FAFF_])(?:[^\W_]|[\d_]|[\U0001F300-\U0001FAFF])*",
+    "IDENTIFIER",
+    func=assign_token_type,
+)
 
 
 t_ignore = " \t"
@@ -110,7 +125,7 @@ t_ignore_comment = r"\#[^\#]*\#"
 
 def t_newline(t):
     r"\n+"
-    t.lineno += 1
+    t.lexer.lineno += len(t.value)
 
 
 ########### TRACEBACK #########
@@ -132,16 +147,22 @@ def print_traceback(input_text: str, token, silent=False):
     line = lines[line_num - 1] if 0 < line_num <= len(lines) else "<unbekannte Zeile>"
 
     # Spaltenposition berechnen
-    line_start = input_text.rfind('\n', 0, pos) + 1
+    line_start = input_text.rfind("\n", 0, pos) + 1
     col = pos - line_start
 
     if not silent:
-        print(f"SyntaxError: Unerwartetes Token '{token.value}' ({token.type}) in Zeile {line_num}, Spalte {col + 1}:")
+        print(
+            f"SyntaxError: Unerwartetes Token '{token.value}' ({token.type}) in Zeile {line_num}, Spalte {col + 1}:"
+        )
         print(f"    {line}")
         print(f"    {' ' * col}^")
-    return f"SyntaxError: Unerwartetes Token '{token.value}' ({token.type}) in Zeile {line_num}, Spalte {col + 1}:" + "\n" + \
-        f"    {line}" + "\n" + \
-        f"    {' ' * col}^"
+    return (
+        f"SyntaxError: Unerwartetes Token '{token.value}' ({token.type}) in Zeile {line_num}, Spalte {col + 1}:"
+        + "\n"
+        + f"    {line}"
+        + "\n"
+        + f"    {' ' * col}^"
+    )
 
 
 def t_error(t):

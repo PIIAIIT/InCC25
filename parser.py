@@ -1,6 +1,7 @@
 from ply.yacc import yacc
 from lexer import tokens, print_traceback, op_assigns
 import readline, traceback
+
 debug = True
 write_tables = False
 
@@ -64,25 +65,25 @@ def p_paran(p):
 
 def p_arithmetic_expression(p):
     """expression : expression PLUS         expression
-                  | expression MINUS        expression
-                  | expression TIMES        expression
-                  | expression DIVIDE       expression
-                  | expression DIVIDE_CEIL  expression
-                  | expression DIVIDE_FLOOR expression
-                  | expression MOD          expression
-                  | expression EXP          expression
-                  | expression AND          expression
-                  | expression OR           expression
-                  | expression XOR          expression
-                  | expression POWER        expression
+    | expression MINUS        expression
+    | expression TIMES        expression
+    | expression DIVIDE       expression
+    | expression DIVIDE_CEIL  expression
+    | expression DIVIDE_FLOOR expression
+    | expression MOD          expression
+    | expression EXP          expression
+    | expression AND          expression
+    | expression OR           expression
+    | expression XOR          expression
+    | expression POWER        expression
     """
     p[0] = ("binop", look_up_table[p[2]], p[1], p[3])
 
 
 def p_unary(p):
     """expression : NOT   expression
-                  | MINUS expression %prec UMINUS
-                  | PLUS  expression %prec UPLUS
+    | MINUS expression %prec UMINUS
+    | PLUS  expression %prec UPLUS
     """
     p[0] = ("unary", unary[p[1]], p[2])
 
@@ -116,11 +117,11 @@ def p_expression1(p):
 
 def p_comparison_op(p):
     """comparison_op : GREATER_THAN
-                     | SMALLER_THAN
-                     | UNEQUALS
-                     | EQUALS
-                     | SMALLER_EQUALS
-                     | GREATER_EQUALS"""
+    | SMALLER_THAN
+    | UNEQUALS
+    | EQUALS
+    | SMALLER_EQUALS
+    | GREATER_EQUALS"""
     p[0] = look_up_table[p[1]]
 
 
@@ -163,6 +164,7 @@ def p_assignment2(p):
 
 ################ SEQUENCE ################
 ################ STATEMENTS ################
+
 
 def p_sequence(p):
     """
@@ -368,6 +370,7 @@ def p_call(p):
 ######################### LET #########################
 ############## Ist Standardmäßig das LETREC ##############
 
+
 def p_let_assign0(p):
     """let_assign : IDENTIFIER EQUALS expression COMMA let_assign"""
     p[0] = [("assign", None, p[1], p[3]), *p[5]]
@@ -389,7 +392,7 @@ def p_let(p):
 
 def p_paramlist1(p):
     """param_list : expression COMMA param_list
-                  | expression COMMA expression
+    | expression COMMA expression
     """
     if isinstance(p[3], list):
         p[0] = [p[1], *p[3]]
@@ -409,22 +412,23 @@ def p_list(p):
 
 def p_list_zugriff(p):
     """expression : expression OPEN_BRACKETS PLUS       CLOSED_BRACKETS
-                  | expression OPEN_BRACKETS expression CLOSED_BRACKETS
+    | expression OPEN_BRACKETS expression CLOSED_BRACKETS
     """
     p[0] = ("array_access", p[1], p[3])
 
 
 def p_leere_liste(p):
     "expression : NULL"
-    p[0] = ("leere")
+    p[0] = "leere"
 
 
 ######################### ARRAY #########################
 
+
 def p_array(p):
     """expression : OPEN_BRACKETS param_list CLOSED_BRACKETS
-                  | OPEN_BRACKETS expression CLOSED_BRACKETS
-                  | OPEN_BRACKETS CLOSED_BRACKETS
+    | OPEN_BRACKETS expression CLOSED_BRACKETS
+    | OPEN_BRACKETS CLOSED_BRACKETS
     """
     if len(p) == 4:
         if isinstance(p[2], list):
@@ -437,9 +441,10 @@ def p_array(p):
 
 ######################### STRUCTS #########################
 
+
 def p_assignment_list0(p):
     """assignment_list : assign_expression SEMICOLON assignment_list
-                       | assign_expression SEMICOLON assign_expression
+    | assign_expression SEMICOLON assign_expression
     """
     if isinstance(p[3], list):
         p[0] = [p[1], *p[3]]
@@ -449,8 +454,8 @@ def p_assignment_list0(p):
 
 def p_struct0(p):
     """expression : STRUCT BEGIN assignment_list END
-                  | STRUCT BEGIN assign_expression END
-                  | STRUCT BEGIN END
+    | STRUCT BEGIN assign_expression END
+    | STRUCT BEGIN END
     """
     if len(p) == 5:
         if isinstance(p[3], list):
@@ -468,6 +473,7 @@ def p_access_structs(p):
 
 ######################### IMPORT #########################
 
+
 def p_file(p):
     "file : STRING"
     p[0] = [p[1][1:-1]]
@@ -476,6 +482,7 @@ def p_file(p):
 def p_import(p):
     "expression : IMPORT file"
     p[0] = ("import", p[2])
+
 
 ######################### MATCH #########################
 
@@ -509,7 +516,7 @@ def p_error(p):
 ########################################################
 
 precedence = (
-    ("right", "ASSIGN", *(a for a in op_assigns.values())),
+    ("right", "ASSIGN", *op_assigns),
     ("left", "LAMBDA"),
     ("left", "OR"),
     ("left", "XOR"),
@@ -530,7 +537,16 @@ precedence = (
     ("left", "IMAG"),
     ("right", "NOT", "UPLUS", "UMINUS"),
     ("left", "CONS"),
-    ("left", "OPEN_BRACKETS", "CLOSED_BRACKETS", "LPAREN", "RPAREN", "BEGIN", "LAMBDA_ARROW", "END"),
+    (
+        "left",
+        "OPEN_BRACKETS",
+        "CLOSED_BRACKETS",
+        "LPAREN",
+        "RPAREN",
+        "BEGIN",
+        "LAMBDA_ARROW",
+        "END",
+    ),
 )
 
 ########################################################

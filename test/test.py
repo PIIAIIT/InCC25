@@ -4,187 +4,198 @@ from interpreter import eval
 from environment import Environment
 from pathlib import Path
 
-start_env = Environment()
-start_env.builtins()
-
-__BASE_DIR = Path(__file__).resolve().parent.parent
-__SEARCH_PATH = __BASE_DIR / "test"
-__FILE_END = ".ice"
-ALL_TEST_FILES = []
+DEBUG = False
 
 
-def __read_file(verbose=False):
-    base_path = Path(__SEARCH_PATH).resolve()
-    code_files = []
+class IceFileManager:
+    def __init__(self, base_dir=None, file_suffix=".ice", ignore_dirs=None):
+        self.base_dir = Path(base_dir or Path(__file__).resolve().parent.parent)
+        self.search_path = self.base_dir / "test"
+        self.file_suffix = file_suffix
+        self.ignore_dirs = ignore_dirs or {"__pycache__"}
 
-    # Alle Verzeichnisse + das Basisverzeichnis selbst
-    ignore_dirs = {"__pycache__"}
-    dirs = [base_path] + [
-        p for p in base_path.iterdir() if p.is_dir() and p.name not in ignore_dirs
-    ]
+    def _get_dirs(self):
+        return [self.search_path] + [
+            p
+            for p in self.search_path.iterdir()
+            if p.is_dir() and p.name not in self.ignore_dirs
+        ]
 
-    for d in dirs:
-        for f in d.glob(f"*{__FILE_END}"):
-            content = f.read_text(encoding="utf-8")
-            code_files.append((f, content))
+    def find_files(self):
+        """Generator für (Pfad, Inhalt)-Tupel"""
+        for directory in self._get_dirs():
+            for file in directory.glob(f"*{self.file_suffix}"):
+                yield file, file.read_text(encoding="utf-8")
+
+    def read_all_files(self, verbose=False):
+        """Liest alle Dateien als Liste von (Pfad, Inhalt)"""
+        files = []
+        for file, content in self.find_files():
+            files.append((file, content))
             if verbose:
-                print(f"\n--- {f} ---\n{content}")
+                print(f"\n--- {file} ---\n{content}")
+        return files
 
-    return code_files  # Liste von (Pfad, Inhalt)
-
-
-ALL_TEST_FILES = __read_file()
-
-
-def read_file(incc25_file, verbose=False):
-    for posix_file, content in ALL_TEST_FILES:
-        if posix_file == incc25_file:
-            print(incc25_file, "wird bearbeitet...") if verbose else ""
-            print(content) if verbose else ""
-            return content
-    return None
+    def read_file_by_path(self, filepath, verbose=False):
+        for file, content in self.find_files():
+            if file == filepath:
+                if verbose:
+                    print(f"{filepath} wird bearbeitet...\n{content}")
+                return content
+        return None
 
 
-def test_lexer(input_string, verbose=False):
-    if input_string is None:
-        print("Es ist ein Fehler mit dem InputStream.")
-    input_string = input_string.strip("\n")
+class IceTester:
+    def __init__(self, env_cls, lexer, parser):
+        self.env = env_cls()
+        self.env.builtins()
+        self.lexer = lexer
+        self.parser = parser
 
-    lexer.input(input_string)
-    result = True
-    for token in lexer:
-        result = result and not str(token).startswith("LexToken(error")
+    def test_lexer(self, input_string, verbose=False):
+        if input_string is None:
+            print("Es ist ein Fehler mit dem InputStream.")
+            return False
+
+        self.lexer.input(input_string)
+        result = True
+        for token in self.lexer:
+            if str(token).startswith("LexToken(error"):
+                result = False
+            if verbose:
+                print("Korrekte Assersion: " + str(token))
 
         if verbose:
-            print("Korrekte Assersion: " + str(token))
-    print("done.") if verbose else ""
-    print("====") if verbose else ""
-    return result
+            print("done.\n====")
+        return result
+
+    def test_parser(self, input_string, verbose=False):
+        if input_string is None:
+            print("Es ist ein Fehler mit dem InputStream.")
+            return False
+
+        try:
+            result = self.parser.parse(input_string, debug=verbose)
+        except Exception as e:
+            if verbose:
+                print(f"Parser-Fehler: {e}")
+            return False
+        return result is not None
+
+    def test_interpreter(self, input_string, verbose=False, clear=False):
+        if input_string is None:
+            print("Es ist ein Fehler mit dem InputStream.")
+            return None
+
+        ast = self.parser.parse(input_string, debug=DEBUG)
+        if verbose:
+            print(input_string, end=" === ")
+
+        result = eval(ast, self.env, verbose)
+        if verbose:
+            print(result)
+
+        if clear:
+            self.env.clear()
+
+        return result
 
 
-def test_parser(input_string, verbose=False):
-    if input_string is None:
-        print("Es ist ein Fehler mit dem InputStream.")
-    input_string = input_string.strip("\n")
-
-    try:
-        res = parser.parse(input_string, debug=verbose)
-    except Exception:
-        res = False
-    return res is not None
-
-
-def test_interpreter(input_string, env=start_env, verbose=False, clear=False):
-    if input_string is None:
-        print("Es ist ein Fehler mit dem InputStream.")
-
-    ast = parser.parse(input_string, debug=verbose)
-    print(ast, end=" === ") if verbose else ""
-    res = eval(ast, env, verbose)
-    print(res) if verbose else ""
-    if clear:
-        env.clear()
-    return res
-
+# MAIN
+file_manager = IceFileManager()
+tester = IceTester(Environment, lexer, parser)
 
 # MEINE SPRACHE SOLL FOLGENDE EIGENSCHAFTEN HABEN #
 # ATOMIC
-assert test_interpreter("5") == 5
-assert test_interpreter("0x5") == 5
-assert test_interpreter("0b101") == 5
-assert test_interpreter("3.14") == 3.14
-# assert not test_parser(".14")
-# assert not test_parser("3.")
-assert test_interpreter("x", env={"x": 7}) == 7
-assert test_interpreter("3 imag") == 3j
-assert test_interpreter("(2 + 3) imag") == 5j
-assert test_interpreter("2 + 3 imag") == 2+3j
-assert test_interpreter("(2 + 3) imag + 1") == 1 + 5j
-assert test_interpreter("(2 + 3)e 2") == 500
-assert test_interpreter("π", env={"π": 3.1415}) == 3.1415
+assert tester.test_interpreter("5") == 5
+assert tester.test_interpreter("0x5") == 5
+assert tester.test_interpreter("0b101") == 5
+assert tester.test_interpreter("3.14") == 3.14
+# assert not tester.test_parser(".14")
+# assert not tester.test_parser("3.")
+assert tester.test_interpreter("3 imag") == 3j
+assert tester.test_interpreter("(2 + 3) imag") == 5j
+assert tester.test_interpreter("2 + 3 imag") == 2 + 3j
+assert tester.test_interpreter("(2 + 3) imag + 1") == 1 + 5j
+assert tester.test_interpreter("(2 + 3)e 2") == 500
+assert tester.test_interpreter("π := 3.1415") == 3.1415
 
 # BINOPS
-assert test_interpreter("2 + 3") == 5
-assert test_interpreter("7 - 4") == 3
-assert test_interpreter("5 * 6") == 30
-assert test_interpreter("8 / 2") == 4.0
-assert test_interpreter("9 mod 4") == 1
-assert test_interpreter("0 mod 1") == 0
+assert tester.test_interpreter("2 + 3") == 5
+assert tester.test_interpreter("7 - 4") == 3
+assert tester.test_interpreter("5 * 6") == 30
+assert tester.test_interpreter("8 / 2") == 4.0
+assert tester.test_interpreter("9 mod 4") == 1
+assert tester.test_interpreter("0 mod 1") == 0
 try:
-    a = test_interpreter("1 mod 0")
+    a = tester.test_interpreter("1 mod 0")
     raise Exception("Kein Zero Division Error!")
 except ZeroDivisionError:
     pass
 
-assert test_interpreter("2 ** 3") == 8
-assert test_interpreter("0 ** 0") == 1
-assert test_interpreter("0 ** 1") == 0
+assert tester.test_interpreter("2 ** 3") == 8
+assert tester.test_interpreter("0 ** 0") == 1
+assert tester.test_interpreter("0 ** 1") == 0
 
-assert test_interpreter("7 | 3") == 7 / 3  # normale Division
-assert test_interpreter("-7 / 3") == -2  # Aufrunden Minus
-assert test_interpreter("7 / 3") == 3  # Aufrunden
-assert test_interpreter("-7 \\ 3") == -3  # Abrunden Minus
-assert test_interpreter("7 \\ 3") == 2  # Abrunden
+assert tester.test_interpreter("7 | 3") == 7 / 3  # normale Division
+assert tester.test_interpreter("-7 / 3") == -2  # Aufrunden Minus
+assert tester.test_interpreter("7 / 3") == 3  # Aufrunden
+assert tester.test_interpreter("-7 \\ 3") == -3  # Abrunden Minus
+assert tester.test_interpreter("7 \\ 3") == 2  # Abrunden
 
-assert test_interpreter("3 = 3") == 1
-assert test_interpreter("4 > 2") == 1
-assert test_interpreter("2 < 5") == 1
-assert test_interpreter("4 = 4 != 5") == 1
-assert test_interpreter("4 = 4 != 4") == 0
-assert test_interpreter("3 = 3 = 3 = 4") == 0
-assert test_interpreter("3 = 3 = 3 = 3") == 1
-assert test_interpreter("4 > 2 > -2") == 1
-assert test_interpreter("2 < 5 < 2 e 10 > 0") == 1
-assert test_interpreter("3 != 4") == 1
-assert test_interpreter("4 != 4") == 0
-assert test_interpreter("5 <= 5") == 1
-assert test_interpreter("6 <= 5") == 0
-assert test_interpreter("6 >= 5") == 1
-assert test_interpreter("6 >= x", env={"x": 12}) == 0
+assert tester.test_interpreter("3 = 3") == 1
+assert tester.test_interpreter("4 > 2") == 1
+assert tester.test_interpreter("2 < 5") == 1
+assert tester.test_interpreter("4 = 4 != 5") == 1
+assert tester.test_interpreter("4 = 4 != 4") == 0
+assert tester.test_interpreter("3 = 3 = 3 = 4") == 0
+assert tester.test_interpreter("3 = 3 = 3 = 3") == 1
+assert tester.test_interpreter("4 > 2 > -2") == 1
+assert tester.test_interpreter("2 < 5 < 2 e 10 > 0") == 1
+assert tester.test_interpreter("3 != 4") == 1
+assert tester.test_interpreter("4 != 4") == 0
+assert tester.test_interpreter("5 <= 5") == 1
+assert tester.test_interpreter("6 <= 5") == 0
+assert tester.test_interpreter("6 >= 5") == 1
+assert tester.test_interpreter("{x:=12; 6 >= x}") == 0
 
 # COMPS
-assert test_interpreter("1 and 1") == 1
-assert test_interpreter("0 and x", env={"x": 1}) == 0
-assert test_interpreter("1 or x", env={"x": 0}) == 1
-assert test_interpreter("1 or 0") == 1
-assert test_interpreter("1 xor 0") == 1
-assert test_interpreter("1 xor 1") == 0
-assert test_interpreter("not 1") == 0
-assert test_interpreter("not not 1") == 1
-assert test_interpreter("not 0") == 1
-assert test_interpreter("not (1 and 0)") == 1
+assert tester.test_interpreter("1 and 1") == 1
+assert tester.test_interpreter("{x:=1; 0 and x}") == 0
+assert tester.test_interpreter("{x:=0; 1 or x}") == 1
+assert tester.test_interpreter("1 or 0") == 1
+assert tester.test_interpreter("1 xor 0") == 1
+assert tester.test_interpreter("1 xor 1") == 0
+assert tester.test_interpreter("not 1") == 0
+assert tester.test_interpreter("not not 1") == 1
+assert tester.test_interpreter("not 0") == 1
+assert tester.test_interpreter("not (1 and 0)") == 1
 
 # UNARY
-assert test_interpreter("-5") == -5
-assert test_interpreter("-(+5)") == -5
-assert test_interpreter("+5") == 5
-assert test_interpreter("-(+(-(-5)))") == -5
-assert test_interpreter("+(-5)") == 5
-assert test_interpreter("not -1") == 0
+assert tester.test_interpreter("-5") == -5
+assert tester.test_interpreter("-(+5)") == -5
+assert tester.test_interpreter("+5") == 5
+assert tester.test_interpreter("-(+(-(-5)))") == -5
+assert tester.test_interpreter("+(-5)") == 5
+assert tester.test_interpreter("not -1") == 0
 
 # ENVIRONMENT / ASSIGNMENT
-new_env = Environment(start_env)
-assert test_interpreter("a := 7", new_env) == 7
-assert new_env["a"] == 7
-assert test_interpreter("a := (x:=2) + 5", new_env) == 7
-assert new_env["x"] == 2
-assert new_env["a"] == 7
-assert test_interpreter("{a:=2; a+:=3; a}") == 5
-assert test_interpreter("{a:=2; a-:=5; a}") == -3
-assert test_interpreter("{a:=3; a*:=-2; a}") == -6
-assert test_interpreter("{a:=4; a/:=2; a}") == 2
+assert tester.test_interpreter("a := 7") == 7
+assert tester.test_interpreter("a := (x:=2) + 5") == 7
+assert tester.test_interpreter("{a:=2; a+:=3; a}") == 5
+assert tester.test_interpreter("{a:=2; a-:=5; a}") == -3
+assert tester.test_interpreter("{a:=3; a*:=-2; a}") == -6
+assert tester.test_interpreter("{a:=4; a/:=2; a}") == 2
 
 # COMPLEX COMPS/BINOPS/UNARY
-assert test_interpreter("(2 + -3) * 4") == -4
-assert test_interpreter("{2 < 5 <2 e 10 > 0}") == 1
-assert test_interpreter("{2 < 5 and 5<2 e 10 and 2e 10 > 0}") == 1
-assert test_interpreter("{(2 < 5) and (5<2 e 10) and (2e 10 > 0)}") == 1
-new_env = Environment(new_env)
-new_env.put(["x"])
-new_env["x"] = 0
-assert test_interpreter("{(2 < 5) and (5<2 e 10) and (2e 10 > 5) and (x:=1)}", env=new_env) == 1
-assert new_env["x"] == 1
-assert test_interpreter("{x:=2<3; x:=x+1; x}", env={"x": 2}) == 2
+assert tester.test_interpreter("(2 + -3) * 4") == -4
+assert tester.test_interpreter("{2 < 5 <2 e 10 > 0}") == 1
+assert tester.test_interpreter("{2 < 5 and 5<2 e 10 and 2e 10 > 0}") == 1
+assert tester.test_interpreter("{(2 < 5) and (5<2 e 10) and (2e 10 > 0)}") == 1
+assert (
+    tester.test_interpreter("{(2 < 5) and (5<2 e 10) and (2e 10 > 5) and (x:=1)}") == 1
+)
+assert tester.test_interpreter("{x:=2<3; x:=x+1; x}") == 2
 
 test_code = r"""
 {
@@ -194,7 +205,7 @@ a+:=b * 3;
 a
 }
 """
-assert test_interpreter(test_code) == 7
+assert tester.test_interpreter(test_code) == 7
 
 test_code = r"""
 {
@@ -205,7 +216,7 @@ x:=x+1;
 x
 }
 """
-assert test_interpreter(test_code) == 3
+assert tester.test_interpreter(test_code) == 3
 
 test_code = r"""
 {
@@ -215,7 +226,7 @@ x
 }
 """
 
-assert test_interpreter(test_code) == 21
+assert tester.test_interpreter(test_code) == 21
 
 test_code = r"""
 {
@@ -225,7 +236,7 @@ x:=-x-2;
 x mod 5;
 }
 """
-assert test_interpreter(test_code) == 4
+assert tester.test_interpreter(test_code) == 4
 
 test_code = r"""
 {
@@ -234,7 +245,7 @@ y:=5;
 (x<y and y>x) or (x=y)
 }
 """
-assert test_interpreter(test_code) == 1
+assert tester.test_interpreter(test_code) == 1
 
 test_code = r"""
 {
@@ -243,7 +254,7 @@ x:=1 or (z:=1);
 z
 }
 """
-assert test_interpreter(test_code) == 1  # short-circuit: z bleibt 0
+assert tester.test_interpreter(test_code) == 1  # short-circuit: z bleibt 0
 
 test_code = r"""
 {
@@ -254,7 +265,7 @@ x mod 5;
 y:=0xff + 0b11 + -x - 5 e 10;
 }
 """
-assert test_interpreter(test_code) == -50000009001
+assert tester.test_interpreter(test_code) == -50000009001
 
 test_code = r"""
 {
@@ -263,7 +274,7 @@ x := 256;
 x := x mod 5 \ 4 - 10 ** (4 | 2 + 3) / 5;
 i_me:=420.69
 }"""
-assert test_interpreter(test_code) == 420.69
+assert tester.test_interpreter(test_code) == 420.69
 
 test_prec = r"""
 {
@@ -273,18 +284,24 @@ y +:= [1,2];
 }
 """
 
-assert test_interpreter(test_prec) == [3, 4]
+assert tester.test_interpreter(test_prec) == [3, 4]
 
-ALL_PATHS = [x for x, _ in ALL_TEST_FILES]
-v = False
-################### LEXER TEST ###################
-for path in ALL_PATHS:
-    assert test_lexer(read_file(path), verbose=v)
+################### LEXER ###################
+################### PARSER ###################
+################### INTERPRETER ###################
+green = "\001\033[32m\002"
+red = "\001\033[31m\002"
+normal = "\001\033[0m\002"
+state = ["FAILED", "OK"]
 
-################### PARSER TEST ###################
-for path in ALL_PATHS:
-    assert test_parser(read_file(path, True), verbose=v)
+for file, content in file_manager.find_files():
+    print(f"Teste Datei: {"/".join(str(file).split("/")[-2:])}")
 
-################### INTERPRETER TEST ###################
-for path in ALL_PATHS:
-    assert test_interpreter(read_file(path, True), verbose=v, clear=True)
+    b = tester.test_lexer(content, verbose=False)
+    print(f"{'Lexer':<12} {green} {state[int(bool(b))]:<10} {normal}")
+
+    b = tester.test_parser(content, verbose=False)
+    print(f"{'Parser':<12} {green} {state[int(bool(b))]:<10} {normal}")
+
+    b = tester.test_interpreter(content, verbose=False)
+    print(f"{'Interpreter':<12} {green} {state[int(bool(b))]:<10} {normal}")

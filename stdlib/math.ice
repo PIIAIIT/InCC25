@@ -1,4 +1,4 @@
-math := struct {
+{
 # Für die ganzen Mathe Definitionen. #
 # Arithmetik, Konstanten #
 
@@ -34,7 +34,7 @@ in
 .;
 
 # ABS #
-abs := lambda x -> wenn x < 0 gilt, -x sonst x .;
+abs := lambda x -> +x;
 
 # SQRT #
 # Heron-Verfahren #
@@ -46,5 +46,19 @@ sqrt := lambda x -> {
         b := (a + b) | 2
     }.;
     a
+};
+
+# isPrim #
+isPrim := lambda x -> {
+  i := 2;
+  prim := 1;
+  solange i < x gilt, {
+    t  := x mod i;
+    wenn t = 0 gilt, {prim:=0; i:=x} .;
+    i +:= 1;
+  }.;
+  wenn x <= 1 gilt, prim := 0 .;
+  prim
 }
+
 }

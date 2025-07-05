@@ -1,4 +1,9 @@
+
+![Logo](logo.jpg)
+
+
 # InCC25 – Interpreter für Interpreter und Compilerbau
+
 
 Dieses Projekt implementiert einen Interpreter im Rahmen der Veranstaltung „Interpreter und Compilerbau“ an der PIIAIIT. Der Code dient als praktisches Beispiel für die Entwicklung von Interpretern und bietet eine Grundlage für das Verständnis von Compilerbau.
 

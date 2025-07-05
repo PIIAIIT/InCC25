@@ -1,5 +1,6 @@
 from environment import Environment
 from numpy import complex64
+
 DEBUG = False
 
 
@@ -29,9 +30,9 @@ class Lambda:
         for k, v in self.defaults.items():
             lokal_env.put(k)
             if isinstance(v, (tuple, list, dict)):
-                lokal_env[k] = eval_func(v, lokal_env)
+                lokal_env.define(k, eval_func(v, lokal_env))
             else:
-                lokal_env[k] = v
+                lokal_env.define(k, v)
 
         lokal_env.put(self.params)
         if self.varargs:
@@ -49,7 +50,7 @@ class Lambda:
         for k, v in keyword_args.items():
             if k not in lokal_env:
                 raise Exception("Invalid Argument Exception")
-            lokal_env[k] = v
+            lokal_env.define(k, v)
             new_defaults[k] = v
             bound_keys.append(k)
 
@@ -58,9 +59,9 @@ class Lambda:
             print(f"Positional Args:{pos_args}")
 
         # Dann Pos Args auf restliche lambda env binden
-        all_param_names = new_params+list(new_defaults.keys())
+        all_param_names = new_params + list(new_defaults.keys())
         for key, val in zip(all_param_names, pos_args):
-            lokal_env[key] = val
+            lokal_env.define(key, val)
             bound_keys.append(key)
 
         if DEBUG:
@@ -72,18 +73,19 @@ class Lambda:
 
         # Checken ob Positionale Args alle gebunden sind
         # Wenn nein, return Lambda mit neuem Environment und Parameter
-        if new_params: # nicht leer
+        if new_params:  # nicht leer
             # [('pos', 'x'), ('keyword', 'y', ('num', '3')), ('keyword', 'z', ('num', '5')), ('infty', 'c')]
-            new_parameter = [*[("pos", x) for x in new_params],
-                             *[("keyword", x, y) for x, y in new_defaults.items()]
-                             ]
+            new_parameter = [
+                *[("pos", x) for x in new_params],
+                *[("keyword", x, y) for x, y in new_defaults.items()],
+            ]
             if self.varargs:
                 new_parameter.append(("infty", self.varargs))
             return Lambda(new_parameter, self.body, lokal_env)
 
         # varargs Belegen
         if self.varargs:
-            lokal_env[self.varargs] = pos_args[len(self.params):]
+            lokal_env.define(self.varargs, pos_args[len(self.params) :])
 
         # Wenn ja, execute Lambda
         if DEBUG:
@@ -102,11 +104,11 @@ def parse_lambda_parameters(parameter: list) -> tuple[list, dict, None | str]:
     # [('pos', 'x'), ('keyword', 'y', ('num', '3')), ('keyword', 'z', ('num', '5')), ('infty', 'c')]
     for param in parameter:
         match param:
-            case ('pos', var):
+            case ("pos", var):
                 params.append(var)
-            case ('keyword', var, expr):
+            case ("keyword", var, expr):
                 defaults[var] = expr
-            case ('infty', var):
+            case ("infty", var):
                 varargs = var
             case _:
                 raise Exception(f"Unbekannter Parameter-Typ: {param}")
@@ -125,9 +127,9 @@ def parse_call_arguments(args_expr, eval_func, env) -> tuple[list, dict]:
     # [('pos', ('num', '2')), ('keyword', ('var', 'x'), ('num', '3'))]
     for param in args_expr:
         match param:
-            case ('pos', expr):
+            case ("pos", expr):
                 pos_args.append(eval_func(expr, env))
-            case ('keyword', var, expr):
+            case ("keyword", var, expr):
                 keyword_args[var[1]] = eval_func(expr, env)
             case _:
                 raise Exception(f"Ungültiges Argumentformat: {param}")
@@ -142,4 +144,4 @@ class Struct(dict):
         super().__init__()
 
     def __repr__(self):
-        return "{" + "; ".join([f'{key}: {val}' for key, val in self.items()]) + "}"
+        return "{" + "; ".join([f"{key}: {val}" for key, val in self.items()]) + "}"

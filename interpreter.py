@@ -60,7 +60,7 @@ def eval(expression, env: Environment, debug=False):
         case ("var", n):
             if n not in env:
                 raise Exception(f"variable {n} not found in environment")
-            return env[n]
+            return env[n].value
 
         case ("binop", op, expr1, expr2):
             x = eval(expr1, env)
@@ -95,7 +95,10 @@ def eval(expression, env: Environment, debug=False):
             if op is not None:
                 y = eval(("binop", op, ("var", var), val), env)
 
-            env[var] = y
+            if var in env:
+                env[var].value = y
+            else:
+                env.define(var, y)
             return y
 
         case ("unary", op, expr):
@@ -136,11 +139,11 @@ def eval(expression, env: Environment, debug=False):
             if isinstance(arr, tuple):
                 arr = list(iter_tuple(arr))
 
-            local_env = Environment(env)
-            local_env.put(counter)
+            local_env = env.push(counter)
+
             result = None
             for i in arr:
-                local_env[counter] = i
+                local_env[counter].value = i
                 result = eval(body, local_env)
             return result
 
@@ -154,7 +157,7 @@ def eval(expression, env: Environment, debug=False):
             return range(a, b + 1)
 
         case ("lambda", parameter, body):
-            # Lambda-Objekt mit aktuellem Closure zurückgeben
+            # Lambda-bjekt mit aktuellem Closure zurückgeben
             return Lambda(parameter, body, env.copy())
 
         case ("call", func, args_expr):
@@ -174,9 +177,9 @@ def eval(expression, env: Environment, debug=False):
                 if op is not None:
                     raise Exception(f"Cannot Operation Assign in a let.")
                 env2.put(var)
-                lambda_obj = eval(("assign", None, var, val), env2)
-                if isinstance(lambda_obj, Lambda):
-                    lambda_obj.override_env(env2)
+                obj = eval(("assign", None, var, val), env2)
+                if isinstance(obj, Lambda):
+                    obj.override_env(env2)
 
             return eval(body, env2)
 
@@ -317,7 +320,7 @@ def match_pattern(pattern, value, env):
         return eval(pattern, env) == value
 
     if kind == "var":
-        env[pattern[1]] = value
+        env.define(pattern[1], value)
         return True
 
     # pattern: ['list', [p1, p2, p3]]

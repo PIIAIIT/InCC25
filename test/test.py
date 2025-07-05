@@ -75,7 +75,7 @@ class IceTester:
             return False
 
         try:
-            result = self.parser.parse(input_string, debug=verbose)
+            result = self.parser.parse(input_string, debug=DEBUG)
         except Exception as e:
             if verbose:
                 print(f"Parser-Fehler: {e}")
@@ -298,10 +298,12 @@ for file, content in file_manager.find_files():
     print(f"Teste Datei: {"/".join(str(file).split("/")[-2:])}")
 
     b = tester.test_lexer(content, verbose=False)
-    print(f"{'Lexer':<12} {green} {state[int(bool(b))]:<10} {normal}")
+    print(f"{'Lexer':<12} {green if b else red} {state[int(bool(b))]:<10} {normal}")
 
     b = tester.test_parser(content, verbose=False)
-    print(f"{'Parser':<12} {green} {state[int(bool(b))]:<10} {normal}")
+    print(f"{'Parser':<12} {green if b else red} {state[int(bool(b))]:<10} {normal}")
 
     b = tester.test_interpreter(content, verbose=False)
-    print(f"{'Interpreter':<12} {green} {state[int(bool(b))]:<10} {normal}")
+    print(
+        f"{'Interpreter':<12} {green if b else red} {state[int(bool(b))]:<10} {normal}"
+    )

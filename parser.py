@@ -245,19 +245,19 @@ def p_loop_statement0(p):
 
 def p_interval(p):
     """
-    expression : OPEN_BRACKETS   expression ITER expression CLOSED_BRACKETS
-               | CLOSED_BRACKETS expression ITER expression CLOSED_BRACKETS
-               | OPEN_BRACKETS   expression ITER expression OPEN_BRACKETS
-               | CLOSED_BRACKETS expression ITER expression OPEN_BRACKETS
+    expression : OPEN_BRACKETS   expression DOT DOT expression CLOSED_BRACKETS
+               | CLOSED_BRACKETS expression DOT DOT expression CLOSED_BRACKETS
+               | OPEN_BRACKETS   expression DOT DOT expression OPEN_BRACKETS
+               | CLOSED_BRACKETS expression DOT DOT expression OPEN_BRACKETS
     """
-    p[0] = ("interval", p[1], p[2], p[4], p[5])
+    p[0] = ("interval", p[1], p[2], p[5], p[6])
 
 
 ######################### LAMBDA #########################
 
 
 def p_lambda0(p):
-    "expression : LAMBDA parameter LAMBDA_ARROW expression %prec LAMBDA"
+    "expression : LAMBDA parameter ARROW expression %prec LAMBDA"
     p[0] = ("lambda", p[2], p[4])
 
 
@@ -319,7 +319,7 @@ def p_parameter4(p):
 
 def p_parameter5(p):
     """
-    parameter_infty : IDENTIFIER DOTS
+    parameter_infty : IDENTIFIER DOT DOT DOT
     """
     p[0] = [("infty", p[1])]
 
@@ -467,7 +467,7 @@ def p_struct0(p):
 
 
 def p_access_structs(p):
-    "expression : expression LAMBDA_ARROW expression"
+    "expression : expression ARROW expression"
     p[0] = ("access_struct", p[1], p[3])
 
 
@@ -544,7 +544,7 @@ precedence = (
         "LPAREN",
         "RPAREN",
         "BEGIN",
-        "LAMBDA_ARROW",
+        "ARROW",
         "END",
     ),
 )

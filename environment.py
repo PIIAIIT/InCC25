@@ -1,11 +1,17 @@
+class Entry:
+    value = None
+
+    def __repr__(self):
+        return "E:" + str(self.value)
+
+
 class Environment:
     def __init__(self, parent=None):
         self.parent = parent
         self.vars = {}
 
     def push(self, names: list | tuple | set):
-        """
-        """
+        """ """
         return Environment(self).put(names)
 
     def put(self, names: list | tuple | set):
@@ -15,15 +21,14 @@ class Environment:
         @return gibt sich selber als Object aus
         """
         if not isinstance(names, (list, tuple, set)):
-            name = [names]
+            names = [names]
         for name in names:
             if name not in self.vars:
-                self.vars[name] = None
+                self.vars[name] = Entry()
         return self
 
     def root(self):
-        """
-        """
+        """Gibt das Oberste Environment aus! (Root)"""
         t = self
         while t.parent:
             t = t.parent
@@ -31,7 +36,7 @@ class Environment:
 
     def copy(self):
         """
-        Erstellt eine neue copy des selben Environments.
+        Erstellt eine neue copy des gleichen Environments.
         @return Seine eigene Kopie
         """
         new_env = Environment(parent=self.parent)
@@ -44,9 +49,9 @@ class Environment:
         @arg name: Name der Variable
         @arg value: Wert der Variable
         """
-        assert name is not None
-        assert value is not None
-        self.__setitem__(name, value)
+        self.put(name)
+        self[name].value = value
+        return self
 
     def assign(self, name: list, value: list):
         """
@@ -65,15 +70,15 @@ class Environment:
         for k, v in call_keywords.items():
             if k not in self:
                 raise Exception("Invalid Argument Exception")
-            self[k] = v
+            self.define(k, v)
 
         # Dann Pos Args auf restliche lambda env binden
         all_param_names = positional_args + [elem[1] for elem in keyword_args]
         for key, val in zip(all_param_names, call_positional):
-            self[key] = val
+            self.define(key, val)
 
         if name[-1][0] == "infty":
-            self[infty] = call_positional[len(positional_args):]
+            self.define(infty, call_positional[len(positional_args) :])
 
     def builtins(self):
         """
@@ -89,16 +94,18 @@ class Environment:
             "assert": builtin_assert,
         }
         for name, fn in builtins.items():
-            self.put([name])
-            self[name] = BuiltinFunction(name, fn)
+            self.define(name, BuiltinFunction(name, fn))
+            # self[name].value = BuiltinFunction(name, fn)
+
+    def clear(self):
+        self.parent = None
+        self.vars = {}
+        self.builtins()
 
     def __contains__(self, name):
         if name in self.vars:
             return True
-        elif self.parent is None:
-            return False
-        else:
-            return name in self.parent
+        return self.parent and name in self.parent
 
     def __getitem__(self, name):
         if name in self.vars:
@@ -108,24 +115,11 @@ class Environment:
         else:
             return self.parent[name]
 
-    def __setitem__(self, name, value):
-        if name in self.vars:
-            self.vars[name] = value
-        elif self.parent is None:
-            self.vars[name] = value
-        else:
-            self.parent[name] = value
-
     def __str__(self):
         s = str(self.vars)
         if self.parent:
             s += "\n" + str(self.parent)
         return s
-
-    def clear(self):
-        self.parent = None
-        self.vars = {}
-        self.builtins()
 
 
 class BuiltinFunction:
@@ -150,7 +144,7 @@ def builtin_len(pos_args, key_args, _):
     """Länge einer Liste/Array bestimmen"""
     # (1, (2, (3, None))) => 3
     if isinstance(pos_args[0], tuple):
-        list_len = lambda lst : 1 if lst[1] is None else 1 + list_len(lst[1])
+        list_len = lambda lst: 1 if lst[1] is None else 1 + list_len(lst[1])
         return list_len(pos_args[0])
     return len(pos_args[0])
 

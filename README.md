@@ -1,12 +1,13 @@
 
-![Logo](logo.jpg)
+<!-- ![Logo](logo.jpg) -->
+<p align="center">
+  <img src="logo.jpg" alt="IceMango" width="500">
+</p>
+
+# ICE – Interpreter für Interpreter und Compilerbau
 
 
-# InCC25 – Interpreter für Interpreter und Compilerbau
-
-
-Dieses Projekt implementiert einen Interpreter im Rahmen der Veranstaltung „Interpreter und Compilerbau“ an der PIIAIIT. Der Code dient als praktisches Beispiel für die Entwicklung von Interpretern und bietet eine Grundlage für das Verständnis von Compilerbau.
-
+Dieses Projekt implementiert meine Ice-Sorte: Mango - einen Interpreter im Rahmen der Veranstaltung „Interpreter und Compilerbau Entwicklung“. Der Code dient als praktisches Beispiel für die Entwicklung von Interpretern und bietet eine Grundlage für das Verständnis von Compilerbau.
 
 
 ## 📦 Übersicht

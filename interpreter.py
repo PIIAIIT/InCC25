@@ -154,7 +154,7 @@ def eval(expression, env: Environment, debug=False):
                 raise TypeError("Non-Int Type is not supported!")
             a += 1 if left_interval == "]" else 0
             b -= 1 if right_interval == "[" else 0
-            return range(a, b + 1)
+            return list(range(a, b + 1))
 
         case ("lambda", parameter, body):
             # Lambda-bjekt mit aktuellem Closure zurückgeben

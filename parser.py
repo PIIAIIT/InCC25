@@ -184,7 +184,7 @@ def p_statement(p):
     p[0] = [p[1]]
 
 
-def p_statements(p):
+def p_statements0(p):
     """
     statements : statements SEMICOLON expression
     """

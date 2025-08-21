@@ -17,9 +17,6 @@ def rule_lexer(doc, name, func=lambda x: x, b_assign=False):
     setattr(module, f"t_{name.upper()}", f)
 
 
-literals = "e"
-
-
 rule_lexer(r"(\d+\.\d+)", "FLOAT")
 rule_lexer(r"0x[0-9a-fA-F]+|0b(0|1[01]*)|\d+", "NUMBER")
 rule_lexer(r'"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'', "STRING")
@@ -33,8 +30,6 @@ rule_lexer(r"\[", "OPEN_BRACKETS")
 rule_lexer(r"{", "BEGIN")
 rule_lexer(r"}", "END")
 rule_lexer(r"->", "ARROW")
-# rule_lexer(r"\.\.\.", "DOTS")
-# rule_lexer(r"\.\.", "ITER")
 rule_lexer(r"\.", "DOT")
 rule_lexer(r",", "COMMA")
 

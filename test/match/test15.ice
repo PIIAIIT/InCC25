@@ -15,7 +15,7 @@ sei arith = lambda exp -> {
 in 
 {
 # TEST arith #
-assert := arith(('+', 5, 6)) = 5+6;
+assert := arith(('+', ('+', 3, 2), 6)) = 5+6;
 assert +:= arith(('-', 5, 6)) = 5-6;
 assert +:= arith(('/', 5, 6)) = 5/6;
 assert +:= arith(('^', 5, 6)) = 5**6;

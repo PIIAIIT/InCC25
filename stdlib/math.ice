@@ -39,14 +39,27 @@ abs := lambda x -> +x;
 # SQRT #
 # Heron-Verfahren #
 sqrt := lambda x -> {
-    a := x;
-    b := 1.0;
-    solange (abs(a - b) > 1 e -6 ) gilt, {
-        a := x | b;
-        b := (a + b) | 2
-    }.;
-    a
+  a := x;
+  b := 1.0;
+  solange (abs(a - b) > 1 e -6) gilt, {
+    a := x | b;
+    b := (a + b) | 2
+  }.;
+  a
 };
+
+# LOGARITHMUS #
+log := sei prec = 60 in lambda x -> {
+  wenn x <= 0 gilt,
+    echo("log of a non-positive number doesnt exist.")
+  sonst {
+    sum := 0;
+    für n in [0..prec] wiederhole
+        sum +:= ((x-1)|(x+1))**(2*n+1) | (2*n+1)
+    .;
+    2 * sum
+  }.
+}.;
 
 # isPrim #
 isPrim := lambda x -> {

@@ -97,6 +97,11 @@ reserved = {
     "struct": "STRUCT",
     "leere": "NULL",
     "sei": "LET",  # letrec
+    "i64": "T_INT",
+    "f64": "T_FLOAT",
+    "str": "T_STRING",
+    "c64": "T_COMPLEX",
+    "undef": "T_UNDEF",
 }
 tokens += reserved.values()
 op_assigns += ["AND_ASSIGN", "OR_ASSIGN", "XOR_ASSIGN", "MOD_ASSIGN", "EXP_ASSIGN"]

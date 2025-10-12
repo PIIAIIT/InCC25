@@ -1,6 +1,6 @@
 {
 # ARITHMETIC ENTSCHEIDER #
-sei arith = lambda exp -> {
+sei arith = lambda ? exp -> {
     vergleiche exp mit
         fall ('+', a, b) : arith(a) + arith(b) .
         fall ('-', a, b) : arith(a) - arith(b) .

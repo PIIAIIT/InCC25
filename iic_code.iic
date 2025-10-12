@@ -1,0 +1,10 @@
+main:
+R0 = 1 = 2
+IF R0 GOTO L2_then
+GOTO L2_else
+L2_then:
+R0 = 41
+GOTO L2_end
+L2_else:
+R0 = 42
+L2_end:

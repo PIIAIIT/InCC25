@@ -15,7 +15,7 @@ assert +:= add1(P) = 6;
 list := [struct { a:= 1 }, struct { a := 2 }];
 assert +:= list[0]->a + list[1]->a = 3;
 
-P := struct {square := lambda(x) -> x * x};
+P := struct {square := lambda(i64 x) -> x * x};
 assert +:= P->square(4) = 16;
 assert = 6 # Erwartet 6 #
 }

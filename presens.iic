@@ -1,0 +1,63 @@
+// 42
+
+main:
+R0 = 42
+(label, main)
+(=, R0, 42)
+
+// 21*2
+
+main:
+R0 = 21 * 2
+(label, main)
+(*, R0, 21, 2)
+
+// begin 3+4; 7/3; 42 end
+
+main:
+R0 = 3 + 4,
+R0 = 7 / 3,
+R0 = 42
+(label, main)
+(+, R0, 3, 4)
+(/, R0, 7, 3)
+(=, R0, 42)
+
+// (3 + (3+4)*5-1+24*2) / 2
+main:
+R0 = 3 + 4,
+R1 = 24 * 2,
+R0 = R0 * 5,
+R0 = R0 + 3,
+R1 = R1 - 1,
+R0 = R0 + R1,
+R0 = R0 / 2,
+("label", "main"),
+("+", "R0", 3, 4),
+("*", "R1", 24, 2),
+("*", "R0", "R0", 5),
+("+", "R0", "R0", 3),
+("-", "R1", "R1", 1),
+("+", "R0", "R0", "R1"),
+("/", "R0", "R0", 2),
+
+
+// if 1 == 2 then 41 else 42 end
+main:
+if 1 == 2 goto then
+R0 = 42
+goto if_end
+then:
+R0 = 41
+if_end:
+
+(label, main),
+(==, R0, 1, 2),
+(ifgoto, R0, then),
+(goto, else),
+(label, then),
+(=, R0, 41),
+(goto, if_end)
+(label, else),
+(=, R0, 42),
+(label, if_end)

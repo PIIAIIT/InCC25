@@ -1,4 +1,4 @@
-from environment import Environment
+from environment import SymbolTable
 from numpy import complex64
 
 DEBUG = False
@@ -10,7 +10,7 @@ class Lambda:
 
     def __init__(self, parameter, body, closure_env):
         self.params, self.defaults, self.varargs = parse_lambda_parameters(parameter)
-        self.closure_env: Environment = closure_env  # Environment zur Closure-Zeit
+        self.closure_env: SymbolTable = closure_env  # Environment zur Closure-Zeit
         self.body = body  # AST des Lambda-Bodies
 
     def __repr__(self):
@@ -26,7 +26,7 @@ class Lambda:
             print("DEBUG -- Lokales Environment erstellen")
             print("Das Lambda-Objekt  das gecallt wird : ", self)
 
-        lokal_env = Environment(parent=self.closure_env)
+        lokal_env = SymbolTable(parent=self.closure_env)
         for k, v in self.defaults.items():
             lokal_env.put(k)
             if isinstance(v, (tuple, list, dict)):
@@ -74,10 +74,10 @@ class Lambda:
         # Checken ob Positionale Args alle gebunden sind
         # Wenn nein, return Lambda mit neuem Environment und Parameter
         if new_params:  # nicht leer
-            # [('pos', 'x'), ('keyword', 'y', ('num', '3')), ('keyword', 'z', ('num', '5')), ('infty', 'c')]
+            # [('pos', _, 'x'), ('keyword', _, 'y', ('num', '3')), ('keyword', 'z', ('num', '5')), ('infty', _, 'c')]
             new_parameter = [
-                *[("pos", x) for x in new_params],
-                *[("keyword", x, y) for x, y in new_defaults.items()],
+                *[("pos", "", x) for x in new_params],
+                *[("keyword", "", x, y) for x, y in new_defaults.items()],
             ]
             if self.varargs:
                 new_parameter.append(("infty", self.varargs))
@@ -104,11 +104,11 @@ def parse_lambda_parameters(parameter: list) -> tuple[list, dict, None | str]:
     # [('pos', 'x'), ('keyword', 'y', ('num', '3')), ('keyword', 'z', ('num', '5')), ('infty', 'c')]
     for param in parameter:
         match param:
-            case ("pos", var):
+            case ("pos", _, var):
                 params.append(var)
-            case ("keyword", var, expr):
+            case ("keyword", _, var, expr):
                 defaults[var] = expr
-            case ("infty", var):
+            case ("infty", _, var):
                 varargs = var
             case _:
                 raise Exception(f"Unbekannter Parameter-Typ: {param}")

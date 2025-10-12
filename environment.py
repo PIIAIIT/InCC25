@@ -1,18 +1,19 @@
 class Entry:
     value = None
+    ty: str | None | tuple = None
 
     def __repr__(self):
         return "E:" + str(self.value)
 
 
-class Environment:
+class SymbolTable:
     def __init__(self, parent=None):
         self.parent = parent
-        self.vars = {}
+        self.vars: dict[str, Entry] = {}
 
     def push(self, names: list | tuple | set):
         """ """
-        return Environment(self).put(names)
+        return SymbolTable(self).put(names)
 
     def put(self, names: list | tuple | set):
         """
@@ -39,7 +40,7 @@ class Environment:
         Erstellt eine neue copy des gleichen Environments.
         @return Seine eigene Kopie
         """
-        new_env = Environment(parent=self.parent)
+        new_env = SymbolTable(parent=self.parent)
         new_env.vars = self.vars.copy()
         return new_env
 
@@ -114,6 +115,22 @@ class Environment:
             raise KeyError(name)
         else:
             return self.parent[name]
+
+    def __setitem__(self, name, value):
+        if name in self.vars:
+            self.vars[name] = value
+        elif self.parent is None:
+            raise KeyError(name)
+        else:
+            self.parent[name] = value
+
+    def __delitem__(self, name):
+        if name in self.vars:
+            del self.vars[name]
+        elif self.parent is None:
+            raise KeyError(name)
+        else:
+            del self.parent[name]
 
     def __str__(self):
         s = str(self.vars)

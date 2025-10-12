@@ -2,21 +2,21 @@
 # LAMBDA TEST #
 # AUCH MIT LETREC #
 
-x := sei fac = lambda x -> wenn x = 0 gilt, 1 sonst x*fac(x-1) .
+i64 x := sei fac := lambda i64 x -> wenn x = 0 gilt, 1 sonst x*fac(x-1) .
 in fac(5) .;
 assert := x = 120;
 
-x := sei x = lambda x -> x*x
+i64 x := sei x := lambda i64 x -> x*x
 in x(4) .;
 assert +:= x = 16;
 
-🗅:= sei x = lambda a -> {
+i64 🗅:= sei x := lambda i64 a -> {
     wenn a = 0 gilt,
         1
     sonst
         a * y(a)
     .;
-}, y = lambda b -> {
+}, y := lambda i64 b -> {
     wenn b > 1 gilt,
         1/b * x(b-1)
     sonst

@@ -1,13 +1,14 @@
 import sys
 from parser import parser
 
-from environment import Environment
+from environment import SymbolTable
 from interpreter import eval
+from typisierung import typecheck
 from lexer import print_traceback
+from zwischencode import code_b, save_in_file
 
-env = Environment()
+env = SymbolTable()
 env.builtins()
-
 
 ansii = {
     "r": "\001\033[31m\002",
@@ -29,8 +30,19 @@ def test_code(debug=False):
                 multiline = src.strip().endswith("->") or src.count("{") > src.count(
                     "}"
                 )
-
+            # Parser
             result = parser.parse(src, debug=debug)
+            # Typecheck
+            type_result = typecheck(result, env)
+            print(
+                ansii["b"] + str(type_result if type_result else "Typecheck: OK"),
+                end=": " + ansii["_"],
+            )
+            # Intermediate Code
+            inter_result = code_b(result, b_save_in_file=True)
+            print(ansii["b"] + str(inter_result) + ansii["_"], end=" => ")
+
+            # Interpreter
             if debug:
                 print(result)
 

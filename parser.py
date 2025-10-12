@@ -128,17 +128,32 @@ def p_comparison_op(p):
 ################ ASSIGNMENTS ################
 
 
+def p_type(p):
+    """
+    type : T_INT
+         | T_FLOAT
+         | T_STRING
+         | T_COMPLEX
+    """
+    p[0] = p[1]
+
+
 def p_assignment1(p):
+    "assign_expression : type IDENTIFIER ASSIGN expression"
+    p[0] = ("assign", None, p[1], p[2], p[4])
+
+
+def p_assignment2(p):
     "assign_expression : IDENTIFIER ASSIGN expression"
     p[0] = ("assign", None, p[1], p[3])
 
 
-def p_assignment3(p):
+def p_assignment4(p):
     "expression : assign_expression"
     p[0] = p[1]
 
 
-def p_assignment2(p):
+def p_assignment3(p):
     """
     expression : IDENTIFIER PLUS_ASSIGN expression
                | IDENTIFIER MINUS_ASSIGN expression
@@ -160,6 +175,13 @@ def p_assignment2(p):
                | IDENTIFIER MOD_ASSIGN expression
     """
     p[0] = ("assign", look_up_table[p[2][:-2]], p[1], p[3])
+
+
+def p_assignment5(p):
+    """
+    expression : T_UNDEF expression
+    """
+    p[0] = ("undef", p[2])
 
 
 ################ SEQUENCE ################
@@ -264,13 +286,13 @@ def p_lambda0(p):
 def p_parameter0(p):
     """
     parameter : LPAREN parameter_pos RPAREN
-              | IDENTIFIER
+              | type IDENTIFIER
               | empty
     """
-    if len(p) == 4:
+    if len(p) == 4 and p.slice[1].type == "LPAREN":
         p[0] = p[2]
-    elif p.slice[1].type == "IDENTIFIER":
-        p[0] = [("pos", p[1])]
+    elif len(p) == 3:
+        p[0] = [("pos", p[1], p[2])]
     else:
         p[0] = []
 
@@ -284,14 +306,14 @@ def p_parameter1(p):
 
 def p_parameter2(p):
     """
-    parameter_pos_list : IDENTIFIER COMMA parameter_pos_list
-                       | IDENTIFIER
+    parameter_pos_list : type IDENTIFIER COMMA parameter_pos_list
+                       | type IDENTIFIER
                        | parameter_keywords
     """
-    if len(p) == 4:
-        p[0] = [("pos", p[1]), *p[3]]
-    elif p.slice[1].type == "IDENTIFIER":
-        p[0] = [("pos", p[1])]
+    if len(p) == 5:
+        p[0] = [("pos", p[1], p[2]), *p[4]]
+    elif len(p) == 3:
+        p[0] = [("pos", p[1], p[2])]
     else:
         p[0] = p[1]
 
@@ -305,23 +327,23 @@ def p_parameter3(p):
 
 def p_parameter4(p):
     """
-    parameter_kw_list : IDENTIFIER COLON expression COMMA parameter_kw_list
-                      | IDENTIFIER COLON expression
+    parameter_kw_list : type IDENTIFIER COLON expression COMMA parameter_kw_list
+                      | type IDENTIFIER COLON expression
                       | parameter_infty
     """
-    if len(p) == 6:
-        p[0] = [("keyword", p[1], p[3]), *p[5]]
-    elif len(p) == 4:
-        p[0] = [("keyword", p[1], p[3])]
+    if len(p) == 7:
+        p[0] = [("keyword", p[1], p[2], p[4]), *p[6]]
+    elif len(p) == 5:
+        p[0] = [("keyword", p[1], p[2], p[4])]
     else:
         p[0] = p[1]
 
 
 def p_parameter5(p):
     """
-    parameter_infty : IDENTIFIER DOT DOT DOT
+    parameter_infty : type IDENTIFIER DOT DOT DOT
     """
-    p[0] = [("infty", p[1])]
+    p[0] = [("infty", p[1], p[2])]
 
 
 def p_parameter6(p):
@@ -372,13 +394,13 @@ def p_call(p):
 
 
 def p_let_assign0(p):
-    """let_assign : IDENTIFIER EQUALS expression COMMA let_assign"""
-    p[0] = [("assign", None, p[1], p[3]), *p[5]]
+    """let_assign : assign_expression COMMA let_assign"""
+    p[0] = [p[1], *p[3]]
 
 
 def p_let_assign1(p):
-    """let_assign : IDENTIFIER EQUALS expression"""
-    p[0] = [("assign", None, p[1], p[3])]
+    """let_assign : assign_expression"""
+    p[0] = [p[1]]
 
 
 def p_let(p):
@@ -516,7 +538,7 @@ def p_error(p):
 ########################################################
 
 precedence = (
-    ("right", "ASSIGN", *op_assigns),
+    ("right", "ASSIGN", *op_assigns, "T_UNDEF"),
     ("left", "LAMBDA"),
     ("left", "OR"),
     ("left", "XOR"),

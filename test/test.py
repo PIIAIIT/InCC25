@@ -1,7 +1,7 @@
 from lexer import lexer
 from parser import parser
 from interpreter import eval
-from environment import Environment
+from environment import SymbolTable
 from pathlib import Path
 
 DEBUG = False
@@ -103,7 +103,7 @@ class IceTester:
 
 # MAIN
 file_manager = IceFileManager()
-tester = IceTester(Environment, lexer, parser)
+tester = IceTester(SymbolTable, lexer, parser)
 
 # MEINE SPRACHE SOLL FOLGENDE EIGENSCHAFTEN HABEN #
 # ATOMIC
@@ -278,7 +278,7 @@ assert tester.test_interpreter(test_code) == 420.69
 
 test_prec = r"""
 {
-func := lambda x -> 3 + 5 or 7imag ** 2 xor {1 + -10 <= -5} - +12 and 2<3<4<5 and 1 * 9 e (not 1 | 2 mod 5 + 5) / x = 1 \ 5;
+func := lambda i64 x -> 3 + 5 or 7imag ** 2 xor {1 + -10 <= -5} - +12 and 2<3<4<5 and 1 * 9 e (not 1 | 2 mod 5 + 5) / x = 1 \ 5;
 y := func(1);
 y +:= [1,2];
 }

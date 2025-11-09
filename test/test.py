@@ -3,16 +3,27 @@ from parser import parser
 from interpreter import eval
 from environment import SymbolTable
 from pathlib import Path
+from typisierung import typecheck
+from zwischencode import free
+from zwischencode import code_b
+import ice2_ws25.ice_machine as ice_machine
 
 DEBUG = False
 
 
 class IceFileManager:
-    def __init__(self, base_dir=None, file_suffix=".ice", ignore_dirs=None):
+    def __init__(
+        self,
+        base_dir=None,
+        file_suffix=".ice",
+        ignore_dirs: set | None = None,
+        ignore_files: set = set(),
+    ):
         self.base_dir = Path(base_dir or Path(__file__).resolve().parent.parent)
         self.search_path = self.base_dir / "test"
         self.file_suffix = file_suffix
         self.ignore_dirs = ignore_dirs or {"__pycache__"}
+        self.ignore_files = ignore_files
 
     def _get_dirs(self):
         return [self.search_path] + [
@@ -21,23 +32,24 @@ class IceFileManager:
             if p.is_dir() and p.name not in self.ignore_dirs
         ]
 
-    def find_files(self):
+    def find_all_files(self):
         """Generator für (Pfad, Inhalt)-Tupel"""
         for directory in self._get_dirs():
             for file in directory.glob(f"*{self.file_suffix}"):
-                yield file, file.read_text(encoding="utf-8")
+                if file not in self.ignore_files:
+                    yield file, file.read_text(encoding="utf-8")
 
     def read_all_files(self, verbose=False):
         """Liest alle Dateien als Liste von (Pfad, Inhalt)"""
         files = []
-        for file, content in self.find_files():
+        for file, content in self.find_all_files():
             files.append((file, content))
             if verbose:
                 print(f"\n--- {file} ---\n{content}")
         return files
 
     def read_file_by_path(self, filepath, verbose=False):
-        for file, content in self.find_files():
+        for file, content in self.find_all_files():
             if file == filepath:
                 if verbose:
                     print(f"{filepath} wird bearbeitet...\n{content}")
@@ -100,9 +112,24 @@ class IceTester:
 
         return result
 
+    def test_iic(self, input_string, verbose=False):
+        """Integrierter Interpreter-Check: Lexer, Parser, Interpreter"""
+        if input_string is None:
+            print("Es ist ein Fehler mit dem InputStream.")
+            return None
+
+        ast = self.parser.parse(input_string, debug=verbose)
+        ast = typecheck(ast, self.env)
+        ast = free(ast)
+
+        result = [("label", "main")] + code_b(ast).code
+        regs = ice_machine.run(result, debug=verbose, detailed=verbose)
+
+        print(regs)
+        return regs.get("R0", None)
+
 
 # MAIN
-file_manager = IceFileManager()
 tester = IceTester(SymbolTable, lexer, parser)
 
 # MEINE SPRACHE SOLL FOLGENDE EIGENSCHAFTEN HABEN #
@@ -118,7 +145,7 @@ assert tester.test_interpreter("(2 + 3) imag") == 5j
 assert tester.test_interpreter("2 + 3 imag") == 2 + 3j
 assert tester.test_interpreter("(2 + 3) imag + 1") == 1 + 5j
 assert tester.test_interpreter("(2 + 3)e 2") == 500
-assert tester.test_interpreter("π := 3.1415") == 3.1415
+assert tester.test_interpreter("f64 π := 3.1415") == 3.1415
 
 # BINOPS
 assert tester.test_interpreter("2 + 3") == 5
@@ -157,12 +184,12 @@ assert tester.test_interpreter("4 != 4") == 0
 assert tester.test_interpreter("5 <= 5") == 1
 assert tester.test_interpreter("6 <= 5") == 0
 assert tester.test_interpreter("6 >= 5") == 1
-assert tester.test_interpreter("{x:=12; 6 >= x}") == 0
+assert tester.test_interpreter("{i64 x:=12; 6 >= x}") == 0
 
 # COMPS
 assert tester.test_interpreter("1 and 1") == 1
-assert tester.test_interpreter("{x:=1; 0 and x}") == 0
-assert tester.test_interpreter("{x:=0; 1 or x}") == 1
+assert tester.test_interpreter("{i64 x:=1; 0 and x}") == 0
+assert tester.test_interpreter("{i64 x:=0; 1 or x}") == 1
 assert tester.test_interpreter("1 or 0") == 1
 assert tester.test_interpreter("1 xor 0") == 1
 assert tester.test_interpreter("1 xor 1") == 0
@@ -180,12 +207,12 @@ assert tester.test_interpreter("+(-5)") == 5
 assert tester.test_interpreter("not -1") == 0
 
 # ENVIRONMENT / ASSIGNMENT
-assert tester.test_interpreter("a := 7") == 7
-assert tester.test_interpreter("a := (x:=2) + 5") == 7
-assert tester.test_interpreter("{a:=2; a+:=3; a}") == 5
-assert tester.test_interpreter("{a:=2; a-:=5; a}") == -3
-assert tester.test_interpreter("{a:=3; a*:=-2; a}") == -6
-assert tester.test_interpreter("{a:=4; a/:=2; a}") == 2
+assert tester.test_interpreter("i64 a := 7") == 7
+assert tester.test_interpreter("i64 a := (i64 x:=2) + 5") == 7
+assert tester.test_interpreter("{i64 a:=2; a+:=3; a}") == 5
+assert tester.test_interpreter("{i64 a:=2; a-:=5; a}") == -3
+assert tester.test_interpreter("{i64 a:=3; a*:=-2; a}") == -6
+assert tester.test_interpreter("{i64 a:=4; a/:=2; a}") == 2
 
 # COMPLEX COMPS/BINOPS/UNARY
 assert tester.test_interpreter("(2 + -3) * 4") == -4
@@ -193,14 +220,15 @@ assert tester.test_interpreter("{2 < 5 <2 e 10 > 0}") == 1
 assert tester.test_interpreter("{2 < 5 and 5<2 e 10 and 2e 10 > 0}") == 1
 assert tester.test_interpreter("{(2 < 5) and (5<2 e 10) and (2e 10 > 0)}") == 1
 assert (
-    tester.test_interpreter("{(2 < 5) and (5<2 e 10) and (2e 10 > 5) and (x:=1)}") == 1
+    tester.test_interpreter("{(2 < 5) and (5<2 e 10) and (2e 10 > 5) and (i64 x:=1)}")
+    == 1
 )
-assert tester.test_interpreter("{x:=2<3; x:=x+1; x}") == 2
+assert tester.test_interpreter("{i64 x:=2<3; x:=x+1; x}") == 2
 
 test_code = r"""
 {
-a:=1;
-b:=2;
+i64 a:=1;
+i64 b:=2;
 a+:=b * 3;
 a
 }
@@ -209,10 +237,10 @@ assert tester.test_interpreter(test_code) == 7
 
 test_code = r"""
 {
-x:=0;
+i64 x:=0;
 x:=x+1;
 x:=x+1;
-x:=x+1;
+i64 x:=x+1;
 x
 }
 """
@@ -220,7 +248,7 @@ assert tester.test_interpreter(test_code) == 3
 
 test_code = r"""
 {
-x:=0+3*5-(-3);
+i64 x:=0+3*5-(-3);
 x+:=3;
 x
 }
@@ -230,9 +258,9 @@ assert tester.test_interpreter(test_code) == 21
 
 test_code = r"""
 {
-x:= 21;
-x:= -x**3;
-x:=-x-2;
+i64 x:= 21;
+i64 x:= -x**3;
+i64 x:=-x-2;
 x mod 5;
 }
 """
@@ -240,8 +268,8 @@ assert tester.test_interpreter(test_code) == 4
 
 test_code = r"""
 {
-x:=3;
-y:=5;
+i64 x:=3;
+i64 y:=5;
 (x<y and y>x) or (x=y)
 }
 """
@@ -249,8 +277,8 @@ assert tester.test_interpreter(test_code) == 1
 
 test_code = r"""
 {
-z:=0;
-x:=1 or (z:=1);
+i64 z:=0;
+i64 x:=1 or (z:=1);
 z
 }
 """
@@ -258,28 +286,28 @@ assert tester.test_interpreter(test_code) == 1  # short-circuit: z bleibt 0
 
 test_code = r"""
 {
-x:= 21;
+i64 x:= 21;
 x:= -x**3;
 x:=-x-2;
 x mod 5;
-y:=0xff + 0b11 + -x - 5 e 10;
+i64 y:=0xff + 0b11 + -x - 5 e 10;
 }
 """
 assert tester.test_interpreter(test_code) == -50000009001
 
 test_code = r"""
 {
-x:=-49999999742;
+i64 x:=-49999999742;
 x := 256;
 x := x mod 5 \ 4 - 10 ** (4 | 2 + 3) / 5;
-i_me:=420.69
+f64 i_me:=420.69
 }"""
 assert tester.test_interpreter(test_code) == 420.69
 
 test_prec = r"""
 {
-func := lambda i64 x -> 3 + 5 or 7imag ** 2 xor {1 + -10 <= -5} - +12 and 2<3<4<5 and 1 * 9 e (not 1 | 2 mod 5 + 5) / x = 1 \ 5;
-y := func(1);
+i64 -> i64 func := lambda i64 x -> i64 : 3 + 5 or 7imag ** 2 xor {1 + -10 <= -5} - +12 and 2<3<4<5 and 1 * 9 e (not 1 | 2 mod 5 + 5) / x = 1 \ 5;
+i64 y := func(1);
 y +:= [1,2];
 }
 """
@@ -294,7 +322,8 @@ red = "\001\033[31m\002"
 normal = "\001\033[0m\002"
 state = ["FAILED", "OK"]
 
-for file, content in file_manager.find_files():
+file_manager = IceFileManager(ignore_dirs={"match", "struct"})
+for file, content in file_manager.find_all_files():
     print(f"Teste Datei: {"/".join(str(file).split("/")[-2:])}")
 
     b = tester.test_lexer(content, verbose=False)

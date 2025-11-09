@@ -4,7 +4,7 @@ main_file = main.py
 lexer_file = lexer.py
 parser_file = parser.py
 
-default:
+default::
 	$(PYTHON_ENV) $(main_file)
 
 lexer::
@@ -16,7 +16,10 @@ parser::
 test::
 	$(PYTHON_ENV) -m test.test
 
-debug::
+iic::
+	$(PYTHON_ENV) $(main_file) -iic
+
+debug:
 	$(PYTHON_ENV) $(main_file) -debug
 
 clean:

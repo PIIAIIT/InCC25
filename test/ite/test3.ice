@@ -1,12 +1,12 @@
 {
 # TEST IF STATEMENTS #
-x1 := 0;
+i64 x1 := 0;
 wenn not x1 gilt,
   x1:=5
 .;
-assert := x1 = 5;
+i64 assert := x1 = 5;
 
-x2 := 1;
+i64 x2 := 1;
 wenn not x2 gilt,
   x2:=0
 sonst
@@ -14,7 +14,7 @@ sonst
 .;
 assert +:= x2 = 10;
 
-x3 := 10;
+i64 x3 := 10;
 wenn x3 < x2 gilt,
   x3:=0
 ,aber wenn x3 = x2 gilt,
@@ -25,7 +25,7 @@ sonst
 assert +:= x3 = 5;
 
 
-x4 := 10;
+i64 x4 := 10;
 wenn (x4 < 5) gilt,
   x4:=0
 ,aber wenn (x4 < 7) gilt,

@@ -1,12 +1,12 @@
 import os
-from parser import parser
+from parser import parser, Node
 import numpy as np
 from datatypes import (
     Lambda,
     parse_call_arguments,
     Struct,
 )
-from extra_functions import iter_tuple, binop_for_lists, binop_for_tuples
+from utils import iter_tuple, binop_for_lists, binop_for_tuples
 from environment import SymbolTable
 
 bin_operations = {
@@ -42,8 +42,8 @@ pyeval = eval
 loaded_modules = set()
 
 
-def eval(expression, env: SymbolTable, debug=False):
-    match expression:
+def eval(node: Node, env: SymbolTable, debug=False):
+    match node.ast:
         case ("num", n):
             base = 10
             if n.startswith("0b"):
@@ -55,13 +55,15 @@ def eval(expression, env: SymbolTable, debug=False):
             return float(n)
         case ("str", n):
             return str(n[1:-1])
-        case ("complex", imag):
-            a = eval(imag, env)
-            return unary_operations["imag"](a)
+
         case ("var", n):
             if n not in env:
                 raise Exception(f"variable {n} not found in environment")
             return env[n].value
+
+        case ("unary", op, expr):
+            x = eval(expr, env)
+            return unary_operations[op](x)
 
         case ("binop", op, expr1, expr2):
             x = eval(expr1, env)
@@ -90,7 +92,9 @@ def eval(expression, env: SymbolTable, debug=False):
                 )
             )
 
-        case ("assign", None, _, var, val):
+        case ("assign", _, var, val):
+            if not isinstance(var, str):
+                raise Exception(f"Expected variable, got {var}")
             y = eval(val, env)
             if var in env:
                 env[var].value = y
@@ -99,27 +103,14 @@ def eval(expression, env: SymbolTable, debug=False):
             print("Assign: ", var, val) if debug else ""
             return y
 
-        case ("assign", op, var, val):
-            y = eval(val, env)
-            if op is not None:
-                y = eval(("binop", op, ("var", var), val), env)
-            if var in env:
-                env[var].value = y
-            else:
-                env.define(var, y)
-            print("Assign: ", op, var, val) if debug else ""
-            return y
-
         case ("undef", ("var", var)):
+            if var[0] != "var":
+                raise Exception(f"Expected variable, got {var}")
             if var in env:
                 del env[var]
             else:
                 raise Exception(f"variable {var} not found in environment")
             return None
-
-        case ("unary", op, expr):
-            x = eval(expr, env)
-            return unary_operations[op](x)
 
         case ("seq", body):
             if body == []:
@@ -149,7 +140,7 @@ def eval(expression, env: SymbolTable, debug=False):
             return result
 
         case ("loop", counter, interval, body):
-            arr = eval(interval, env)
+            arr: list = eval(interval, env)
 
             # Normalisiere das arr zu einem Iterierbaren Objekt
             if isinstance(arr, tuple):
@@ -172,9 +163,9 @@ def eval(expression, env: SymbolTable, debug=False):
             b -= 1 if right_interval == "[" else 0
             return list(range(a, b + 1))
 
-        case ("lambda", parameter, body):
+        case ("lambda", parameter, body, ret_type):
             # Lambda-bjekt mit aktuellem Closure zurückgeben
-            return Lambda(parameter, body, env.copy())
+            return Lambda(parameter, body, env.copy(), ret_type)
 
         case ("call", func, args_expr):
             pos_arg, key_arg = parse_call_arguments(args_expr, eval, env)
@@ -186,16 +177,16 @@ def eval(expression, env: SymbolTable, debug=False):
                 raise TypeError(f"Cannot call object of type {type(func_obj)}")
             return func_obj(pos_arg, key_arg, eval)
 
-        case ("let", assignments, body):
-            env2 = SymbolTable(parent=env)
+        case ("letrec", assignments, body):
+            local_env = SymbolTable(parent=env)
 
             for *_, var, expr in assignments:
-                env2.put(var)
-                obj = eval(("assign", None, var, expr), env2)
-                if isinstance(obj, Lambda):
-                    obj.override_env(env2)
+                local_env.put(var)
 
-            return eval(body, env2)
+            for assigns in assignments:
+                eval(assigns, local_env)
+
+            return eval(body, local_env)
 
         case ("array", list_elements):
             return [eval(elem, env) for elem in list_elements]
@@ -209,7 +200,7 @@ def eval(expression, env: SymbolTable, debug=False):
             if index == "+":
                 return arr[1:] if isinstance(arr, list) else arr[1]
 
-            i = eval(index, env)  # expression
+            i = eval(index, env)
             if isinstance(arr, list):
                 return arr[i]
 
@@ -219,16 +210,19 @@ def eval(expression, env: SymbolTable, debug=False):
             if len(list_elements) == 0:
                 return None
             if len(list_elements) == 1:
-                return eval(("cons", list_elements[0], ("leere")), env)
-            return eval(("cons", list_elements[0], ("list", list_elements[1:])), env)
+                return eval(Node("cons", list_elements[0], Node("leere")), env)
+            return eval(
+                Node("cons", list_elements[0], Node("list", list_elements[1:])), env
+            )
 
         case ("cons", expr1, expr2):
-            a, b = eval(expr1, env), eval(expr2, env)
+            a = eval(expr1, env)
+            b = eval(expr2, env)
             if isinstance(a, list) and isinstance(b, list):
                 return a + b
             return (a, b)
 
-        case "leere":
+        case ("leere",):
             return None
 
         case ("import", [path]):
@@ -260,11 +254,16 @@ def eval(expression, env: SymbolTable, debug=False):
                 s[name] = eval(expr, env)
             return s
 
-        case ("access_struct", struct, ("var", name)):
-            return eval(struct, env)[name]
+        case ("access_struct", struct, var_name):
+            if var_name[0] != "var":
+                raise Exception(f"Expected variable, got {var_name}")
+            return eval(struct, env)[var_name[1]]
 
+        case "program", body:
+            result = eval(body, env)
+            return result
         case _:
-            print(f"unknown expression {expression}")
+            print(f"unknown expression {node}")
             return -1
 
 

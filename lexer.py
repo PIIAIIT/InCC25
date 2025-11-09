@@ -129,7 +129,7 @@ def t_newline(t):
 
 
 ########### TRACEBACK #########
-def print_traceback(input_text: str, token, silent=False):
+def print_traceback(input_text, token, silent=False):
     """
     Druckt einen gut lesbaren Traceback, wenn ein Parsing-Fehler auftritt.
     :param input_text: Der gesamte Quelltext als String.

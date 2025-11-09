@@ -3,9 +3,9 @@
 # Arithmetik, Konstanten #
 
 # KONSTANTEN #
-PI  := 3.1415926535;
-EXP := 2.718281828;
-PHI := 1.61803398874;
+f64 PI  := 3.1415926535;
+f64 EXP := 2.718281828;
+f64 PHI := 1.61803398874;
 
 # Fakultät #
 # fac := lambda x ->
@@ -17,15 +17,15 @@ PHI := 1.61803398874;
 .; #
 
 # Exponentialfunktion #
-exp := sei eps = 60, fac = lambda x -> 
+f64 exp := sei f64 eps = 60, ? fac = lambda f64 x -> 
     wenn x > 0 gilt,
       fac(x-1) * x
     sonst
       1
     .
 in
-    lambda x -> {
-        sum := 0;
+    lambda f64 x -> {
+        f64 sum := 0;
         für n in [0..eps] wiederhole
             sum +:= x**n | fac(n)
         .;
@@ -34,14 +34,14 @@ in
 .;
 
 # ABS #
-abs := lambda x -> +x;
+abs := lambda f64 x -> +x;
 
 # SQRT #
 # Heron-Verfahren #
-sqrt := lambda x -> {
-  a := x;
-  b := 1.0;
-  solange (abs(a - b) > 1 e -6) gilt, {
+sqrt := lambda f64 x -> {
+  f64 a := x;
+  f64 b := 1.0;
+  solange (abs(a - b) > 1.0 e -6.0) gilt, {
     a := x | b;
     b := (a + b) | 2
   }.;
@@ -49,15 +49,15 @@ sqrt := lambda x -> {
 };
 
 # LOGARITHMUS #
-log := sei prec = 60 in lambda x -> {
+f64 log := sei f64 prec = 60 in lambda f64 x -> {
   wenn x <= 0 gilt,
     echo("log of a non-positive number doesnt exist.")
   sonst {
-    sum := 0;
+    f64 sum := 0;
     für n in [0..prec] wiederhole
         sum +:= ((x-1)|(x+1))**(2*n+1) | (2*n+1)
     .;
-    2 * sum
+    2.0 * sum
   }.
 }.;
 

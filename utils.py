@@ -1,10 +1,28 @@
+# ---------------- FUNKTIONS FOR PARSER ----------------
+def generator():
+    count = dict()
+
+    def gen(name):
+        nonlocal count
+        if name not in count:
+            count[name] = 0
+        else:
+            count[name] += 1
+        return name + str(count[name])
+
+    return gen
+
+
+# ---------------- FUNKTIONS FOR PARSER ----------------
+
+
+# ---------------- FUNKTIONS FOR INTERPRETER ----------------
 def iter_tuple(t):
     while isinstance(t, tuple):
         yield t[0]
         t = t[1]
 
 
-# PRIVATE FUNKTIONS
 def binop_for_lists(x, y, func):
     if isinstance(x, list) or isinstance(y, list):
         return [
@@ -47,3 +65,38 @@ def binop_for_tuples(x, y, func):
         return (func(a, b), next_pair)
 
     return None
+
+
+# ---------------- FUNKTIONS FOR INTERPRETER ----------------
+
+
+# ---------------- FUNKTIONS FOR ZWISCHENCODE ----------------
+
+
+def gen_label(*prefixes):
+    count = 0
+    while True:
+        count += 1
+        yield tuple(f"{prefix}_{count}" for prefix in prefixes)
+
+
+def gen_reg(used, n=1):
+    regs = []
+    i = 0
+    while len(regs) < n:
+        reg = f"R{i}"
+        if reg not in used:
+            regs.append(reg)
+        i += 1
+    return tuple(regs)
+
+
+def save_in_file(iic_code, filename="iic_code.iic"):
+    with open(filename, "w") as f:
+        for line in iic_code:
+            if isinstance(line, tuple):
+                line = " ".join(line)
+            f.write(line + "\n")
+
+
+# ---------------- FUNKTIONS FOR ZWISCHENCODE ----------------

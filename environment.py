@@ -1,9 +1,16 @@
+# ------------------- Environment -------------------#
 class Entry:
-    value = None
-    ty: str | None | tuple = None
+    def __init__(self):
+        self.value: None
+        self.idx: int
+        self.ty: str
 
     def __repr__(self):
-        return "E:" + str(self.value)
+        return (
+            f"<Entry value={self.value}>"
+            if hasattr(self, "value")
+            else f"<Entry type={self.ty}>"
+        )
 
 
 class SymbolTable:
@@ -11,11 +18,15 @@ class SymbolTable:
         self.parent = parent
         self.vars: dict[str, Entry] = {}
 
-    def push(self, names: list | tuple | set):
-        """ """
+    def push(self, names: list | str):
+        """
+        Erstellt ein neues Environment mit dem aktuellen als Parent.
+        @arg names: Kann eine Liste oder Tuple sein
+        @return gibt das neue Environment als Object aus
+        """
         return SymbolTable(self).put(names)
 
-    def put(self, names: list | tuple | set):
+    def put(self, names):
         """
         Packt Jedes Element der Liste als undefiniert auf dem Environment.
         @arg names: Kann eine Liste oder Tuple sein
@@ -28,20 +39,15 @@ class SymbolTable:
                 self.vars[name] = Entry()
         return self
 
-    def root(self):
-        """Gibt das Oberste Environment aus! (Root)"""
-        t = self
-        while t.parent:
-            t = t.parent
-        return t
-
-    def copy(self):
+    def copy(self, item=None):
         """
         Erstellt eine neue copy des gleichen Environments.
         @return Seine eigene Kopie
         """
         new_env = SymbolTable(parent=self.parent)
         new_env.vars = self.vars.copy()
+        if item:
+            self.put(item)
         return new_env
 
     def define(self, name, value):
@@ -54,33 +60,6 @@ class SymbolTable:
         self[name].value = value
         return self
 
-    def assign(self, name: list, value: list):
-        """
-        @arg name: Liste von pos, keyword und infty Argument (kein eval)
-        @arg value: Liste von pos, keyword Argument (eval)
-        @return void
-        """
-        # [('pos', 'x'), ('keyword', 'y', 3), ('keyword', 'z', 5), ('infty', 'c')]
-        # Zuerst Keyword Args auf lambda env binden
-        positional_args = [elem for elem in name if elem[0] == "pos"]
-        keyword_args = [elem for elem in name if elem[0] == "keyword"]
-        infty = name[-1][1] if name[-1][0] == "infty" else None
-
-        call_positional, call_keywords = value
-
-        for k, v in call_keywords.items():
-            if k not in self:
-                raise Exception("Invalid Argument Exception")
-            self.define(k, v)
-
-        # Dann Pos Args auf restliche lambda env binden
-        all_param_names = positional_args + [elem[1] for elem in keyword_args]
-        for key, val in zip(all_param_names, call_positional):
-            self.define(key, val)
-
-        if name[-1][0] == "infty":
-            self.define(infty, call_positional[len(positional_args) :])
-
     def builtins(self):
         """
         Definiert eine Variablen auf dem Environment.
@@ -91,12 +70,10 @@ class SymbolTable:
             "echo": builtin_print,
             "länge": builtin_len,
             "list": builtin_list,
-            "type": builtin_type,
             "assert": builtin_assert,
         }
         for name, fn in builtins.items():
             self.define(name, BuiltinFunction(name, fn))
-            # self[name].value = BuiltinFunction(name, fn)
 
     def clear(self):
         self.parent = None
@@ -108,7 +85,7 @@ class SymbolTable:
             return True
         return self.parent and name in self.parent
 
-    def __getitem__(self, name):
+    def __getitem__(self, name) -> Entry:
         if name in self.vars:
             return self.vars[name]
         elif self.parent is None:
@@ -139,10 +116,11 @@ class SymbolTable:
         return s
 
 
+# ------------------- Builtin Function -------------------#
 class BuiltinFunction:
     def __init__(self, name, fn):
-        self.fn = fn
         self.name = name
+        self.fn = fn
 
     def __call__(self, pos, key, eval):
         return self.fn(pos, key, eval)
@@ -152,14 +130,19 @@ class BuiltinFunction:
 
 
 def builtin_print(pos_args, key_args, _):
-    """Ausgabe in der Kommandozeile"""
-    print(*pos_args)
+    """
+    Gibt die Argumente auf der Konsole aus
+    Example : echo(1,2,3) -> 1 2 3
+    """
+    print(*pos_args, **key_args)
     return None
 
 
 def builtin_len(pos_args, key_args, _):
-    """Länge einer Liste/Array bestimmen"""
-    # (1, (2, (3, None))) => 3
+    """
+    Länge einer Liste wird zurückgegeben
+    Example : len((1, (2, (3, None)))) == 3
+    """
     if isinstance(pos_args[0], tuple):
         list_len = lambda lst: 1 if lst[1] is None else 1 + list_len(lst[1])
         return list_len(pos_args[0])
@@ -175,17 +158,8 @@ def builtin_list(pos_args, key_args, _):
     if len(pos_args) == 0:
         return None
     if len(pos_args) == 1:
-        return pos_args[0], None
+        return (pos_args[0], None)
     return (pos_args[0], builtin_list(pos_args[1:], None, _))
-
-
-def builtin_type(pos_args, key_args, _):
-    """Lisp Liste wird erstellt
-    Example : list(1,2,3) == (1, (2, (3, None)))
-            | list(1) == (1, None)
-            | list() == (None)
-    """
-    return type(pos_args[0])
 
 
 def builtin_assert(pos_args, key_args, _):

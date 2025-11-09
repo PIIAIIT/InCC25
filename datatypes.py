@@ -1,23 +1,20 @@
 from environment import SymbolTable
-from numpy import complex64
 
 DEBUG = False
 
 
-########## LABMDA ##########
+# ------------------- LABMDA -------------------#
 class Lambda:
     """Repräsentiert eine Lambda-Funktion mit Parametern, Defaults und Closure"""
 
-    def __init__(self, parameter, body, closure_env):
+    def __init__(self, parameter, body, closure_env, rt):
         self.params, self.defaults, self.varargs = parse_lambda_parameters(parameter)
         self.closure_env: SymbolTable = closure_env  # Environment zur Closure-Zeit
         self.body = body  # AST des Lambda-Bodies
+        self.ret_type = rt
 
     def __repr__(self):
-        return f"<Lambda params={self.params}, defaults={list(self.defaults.keys())}, varargs={self.varargs}>"
-
-    def override_env(self, env):
-        self.closure_env = env
+        return f"Lambda({self.params}, {self.defaults}, {self.varargs})"
 
     def __call__(self, pos_args, keyword_args, eval_func):
         """Führt einen Lambda-Ausdruck aus oder erstellt Partial Application"""
@@ -81,7 +78,7 @@ class Lambda:
             ]
             if self.varargs:
                 new_parameter.append(("infty", self.varargs))
-            return Lambda(new_parameter, self.body, lokal_env)
+            return Lambda(new_parameter, self.body, lokal_env, self.ret_type)
 
         # varargs Belegen
         if self.varargs:
@@ -90,11 +87,11 @@ class Lambda:
         # Wenn ja, execute Lambda
         if DEBUG:
             print("DEBUG -- Execute Lambda")
-        # print(lokal_env)
 
         return eval_func(self.body, lokal_env)
 
 
+# ------------------- Global Lambda Function -------------------#
 def parse_lambda_parameters(parameter: list) -> tuple[list, dict, None | str]:
     """Parst Lambda-Parameter und extrahiert reguläre Parameter, Defaults und Varargs"""
     params = []
@@ -138,7 +135,7 @@ def parse_call_arguments(args_expr, eval_func, env) -> tuple[list, dict]:
     return pos_args, keyword_args
 
 
-########## STRUCT ##########
+# ------------------- Struct -------------------#
 class Struct(dict):
     def __init__(self):
         super().__init__()

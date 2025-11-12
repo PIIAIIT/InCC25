@@ -20,7 +20,7 @@ T = dict(i="i64", f="f64", c="c64")
 add_all(["plus", "minus", "times", "divide_ceil", "divide_floor"], *(3 * (T["i"],)))
 add_all(["plus", "minus", "times", "divide"], *(3 * (T["f"],)))
 add_all(["plus", "minus", "times", "divide"], *(3 * (T["c"],)))
-add("divide", *(3 * (T["i"],)))
+add("divide", T["i"], T["i"], T["f"])
 add_all(["and", "or", "xor"], *(3 * (T["i"],)))
 add("not", *(2 * (T["i"],)))
 add_all(["uminus", "uplus"], *(2 * (T["i"],)))
@@ -37,6 +37,7 @@ print("OPS:", OPS) if DEBUG else None
 
 
 def typecheck(node, gamma):
+    print(node)
     node.sym = gamma.copy()
     return _typecheck(node, gamma)
 
@@ -141,19 +142,18 @@ def _typecheck(node, gamma, debug=DEBUG or False):
 
         case ("loop", counter, interval, body):
             t_interval = typecheck(interval, gamma).ty
-            assert isinstance(t_interval, str)
             if not t_interval.startswith("[]"):
                 raise TypeError(
                     f"Loop interval must be of type 'interval', got '{t_interval}'"
                 )
             gamma.put(counter)
-            gamma[counter].ty = "int"
+            gamma[counter].ty = "i64"
             node.ty = typecheck(body, gamma).ty
 
         case ("interval", _, expr1, expr2, _):
             t1 = typecheck(expr1, gamma).ty
             t2 = typecheck(expr2, gamma).ty
-            if t1 != "i64" or t2 != "i64":
+            if [t1, t2] != ["i64", "i64"]:
                 raise TypeError(
                     f"Interval bounds must be of type 'i64', got '{t1}' and '{t2}'"
                 )
@@ -238,6 +238,7 @@ def _typecheck(node, gamma, debug=DEBUG or False):
             elem_types = [typecheck(elem, gamma).ty for elem in list_elements]
             if not elem_types:
                 node.ty = "[]unknown"
+                return node
             first_type = elem_types[0]
             if any(t != first_type for t in elem_types):
                 raise TypeError(

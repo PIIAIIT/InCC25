@@ -4,6 +4,7 @@ class Entry:
         self.value: None
         self.idx: int
         self.ty: str
+        self.scope: str
 
     def __repr__(self):
         return (

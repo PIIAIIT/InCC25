@@ -264,9 +264,7 @@ rule_f("expr", "expr : BEGIN sequence END", lambda p: Node("seq", p[2]))
 rule_f("expr", "expr : BEGIN END", lambda _: Node("seq", []))
 
 ######################## ITE #########################
-rule_n(
-    "if", "expr : IF expr THEN COMMA expr DOT", condition=2, cond_body=5, else_if=None
-)
+rule_n("if", "expr : IF expr THEN COMMA expr DOT", condition=2, cond_body=5, else_if=[])
 rule_n(
     "if",
     "expr : IF expr THEN COMMA expr else_elif_body DOT",

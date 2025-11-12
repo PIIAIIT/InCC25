@@ -12,6 +12,8 @@ OPS = {
     "minus": "-",
     "times": "*",
     "divide": "|",
+    "power": "**",
+    "mod": "%",
     "divide_ceil": "/",
     "divide_floor": "\\",
     "equals": "==",
@@ -23,8 +25,10 @@ OPS = {
     "and": "and",
     "or": "or",
     "not": "not",
+    "xor": "xor",
     "uminus": "u-",
     "uplus": "u+",
+    "imag": "i+",
 }
 
 
@@ -36,7 +40,23 @@ loop_label = gen_label("loop", "end_loop")
 let_label = gen_label("letrec")
 lambda_label = gen_label("lambda")
 
-VAR_ID = 0
+HEAP_POS = 0
+
+
+def alloc() -> int:
+    global HEAP_POS
+    HEAP_POS += 1
+    return HEAP_POS - 1
+
+
+def iic_gen(node):
+    lambda_env = dict()
+    inter_result = code_c(node, lambda_env, "R0", set(), code_b)
+
+    func_res = [x for sublist in list(lambda_env.values()) for x in sublist]
+
+    inter_result = func_res + inter_result
+    return inter_result
 
 
 def code_c(node, lmbd, ret, used, code_x, scope="global"):
@@ -51,7 +71,7 @@ def code_c(node, lmbd, ret, used, code_x, scope="global"):
             node.code = [("comment", f"seq start {seq_l}")]
             for expr in exprs[:-1]:
                 node.code += code_c(expr, lmbd, ret, used, code_x, scope=scope)
-            node.code += code_c(exprs[-1], lmbd, ret, used, code_x)
+            node.code += code_c(exprs[-1], lmbd, ret, used, code_x, scope=scope)
             node.code += [("comment", f"seq end {seq_l}")]
 
         case (
@@ -78,15 +98,15 @@ def code_c(node, lmbd, ret, used, code_x, scope="global"):
             elif_cond_l = [next(elif_label)[0] for _ in range(n_elifs)]
             elif_body_l = [next(elif_label)[1] for _ in range(n_elifs)]
 
-            code_c(condition, lmbd, ret, used, code_b)
-            code_c(then_body, lmbd, ret, used, code_x)
+            code_c(condition, lmbd, ret, used, code_b, scope=scope)
+            code_c(then_body, lmbd, ret, used, code_x, scope=scope)
 
             for i in range(n_elifs):
                 cond, body = else_body[i]
-                code_c(cond, lmbd, ret, used, code_x)
-                code_c(body, lmbd, ret, used, code_x)
+                code_c(cond, lmbd, ret, used, code_b, scope=scope)
+                code_c(body, lmbd, ret, used, code_x, scope=scope)
             if has_else:
-                code_c(else_body[-1][1], lmbd, ret, used, code_x)
+                code_c(else_body[-1][1], lmbd, ret, used, code_x, scope=scope)
 
             l_elifs = []
             for i in range(n_elifs):
@@ -136,13 +156,13 @@ def code_c(node, lmbd, ret, used, code_x, scope="global"):
             while_l, end_l = next(while_label)
             (cond_reg,) = gen_reg(used | {ret})
 
-            code_c(cond, lmbd, cond_reg, used | {ret}, code_b)
-            code_c(body, lmbd, ret, used, code_x)
+            code_c(cond, lmbd, cond_reg, used | {ret}, code_b, scope=scope)
+            code_c(body, lmbd, ret, used, code_v, scope=scope)
 
             node.code = [
                 ("label", while_l),
                 *cond.code,
-                ("ifgoto", f"R{cond_reg}", end_l),
+                ("ifgoto", cond_reg, end_l),
                 *body.code,
                 ("goto", while_l),
                 ("label", end_l),
@@ -150,12 +170,11 @@ def code_c(node, lmbd, ret, used, code_x, scope="global"):
 
         case "loop", counter, interval, body:
             loop_l, end_l = next(loop_label)
-
             count_reg, cond_reg = gen_reg(used | {ret}, 2)
 
-            code_c(counter, lmbd, ret, used, code_b)
-            code_c(interval, lmbd, ret, used | {count_reg}, code_b)
-            code_c(body, lmbd, ret, used | {count_reg, cond_reg}, code_x)
+            code_c(counter, lmbd, ret, used, code_b, scope=scope)
+            code_c(interval, lmbd, ret, used | {count_reg}, code_b, scope=scope)
+            code_c(body, lmbd, ret, used | {count_reg, cond_reg}, code_x, scope=scope)
 
             node.code = [
                 ("comment", f"count of {loop_l}"),
@@ -171,19 +190,18 @@ def code_c(node, lmbd, ret, used, code_x, scope="global"):
                 ("label", end_l),
             ]
 
-        # TODO: letrec
         case "letrec", decls, body:
             body.sym.copy(body.free)
-            for i, name in enumerate(body.free):
+            for i, name in enumerate(sorted(body.free)):
                 body.sym[name].idx = i
 
             (letrec_l,) = next(let_label)
             (env_reg,) = gen_reg(used | {ret})
 
             gobal_vars = []
-            for name in node.free:
+            for name in sorted(body.free):
                 gobal_vars += [
-                    ("get", ret, node.sym[name].idx),
+                    ("=", ret, node.sym[name].idx),
                     ("[]=", env_reg, body.sym[name].idx, ret),
                 ]
 
@@ -193,7 +211,7 @@ def code_c(node, lmbd, ret, used, code_x, scope="global"):
                 if var_name not in body.free:
                     continue
                 (hull_reg,) = gen_reg(
-                    used | {ret} | {env_reg} | {r for _, r in hulls_regs}
+                    used | {ret, env_reg} | {r for _, r in hulls_regs}
                 )
                 match ty:
                     case ("->", *_):
@@ -205,15 +223,18 @@ def code_c(node, lmbd, ret, used, code_x, scope="global"):
 
             declared_vars = []
             for _, ty, name, rhs in decls:
+                node.sym[name].scope = "letrec"
                 if name not in body.free:
-                    declared_vars += code_c(rhs, lmbd, ret, used, code_v)
+                    declared_vars += code_c(
+                        rhs, lmbd, ret, used, code_v, scope="letrec"
+                    )
                     continue
                 _, hull_reg = next(r for r in hulls_regs if r[0] == name)
-                code_c(rhs, lmbd, ret, used | {env_reg} | {hull_reg}, code_v)
+                code_c(rhs, lmbd, ret, used | {env_reg}, code_v, scope="letrec")
                 declared_vars += rhs.code
                 declared_vars += [("rewrite", hull_reg, ret)]
 
-            code_c(body, lmbd, ret, used, code_v, scope="letrec")
+            code_c(body, lmbd, ret, used | {env_reg}, code_v, scope="letrec")
 
             node.code = [
                 ("comment", f"env of {letrec_l}"),
@@ -229,6 +250,7 @@ def code_c(node, lmbd, ret, used, code_x, scope="global"):
                 *body.code,
                 ("leave",),
                 ("comment", f"end of {letrec_l}"),
+                ("get", ret, ret),
             ]
 
         case _:
@@ -239,9 +261,9 @@ def code_c(node, lmbd, ret, used, code_x, scope="global"):
 def code_b(node: Node, lmbd, ret, used, scope="global") -> Any:
     match node.ast:
         case "seq", exprs:
-            code_c(node, lmbd, ret, used, code_b)
+            code_c(node, lmbd, ret, used, code_b, scope=scope)
         case "program", expr:
-            code_c(expr, lmbd, ret, used, code_b)
+            code_c(expr, lmbd, ret, used, code_b, scope=scope)
 
         case "num" | "float" | "str" | "complex" as lit, value:
             _type = {
@@ -252,23 +274,27 @@ def code_b(node: Node, lmbd, ret, used, scope="global") -> Any:
             }
             node.code = [("=", ret, _type[lit](value))]
 
-        case "var" | "call", name, *_:
-            code_c(node, lmbd, ret, used, code_v, scope=scope)
+        case "var", name:
             id = node.sym[name].idx
-            if scope == "letrec" and name in node.free:
+            code_c(node, lmbd, ret, used, code_v, scope=scope)
+            if scope == "letrec" and node.sym[name].scope == "letrec":
                 id = ret
             node.code += [("get", ret, id)]
 
+        case "call", _, _:
+            code_c(node, lmbd, ret, used, code_v, scope=scope)
+            node.code += [("get", ret, ret)]
+
         case "assign", _, name, _:
-            code_c(node, lmbd, ret, used, code_v)
+            code_c(node, lmbd, ret, used, code_v, scope=scope)
             node.code += [("get", ret, node.sym[name].idx)]
 
         case "binop", "power", lhs, rhs:
-            base_reg, exp_reg, tmp_reg = gen_reg(used | {ret}, 3)
+            base_reg, exp_reg, tmp_reg, tmp2_reg = gen_reg(used | {ret}, 4)
             loop_label, end_label = next(gen_label("power_loop", "power_end"))
 
-            code_c(lhs, lmbd, base_reg, used | {ret}, code_b)
-            code_c(rhs, lmbd, exp_reg, used | {ret, base_reg}, code_b)
+            code_c(lhs, lmbd, base_reg, used | {ret}, code_b, scope=scope)
+            code_c(rhs, lmbd, exp_reg, used | {ret, base_reg}, code_b, scope=scope)
 
             node.code = [
                 *lhs.code,
@@ -276,54 +302,28 @@ def code_b(node: Node, lmbd, ret, used, scope="global") -> Any:
                 ("=", ret, 1),
                 ("=", tmp_reg, 0),
                 ("label", loop_label),
-                (">=", "Rcmp", tmp_reg, exp_reg),
-                ("ifgoto", "Rcmp", end_label),
+                (">=", tmp2_reg, tmp_reg, exp_reg),
+                ("ifgoto", tmp2_reg, end_label),
                 ("*", ret, ret, base_reg),
                 ("+", tmp_reg, tmp_reg, 1),
                 ("goto", loop_label),
                 ("label", end_label),
             ]
-        # case "binop", "mod", lhs, rhs:
-        #     node.code = [
-        #         *code_b(lhs, reg_base).code,
-        #         *code_b(rhs, reg_base + 1).code,
-        #         ("\\", f"R{reg_base + 2}", f"R{reg_base}", f"R{reg_base + 1}"),
-        #         ("*", f"R{reg_base + 2}", f"R{reg_base + 2}", f"R{reg_base + 1}"),
-        #         ("-", f"R{reg_base}", f"R{reg_base}", f"R{reg_base + 2}"),
-        #         ("+", target_reg, f"R{reg_base}", f"R{reg_base + 1}"),
-        #     ]
-        # case "binop", "exp", lhs, rhs:
-        #     node.code = [
-        #         *code_b(lhs, reg_base).code,
-        #         *code_b(
-        #             Node("binop", "power", Node("num", 10), rhs), reg_base + 1
-        #         ).code,
-        #         ("*", target_reg, f"R{reg_base}", f"R{reg_base + 1}"),
-        #     ]
-        # case "binop", "xor", lhs, rhs:
-        #     node.code = [
-        #         *code_b(lhs, reg_base).code,
-        #         *code_b(rhs, reg_base + 1).code,
-        #         ("or", target_reg, f"R{reg_base}", f"R{reg_base + 1}"),
-        #         ("and", "R_temp", f"R{reg_base}", f"R{reg_base + 1}"),
-        #         ("not", "R_temp", "R_temp"),
-        #         ("and", target_reg, target_reg, "R_temp"),
-        #     ]
 
         case "binop", op, lhs, rhs:
             x_reg, y_reg = gen_reg(used | {ret}, 2)
 
-            code_c(lhs, lmbd, x_reg, used, code_b)
-            code_c(rhs, lmbd, y_reg, used | {x_reg}, code_b)
+            code_c(lhs, lmbd, x_reg, used, code_b, scope=scope)
+            code_c(rhs, lmbd, y_reg, used | {x_reg}, code_b, scope=scope)
 
             node.code = lhs.code + rhs.code + [(OPS[op], ret, x_reg, y_reg)]
 
         case "unary", "imag", lhs:
-            code_c(lhs, lmbd, ret, used, code_b)
+            code_c(lhs, lmbd, ret, used, code_b, scope=scope)
             node.code = lhs.code
 
         case "unary", op, expr:
-            code_c(expr, lmbd, ret, used, code_b)
+            code_c(expr, lmbd, ret, used, code_b, scope=scope)
             node.code = expr.code + [(OPS[op], ret, ret)]
 
         case "comparison", f, x, y:
@@ -336,8 +336,10 @@ def code_b(node: Node, lmbd, ret, used, scope="global") -> Any:
 
             tmp_regs = list(gen_reg(used | {ret}, len(exprs)))
 
-            code_c(exprs[0], lmbd, tmp_regs[0], used, code_b)
-            code_c(exprs[1], lmbd, tmp_regs[1], used | {tmp_regs[0]}, code_b)
+            code_c(exprs[0], lmbd, tmp_regs[0], used, code_b, scope=scope)
+            code_c(
+                exprs[1], lmbd, tmp_regs[1], used | {tmp_regs[0]}, code_b, scope=scope
+            )
 
             code = [
                 *exprs[0].code,
@@ -347,7 +349,12 @@ def code_b(node: Node, lmbd, ret, used, scope="global") -> Any:
 
             for i in range(1, len(ops)):
                 code_c(
-                    exprs[i + 1], lmbd, tmp_regs[i + 1], used | set(tmp_regs), code_b
+                    exprs[i + 1],
+                    lmbd,
+                    tmp_regs[i + 1],
+                    used | set(tmp_regs),
+                    code_b,
+                    scope=scope,
                 )
                 code += exprs[i + 1].code
                 code += [
@@ -362,49 +369,72 @@ def code_b(node: Node, lmbd, ret, used, scope="global") -> Any:
 def code_v(node: Node, lmbd, ret, used, scope="global") -> Any:
     match node.ast:
         case "num" | "str" | "float", _:
-            code_c(node, lmbd, ret, used, code_b)
+            code_c(node, lmbd, ret, used, code_b, scope=scope)
             node.code += [("mk[]", ret, ret)]
 
         case "binop" | "unary", *_:
-            code_c(node, lmbd, ret, used, code_b)
+            code_c(node, lmbd, ret, used, code_b, scope=scope)
+            node.code += [("mk[]", ret, ret)]
+
+        case "comparison", *_:
+            code_c(node, lmbd, ret, used, code_b, scope=scope)
             node.code += [("mk[]", ret, ret)]
 
         case "var", name:
             node.code = [("comment", f"var: {name}")]
-            if scope == "letrec":
+            if scope == "letrec" and node.sym[name].scope == "letrec":
                 node.code += [
                     ("=[]", node.sym[name].ty, ret, "V", node.sym[name].idx),
                 ]
 
         case "assign", _, name, value:
-            global VAR_ID
-            code_c(value, lmbd, ret, used, code_v)
-            node.sym[name].idx = VAR_ID
-            VAR_ID += 1
-            node.code = value.code + [("rewrite", ret, ret)]
+            code_c(value, lmbd, ret, used, code_v, scope=scope)
+            if hasattr(node.sym[name], "idx") is False:
+                # TODO: mk[]
+                # assign
+                node.sym[name].scope = scope
+                node.sym[name].idx = alloc()
+                node.code = value.code + [("rewrite", ret, ret)]
+            else:
+                # TODO: R : t = V[i]
+                # reassign
+                (glb_idx,) = gen_reg(used | {ret})
+                node.sym[name].scope = scope
+                if name in node.sym and node.sym[name].scope == "letrec":
+                    node.code = value.code + [
+                        ("=[]", node.sym[name].ty, glb_idx, "V", node.sym[name].idx),
+                        ("rewrite", glb_idx, ret),
+                    ]
+                else:
+                    glb_code = [("=", glb_idx, node.sym[name].idx)]
+                    node.code = value.code + glb_code + [("rewrite", glb_idx, ret)]
 
         case "lambda", params, body, _:
-            # rekursion kann noch warten
-            body.sym.copy(body.free)
-
+            body.sym.copy(node.free)
             (lambda_l,) = next(lambda_label)
 
             (env_reg,) = gen_reg(used | {ret})
-            env = [("mk[]", "*", env_reg, len(body.free))]
-            for i, name in enumerate(body.free):
+            env = [("mk[]", "*", env_reg, len(node.free))]
+
+            for i, name in enumerate(node.free):
                 body.sym[name].idx = i
-                env += [
-                    ("=[]", node.sym[name].ty, ret, "V", node.sym[name].idx),
-                    ("get", ret, ret),
-                    ("[]=", env_reg, i, ret),
-                ]
+                if node.sym[name].scope == "letrec":
+                    env += [
+                        ("=[]", node.sym[name].ty, ret, "V", node.sym[name].idx),
+                        ("get", ret, ret),
+                        ("[]=", env_reg, body.sym[name].idx, ret),
+                    ]
+                else:
+                    env += [
+                        ("get", ret, body.sym[name].idx),
+                        ("[]=", env_reg, i, ret),
+                    ]
 
             for i, (*_, name) in enumerate(params):
                 body.sym[name].idx = len(node.free) + i
 
             (body_ret_reg,) = gen_reg({"R0"})
-
-            code_c(body, lmbd, body_ret_reg, {"R0"}, code_v)
+            code_c(body, lmbd, body_ret_reg, {"R0"}, code_v, scope="lambda")
 
             lmbd[lambda_l] = [
                 ("label", lambda_l),
@@ -423,49 +453,55 @@ def code_v(node: Node, lmbd, ret, used, scope="global") -> Any:
             ]
 
         case "call", func, args:
-            code_c(func, lmbd, ret, used, code_v)
+            code_c(func, lmbd, ret, used, code_v, scope=scope)
 
-            env_reg, arg_reg = gen_reg(used | {ret}, 2)
+            # env_reg, arg_reg = gen_reg(used | {ret}, 2)
+            (closure_reg, env_reg, fn_label_reg, argvec_reg, tmp_reg) = gen_reg(
+                used | {ret}, 5
+            )
 
-            argvec = [
-                ("mk[]", "*", arg_reg, len(args)),
-            ]
-            for i, arg in enumerate(args):
-                match arg:
+            argvec = [("mk[]", "*", argvec_reg, len(args))]
+            for i, argument in enumerate(args):
+                match argument:
                     case "pos", expr:
                         argvec += code_c(
-                            expr, lmbd, arg_reg, used | {ret, arg_reg}, code_v
-                        ) + [
-                            ("[]=", arg_reg, i, arg_reg),
-                        ]
-                    case "keyword", _, a:
-                        pass
-            argvec += [
-                ("=[]", arg_reg, ret, 1),
-                ("veccat", env_reg, arg_reg, env_reg),
-                ("=[]", arg_reg, ret, 0),
+                            expr,
+                            lmbd,
+                            tmp_reg,
+                            used | {ret, closure_reg, argvec_reg},
+                            code_v,
+                            scope=scope,
+                        )
+                        argvec += [("[]=", argvec_reg, i, tmp_reg)]
+                    case "keyword", var_name, expr:
+                        argvec += code_c(
+                            expr,
+                            lmbd,
+                            argvec_reg,
+                            used | {ret, closure_reg, argvec_reg},
+                            code_v,
+                            scope=scope,
+                        )
+                        argvec += [("[]=", argvec_reg, func.sym[var_name].idx, tmp_reg)]
+
+            node.code = [
+                ("comment", f"call start {func}"),
+                *func.code,
+                *argvec,
+                ("comment", "unpack closure"),
+                ("=[]", closure_reg, ret, 0),
+                ("=[]", env_reg, closure_reg, 0),
+                ("=[]", fn_label_reg, closure_reg, 1),
+                ("veccat", env_reg, env_reg, argvec_reg),
+                ("fenter", env_reg),
+                ("call", fn_label_reg),
+                ("fleave",),
+                ("=", ret, "R0"),
+                ("comment", f"call end {func}"),
             ]
-            if len(args) == len(func.ty[1]):
-                node.code = [
-                    ("comment", f"call start {func}"),
-                    *func.code,
-                    *argvec,
-                    ("fenter", env_reg),
-                    ("call", arg_reg),
-                    ("fleave",),
-                    ("=", ret, "R0"),
-                ]
-            else:
-                node.code = [
-                    ("comment", f"call start {func}"),
-                    *func.code,
-                    *argvec,
-                    ("mk[]", "*", ret, 2),
-                    ("[]=", ret, 0, env_reg),
-                    ("[]=", ret, 1, arg_reg),
-                ]
+
         case _:
-            raise Exception("code_v not implemented for this AST node")
+            raise Exception(f"code_v not implemented for this AST node: {node.ast}")
     return node.code
 
 
@@ -511,8 +547,9 @@ def free(node) -> Any:
                 free(elif_cond)
                 free(e_body)
                 node.free |= elif_cond.free | e_body.free
-            free(else_body[-1][1])
-            node.free |= else_body[-1][1].free
+            if else_body and else_body[-1][0] == "else":
+                free(else_body[-1][1])
+                node.free |= else_body[-1][1].free
         case "while", cond, body:
             free(cond)
             free(body)

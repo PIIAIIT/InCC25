@@ -4,23 +4,28 @@ main_file = main.py
 lexer_file = lexer.py
 parser_file = parser.py
 
-default::
+default:
 	$(PYTHON_ENV) $(main_file)
 
-lexer::
+lexer:
 	$(PYTHON_ENV) $(lexer_file)
 
-parser::
+parser:
 	$(PYTHON_ENV) $(parser_file)
 
-test::
+test:
 	$(PYTHON_ENV) -m test.test
 
-iic::
+iic:
 	$(PYTHON_ENV) $(main_file) -iic
+
+asm: out.asm
+	nasm -f elf64 -o out.o out.asm
+	ld -o test.exe out.o
+	-./test.exe
 
 debug:
 	$(PYTHON_ENV) $(main_file) -debug
 
 clean:
-	rm -f parsertab.py parser.out
+	rm -f parsertab.py parser.out out.asm out.o test.exe __pycache__/*.pyc

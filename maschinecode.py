@@ -17,12 +17,6 @@ def maschine_code(node):
         else:
             return reg
 
-    OPS = {
-        "+": "add",
-        "-": "sub",
-        "*": "imul",
-    }
-
     for instr in node:
         match instr:
             case "label", "main":
@@ -34,12 +28,18 @@ def maschine_code(node):
                 r = regs(register)
                 e = regs(expr)
                 asm += [f"mov {r}, {e}"]
-            case "+" | "-" | "*" as op, res, reg1, reg2:
-                asm += [
-                    f"mov rax, {regs(reg1)}",
-                    f"{OPS[op]} rax, {regs(reg2)}",
-                    f"mov {regs(res)}, rax",
-                ]
+            case "+" | "-" | "*" | "xor" | "and" | "or" as op, res, reg1, reg2:
+                OPS = {
+                    "+": "add",
+                    "-": "sub",
+                    "*": "imul",
+                    "xor": "xor",
+                    "or": "or",
+                    "and": "and",
+                }
+                asm += [f"mov rax, {regs(reg1)}"]
+                asm += [f"{OPS[op]} rax, {regs(reg2)}"]
+                asm += [f"mov {regs(res)}, rax"]
             case "%", res, reg1, reg2:
                 asm += [
                     f"mov rax, {regs(reg1)}",
@@ -56,11 +56,91 @@ def maschine_code(node):
                     "idiv rbx",
                     f"mov {regs(res)}, rax",
                 ]
+            case "\\", res, reg1, imm2:
+                asm += [
+                    f"mov rax, {regs(reg1)}",
+                    f"mov rcx, {imm2}",
+                    f"shr rax, cl",
+                    f"mov {regs(res)}, rax",
+                ]
+            case "|", res, reg1, imm2:
+                asm += [
+                    f"mov rax, {regs(reg1)}",
+                    f"mov rcx, {imm2}",
+                    f"shl rax, cl",
+                    f"mov {regs(res)}, rax",
+                ]
+            case "**", res, reg1, imm2:
+                asm += [
+                    f"mov {regs(res)}, 1",
+                    f"mov rcx, {imm2}",
+                    f"mov rax, {regs(reg1)}",
+                    f"pow_loop_{res}:",
+                    "mul rax",
+                    f"loop pow_loop_{res}",
+                    f"mov {regs(res)}, rax",
+                ]
+            case "exp", res, reg1, reg2:
+                asm += [
+                    f"mov rax, {regs(reg1)}",
+                    f"mov rbx, {regs(reg2)}",
+                    f"pow_loop_{res}:",
+                    "mul rax",
+                    "dec rbx",
+                    f"jnz pow_loop_{res}",
+                    f"mov {regs(res)}, rax",
+                ]
+            case "u-", res, reg1:
+                asm += [
+                    f"mov rax, {regs(reg1)}",
+                    "neg rax",
+                    f"mov {regs(res)}, rax",
+                ]
+            case "u+", res, reg1:
+                asm += [
+                    f"mov rax, {regs(reg1)}",
+                    f"mov {regs(res)}, rax",
+                ]
+            case "i+", res, reg1:
+                pass
+            case "<" | "<=" | ">" | ">=" | "==" | "!=" as cmp_op, res, reg1, reg2:
+                CMPS = {
+                    "<": "l",
+                    "<=": "le",
+                    ">": "g",
+                    ">=": "ge",
+                    "==": "e",
+                    "!=": "ne",
+                }
+                asm += [
+                    f"mov rax, {regs(reg1)}",
+                    f"cmp rax, {regs(reg2)}",
+                    f"set{CMPS[cmp_op]} al",
+                    f"movzx {regs(res)}, al",
+                ]
+            case "ifgoto", cond, name:
+                asm += [
+                    f"cmp {regs(cond)}, 0",
+                    f"jne {name}",
+                ]
+            case "goto", name:
+                asm += [f"jmp {name}"]
+            case "comment", text:
+                asm += [f"; {text}"]
+            case _:
+                raise ValueError(f"Unknown instruction: {instr}")
 
     # exit syscall
     asm += ["mov rax, 60", f"mov rdi, {register_mapping['R0']}", "syscall"]
 
     return asm
+
+
+def write_to_file(asm, filename="out.asm"):
+    with open(filename, "w") as f:
+        for x in asm:
+            f.write(x)
+            f.write("\n")
 
 
 if __name__ == "__main__":
@@ -83,7 +163,4 @@ if __name__ == "__main__":
         print(x)
 
     # print to file
-    with open("out.asm", "w") as f:
-        for x in asm:
-            f.write(x)
-            f.write("\n")
+    write_to_file(asm)

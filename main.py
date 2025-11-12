@@ -5,7 +5,7 @@ from environment import SymbolTable
 from interpreter import eval
 from typisierung import typecheck
 from lexer import print_traceback
-from zwischencode import code_c, code_b, free
+from zwischencode import code_c, code_b, free, iic_gen
 from optimierung import (
     control_flow,
     basis_block,
@@ -14,6 +14,7 @@ from optimierung import (
     register_coloring,
 )
 import ice2_ws25.ice_machine as ice_machine
+from maschinecode import maschine_code
 import readline
 
 COLORS = {
@@ -26,12 +27,22 @@ COLORS = {
 ENV = SymbolTable()
 
 
-def prod(src, debug=False, write=False, filename="iic_code.iic", iic=False, config={}):
+def prod(
+    src,
+    debug=False,
+    write=False,
+    filename="iic_code.iic",
+    iic=False,
+    mc=False,
+    config={},
+):
     if config != {}:
         debug = config["debug"]
         write = config["write"]["b_write"]
         filename = config["write"]["file"]
         iic = config["iic"]
+        mc = config["asm"]["b_asm"]
+        asm_file = config["asm"]["file"]
     # Parser
     result = parser.parse(src, debug=debug)
     # Typecheck und Symboltabelle
@@ -46,13 +57,18 @@ def prod(src, debug=False, write=False, filename="iic_code.iic", iic=False, conf
 
     if iic:
         # Intermediate Code
-        inter_result = code_c(result, dict(), "R0", set(), code_b)
+        inter_result = iic_gen(result)
 
         if write:
             write_iic(inter_result, filename)
 
         # # Check with ice_machine
         regs = ice_machine.run(inter_result, debug=True, detailed=True)
+
+    if mc:
+        asm_result = maschine_code(inter_result)
+
+        write_asm(asm_result, asm_file)
 
     # Optimization
     if config.get("optimize", False):
@@ -139,12 +155,20 @@ def write_iic(code, filename="iic_code.iic"):
             f.write("\n")
 
 
+def write_asm(code, filename="out.asm"):
+    with open(filename, "w") as f:
+        for x in code:
+            f.write(x)
+            f.write("\n")
+
+
 if __name__ == "__main__":
     config = {
         "debug": False,
         "write": {"b_write": False, "file": "iic_code.iic"},
         "read": {"b_read": False, "file": ""},
         "iic": False,
+        "asm": {"b_asm": False, "file": "out.asm"},
         "optimize:": False,
     }
 
@@ -154,14 +178,15 @@ if __name__ == "__main__":
                 config["debug"] = True
             case "-w" | "--write":
                 config["write"]["b_write"] = True
-                w_filename = sys.argv[sys.argv.index(eachArg) + 1]
-                config["write"]["file"] = w_filename
+                config["write"]["file"] = sys.argv[sys.argv.index(eachArg) + 1]
             case "-iic":
                 config["iic"] = True
+            case "-asm":
+                config["asm"]["b_asm"] = True
+                config["asm"]["file"] = sys.argv[sys.argv.index(eachArg) + 1]
             case "-r" | "--read":
                 config["read"]["b_read"] = True
-                r_filename = sys.argv[sys.argv.index(eachArg) + 1]
-                config["read"]["file"] = r_filename
+                config["read"]["file"] = sys.argv[sys.argv.index(eachArg) + 1]
             case "-O" | "--optimize":
                 config["optimize"] = True
             case _:

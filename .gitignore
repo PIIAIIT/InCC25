@@ -1,3 +1,6 @@
 # pycache
 *pycache*
 .*
+test*.ice
+out.*
+test.exe

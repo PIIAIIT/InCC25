@@ -218,6 +218,7 @@ def code_c(node, lmbd, ret, used, code_x, scope="global"):
                         hulls_code += [("mk[]", "*", hull_reg, 2)]
                     case _:
                         hulls_code += [("mk[]", hull_reg, 0)]
+                alloc()
                 hulls_code += [("[]=", env_reg, body.sym[var_name].idx, hull_reg)]
                 hulls_regs += [(var_name, hull_reg)]
 
@@ -235,6 +236,7 @@ def code_c(node, lmbd, ret, used, code_x, scope="global"):
                 declared_vars += [("rewrite", hull_reg, ret)]
 
             code_c(body, lmbd, ret, used | {env_reg}, code_v, scope="letrec")
+            alloc()
 
             node.code = [
                 ("comment", f"env of {letrec_l}"),
@@ -370,14 +372,17 @@ def code_v(node: Node, lmbd, ret, used, scope="global") -> Any:
     match node.ast:
         case "num" | "str" | "float", _:
             code_c(node, lmbd, ret, used, code_b, scope=scope)
+            alloc()
             node.code += [("mk[]", ret, ret)]
 
         case "binop" | "unary", *_:
             code_c(node, lmbd, ret, used, code_b, scope=scope)
+            alloc()
             node.code += [("mk[]", ret, ret)]
 
         case "comparison", *_:
             code_c(node, lmbd, ret, used, code_b, scope=scope)
+            alloc()
             node.code += [("mk[]", ret, ret)]
 
         case "var", name:
@@ -390,14 +395,10 @@ def code_v(node: Node, lmbd, ret, used, scope="global") -> Any:
         case "assign", _, name, value:
             code_c(value, lmbd, ret, used, code_v, scope=scope)
             if hasattr(node.sym[name], "idx") is False:
-                # TODO: mk[]
-                # assign
                 node.sym[name].scope = scope
-                node.sym[name].idx = alloc()
+                node.sym[name].idx = HEAP_POS - 1
                 node.code = value.code + [("rewrite", ret, ret)]
             else:
-                # TODO: R : t = V[i]
-                # reassign
                 (glb_idx,) = gen_reg(used | {ret})
                 node.sym[name].scope = scope
                 if name in node.sym and node.sym[name].scope == "letrec":
@@ -414,6 +415,7 @@ def code_v(node: Node, lmbd, ret, used, scope="global") -> Any:
             (lambda_l,) = next(lambda_label)
 
             (env_reg,) = gen_reg(used | {ret})
+            alloc()
             env = [("mk[]", "*", env_reg, len(node.free))]
 
             for i, name in enumerate(node.free):
@@ -443,6 +445,7 @@ def code_v(node: Node, lmbd, ret, used, scope="global") -> Any:
                 ("ret",),
             ]
 
+            alloc()
             node.code = [
                 ("comment", f"lambda start {lambda_l}"),
                 *env,
@@ -460,6 +463,7 @@ def code_v(node: Node, lmbd, ret, used, scope="global") -> Any:
                 used | {ret}, 5
             )
 
+            alloc()
             argvec = [("mk[]", "*", argvec_reg, len(args))]
             for i, argument in enumerate(args):
                 match argument:

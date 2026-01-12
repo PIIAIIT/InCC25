@@ -168,25 +168,6 @@ def print_traceback(input_text, token, silent=False):
 def t_error(t):
     print_traceback(t.lexer.lexdata, t)
     t.lexer.skip(1)
-    return t
 
 
 lexer: Lexer = lex()
-
-if __name__ == "__main__":
-    # Interaktives Menu
-    while True:
-        try:
-            s = input(">>> ")
-        except EOFError:
-            break
-
-        if not s or s.lower() == "\n":
-            continue
-        if s.lower() == "q":
-            break
-
-        lexer.input(s)
-
-        for token in lexer:
-            print(token)

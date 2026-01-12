@@ -42,7 +42,7 @@ pyeval = eval
 loaded_modules = set()
 
 
-def eval(node: Node, env: SymbolTable, debug=False):
+def eval(node: Node, env, debug=False):
     match node.ast:
         case ("num", n):
             base = 10
@@ -194,7 +194,7 @@ def eval(node: Node, env: SymbolTable, debug=False):
         case ("array_access", array_ptr, index):
             arr = eval(array_ptr, env)
             assert isinstance(
-                arr, (list, tuple)
+                arr, (list, tuple, str)
             ), f"{type(arr)} {arr} ist nicht veränderlich."
 
             if index == "+":
@@ -202,6 +202,8 @@ def eval(node: Node, env: SymbolTable, debug=False):
 
             i = eval(index, env)
             if isinstance(arr, list):
+                return arr[i]
+            if isinstance(arr, str):
                 return arr[i]
 
             return list(iter_tuple(arr))[i]

@@ -13,16 +13,21 @@ lexer:
 parser:
 	$(PYTHON_ENV) $(parser_file)
 
-test:
+test::
 	$(PYTHON_ENV) -m test.test
 
 iic:
-	$(PYTHON_ENV) $(main_file) -iic
+	$(PYTHON_ENV) $(main_file) -iic -d
 
-asm: out.asm
-	nasm -f elf64 -o out.o out.asm
-	ld -o test.exe out.o
-	-./test.exe
+asm:
+	nasm -f elf64 -o out.o main.asm -g -F dwarf
+	gcc -gdwarf -ggdb -g -z noexecstack -no-pie -o test.exe out.o
+	./test.exe
+
+asmICE:
+	nasm -f elf64 -o out.o main.asm -g -F dwarf
+	gcc -gdwarf -ggdb -g -z noexecstack -no-pie -L libICE -lICE -o test.exe out.o -lICE -static
+	./test.exe
 
 debug:
 	$(PYTHON_ENV) $(main_file) -debug

@@ -1,3 +1,6 @@
 [submodule "ice2_ws25"]
 	path = ice2_ws25
 	url = https://git.inf.h-brs.de/aaster2m/ice2_ws25.git
+[submodule "libICE"]
+	path = libICE
+	url = https://git.inf.h-brs.de/ice/libice.git

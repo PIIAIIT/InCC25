@@ -1,6 +1,22 @@
 # pycache
 *pycache*
+# dotfiles
 .*
-test*.ice
-out.*
+# executables
+main
 test.exe
+# temporary files
+out.*
+# object files
+*.o
+# intermediate files
+*.ice
+*.iic
+# assembly files
+*.out
+*.asm
+# graph coloring files
+dot/
+# generated parser files
+parser.out
+parsetab.py

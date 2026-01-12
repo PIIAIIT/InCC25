@@ -1,23 +1,23 @@
 
 <!-- ![Logo](logo.jpg) -->
 <p align="center">
-  <img src="logo.jpg" alt="IceMango" width="500">
+  <img src="logo.jpg" alt="IceSpaghetti" width="500">
 </p>
 
 # ICE – Interpreter für Interpreter und Compilerbau
 
 
-Dieses Projekt implementiert meine Ice-Sorte: Mango - einen Interpreter im Rahmen der Veranstaltung „Interpreter und Compilerbau Entwicklung“. Der Code dient als praktisches Beispiel für die Entwicklung von Interpretern und bietet eine Grundlage für das Verständnis von Compilerbau.
+Dieses Projekt implementiert meine Ice-Sorte: Spaghetti - einen Interpreter im Rahmen der Veranstaltung „Interpreter und Compilerbau Entwicklung“. Der Code dient als praktisches Beispiel für die Entwicklung von Interpretern und bietet eine Grundlage für das Verständnis von Compilerbau.
 
 
 ## 📦 Übersicht
 
 - Das Repository enthält die folgenden Hauptkomponenten:
-- **Lexer**: Tokenisiert den Quellcode in lexikalische Einheiten.
-- **Parser**: Analysiert die Syntax des Quellcodes und erstellt eine abstrakte Syntaxbaum (AST).
-- **Interpreter**: Führt den AST aus und gibt die Ergebnisse aus.
-- **Standardbibliothek**: Enthält grundlegende Funktionen.
-- **Testumgebung**: Stellt sicher, dass der Interpreter korrekt funktioniert.
+- **Lexer**: Tokenisiert den Quellcode in lexikalische Einheiten. (lexer.py)
+- **Parser**: Analysiert die Syntax des Quellcodes und erstellt eine abstrakte Syntaxbaum (AST). (parser.py)
+- **Interpreter**: Führt den AST aus und gibt die Ergebnisse aus. (interpreter.py)
+- **Standardbibliothek**: Enthält grundlegende Funktionen. ( stdlib/ )
+- **Testumgebung**: Stellt sicher, dass der Interpreter korrekt funktioniert. ( in tests/ )
 ## ⚙️ Installation
 
 Clone das Repository und navigiere in das Projektverzeichnis:

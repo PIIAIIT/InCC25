@@ -1,6 +1,6 @@
 {
 # === Benannter Lambda-Ausdruck === #
-i64 -> i64 add := lambda (i64 x, i64 y) -> i64 : x + y;
+(i64, i64) -> i64 add := lambda (i64 x, i64 y) -> i64 : x + y;
 x := add(2, 3); # Erwartet: 5 #
 assert := x = 5;
 
@@ -9,9 +9,9 @@ i64 x := (lambda i64 x -> i64 : x * x)(4); # Erwartet: 16 #
 assert +:= x = 16;
 
 # === Keyword- und Positionsargumente === #
-format := lambda (i64 a, i64 b, i64 c) -> f64 : +(a | b - (c:=2));
-f64 x := format(1, 2, c: 3); # Erwartet: "a=1, b=2, c=2" #
-assert +:= x = 1.5;
+format := lambda (i64 a, i64 b, f64 c) -> f64 : (a | b - (c:=2.0));
+f64 x := format(1, 2, c: 3.0); # Erwartet: "a=1, b=2, c=2" #
+assert +:= x = -1.5;
 
 # === Oversupply (Mehr Argumente) === #
 # Funktion mit variadischen Argumenten (z.B. letzte ist Rest) #

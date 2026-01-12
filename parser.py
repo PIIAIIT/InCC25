@@ -34,10 +34,6 @@ unary = {
 }
 
 
-# FUNCTION DEFINITION
-EXPR = "expr"
-
-
 class Node:
 
     def __init__(self, tag: str, *args):
@@ -46,6 +42,9 @@ class Node:
         self.code: list
         self.ty: str
         self.free: set
+
+    def children(self):
+        return self.ast[1:]
 
     def __iter__(self):
         return iter(self.ast)
@@ -57,8 +56,9 @@ class Node:
         return f"{self.ast}"
 
 
-def print_ast(node: Node, level=0):
+def print_ast(node: Node, level=0, debug=False):
     indent = "  " * level
+    print(f"{node.sym=}") if hasattr(node, "sym") and debug else None
     match node.ast:
         case "num" | "float" | "str" | "var", value:
             print(f"{indent}{node.ast[0]}: {value}")
@@ -79,12 +79,18 @@ def print_ast(node: Node, level=0):
         case "assign", ty, name, expr:
             print(f"{indent}assign: {name} of type {ty}")
             print_ast(expr, level + 1)
-        case "comparison", *args:
+        case "comparison", f, x, y:
+            ops, exprs, tmp = [f], [x], y
+            while tmp[0] == "comparison":
+                ops.append(tmp[1])
+                exprs.append(tmp[2])
+                tmp = tmp[3]
+            exprs.append(tmp)
             print(f"{indent}comparison:")
-            for i in range(0, len(args[0]), 1):
-                if i > 0:
-                    print(f"{indent}  op: {args[0][i]}")
-                print_ast(args[1][i], level + 1)
+            for i in range(len(ops)):
+                print(f"{indent}  {ops[i]}:")
+                print_ast(exprs[i], level + 1)
+            print_ast(exprs[-1], level + 1)
         case "if", condition, cond_body, else_if:
             print(f"{indent}if:")
             print(f"{indent}  condition:")
@@ -113,9 +119,28 @@ def print_ast(node: Node, level=0):
             print_ast(iterator, level + 2)
             print(f"{indent}  body:")
             print_ast(body, level + 2)
+        case "lambda", para, body, ty:
+            print(f"{indent}lambda of type {ty}:")
+            print(f"{indent}  parameters:")
+            for p in para:
+                print(f"{indent}    {p}")
+            print(f"{indent}  body:")
+            print_ast(body, level + 2)
+        case "call", func, para:
+            print(f"{indent}call:")
+            print(f"{indent}  function:")
+            print_ast(func, level + 2)
+            print(f"{indent}  parameters:")
+            for p in para:
+                print_ast(p[1], level + 2)
+        case "letrec", assigns, body:
+            print(f"{indent}letrec:")
+            for a in assigns:
+                print_ast(a, level + 1)
+            print(f"{indent}in:")
+            print_ast(body, level + 1)
         case _:
             print(f"{indent}{node.ast[0]}:")
-    print(node.sym)
 
 
 def rule_f(name, rule, func):
@@ -139,19 +164,19 @@ def rule_n(tag, rule, **children):
 
 def node_b(op, prec=None):
     rule_f(
-        EXPR,
-        f"{EXPR} : {EXPR} {op} {EXPR} %prec {prec if prec else op}",
+        "expr",
+        f"expr : expr {op} expr %prec {prec if prec else op}",
         lambda p: Node("binop", look_up_table[p[2]], p[1], p[3]),
     )
 
 
 def node_u(op, postfix=False, prec=None):
     op_pos = 2 if postfix else 1
-    rule = f"{EXPR} {op}" if postfix else f"{op} {EXPR}"
+    rule = f"expr {op}" if postfix else f"{op} expr"
 
     rule_f(
-        EXPR,
-        f"{EXPR} : {rule} %prec {prec if prec else op}",
+        "expr",
+        f"expr : {rule} %prec {prec if prec else op}",
         lambda p: Node("unary", unary[p[op_pos]], p[3 - op_pos]),
     )
 
@@ -225,8 +250,13 @@ rule_f("type", "type : T_FLOAT", lambda _: "f64")
 rule_f("type", "type : T_STRING", lambda _: "str")
 rule_f("type", "type : T_COMPLEX", lambda _: "c64")
 rule_l("type_arg", "type", "COMMA", trailing_seperator="disallow")
-rule_f("type", "type : LPAREN type_arg RPAREN ARROW type", lambda p: ("->", p[2], p[5]))
-rule_f("type", "type : type ARROW type", lambda p: ("->", [p[1]], p[3]))
+rule_f(
+    "type",
+    "type : LPAREN type_arg RPAREN ARROW type",
+    lambda p: ("->", tuple(p[2]), p[5]),
+)
+rule_f("type", "type : type ARROW type", lambda p: ("->", tuple([p[1]]), p[3]))
+rule_f("type", "type : LPAREN RPAREN ARROW type", lambda p: ("->", tuple(), p[4]))
 rule_f("type", "type : OPEN_BRACKETS CLOSED_BRACKETS type", lambda p: "[]" + p[3])
 
 rule_f(

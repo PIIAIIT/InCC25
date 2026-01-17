@@ -134,6 +134,10 @@ def _typecheck(node, debug=DEBUG or False):
         case ("binop", op, expr1, expr2):
             t1 = typecheck(expr1)
             t2 = typecheck(expr2)
+            if OPS[op].get((t1, t2)) is None:
+                raise TypeError(
+                    f"Operator '{op}' not defined for types '{t1}' and '{t2}'"
+                )
             return OPS[op][(t1, t2)]
 
         case ("comparison", _, x, y):
@@ -171,6 +175,8 @@ def _typecheck(node, debug=DEBUG or False):
 
         case ("unary", op, expr):
             t = typecheck(expr)
+            if OPS[op].get((t,)) is None:
+                raise TypeError(f"Operator '{op}' not defined for type '{t}'")
             return OPS[op][(t,)]
 
         case ("seq", body):

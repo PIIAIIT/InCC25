@@ -8,3 +8,5 @@ When a system runs out of memory, it "spills" some of the data to disk to free u
 Für jede Funktion seperates Spilling Problem
 An anfang jeder Funktion ( RS = mk[*] 17, wobei 17 = 14 + 3 )
 Anzahl der Farben - Anzahl der verfügbaren Farben + 3
+
+Dauert: reads, writes

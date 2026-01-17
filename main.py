@@ -201,7 +201,7 @@ if __name__ == "__main__":
         "-asm",
         nargs="?",
         const=True,
-        default="main.asm",
+        default="",
         metavar="file",
         help="Generate assembly code and write to file",
     )

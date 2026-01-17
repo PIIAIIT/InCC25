@@ -1,7 +1,8 @@
+from optimierung import CFGraph, liveness
 from parser import Node
 from typing import Any
 from utils import gen_label, gen_reg
-from ice2_ws25.ice_machine import Inst, annotate_type, tuple_to_infix
+from ice2_ws25.ice_machine import tuple_to_infix
 
 OPS = {
     "plus": "+",
@@ -28,14 +29,16 @@ OPS = {
 }
 
 
-if_label = gen_label("if", "else", "end_if")
-elif_label = gen_label("elif", "elif_body")
-while_label = gen_label("while", "end_while")
-seq_label = gen_label("seq")
-loop_label = gen_label("loop", "end_loop")
-let_label = gen_label("letrec")
-lambda_label = gen_label("lambda")
-call_label = gen_label("call")
+LABELS = {
+    "if": gen_label("if", "else", "end_if"),
+    "elif": gen_label("elif", "elif_body"),
+    "while": gen_label("while", "end_while"),
+    "seq": gen_label("seq"),
+    "loop": gen_label("loop", "end_loop"),
+    "let": gen_label("letrec"),
+    "lambda": gen_label("lambda"),
+    "call": gen_label("call"),
+}
 
 
 def iic_gen(node, debug=False):
@@ -46,28 +49,21 @@ def iic_gen(node, debug=False):
     func_res = [x for sublist in list(lambda_env.values()) for x in sublist]
 
     inter_result = func_res + inter_result
-    # Make instructions into Inst objects
-    inter_result = mkInstrLabels(inter_result)
-    print("Instructions labeled.") if debug else None
-    # Assign types to registers
-    # types = _type(inter_result)
-    # _type(inter_result)  # for debugging purposes
-    # annotate_type(inter_result)
-    print("Types annotated.") if debug else None
-    return inter_result
+
+    cfg = CFGraph(inter_result)
+    liveness(cfg)
+
+    return cfg.iir
 
 
 def code_c(node, lmbd, ret, used, code_x):
     match node.ast:
-        case None:
-            return []
-
         case ("program", expr):
             code_c(expr, lmbd, ret, used, code_x)
             node.code = [("label", "main"), *expr.code]
 
         case "seq", exprs:
-            (seq_l,) = next(seq_label)
+            (seq_l,) = next(LABELS["seq"])
             node.code = [("comment", f"seq start {seq_l}")]
             for expr in exprs[:-1]:
                 node.code += code_c(expr, lmbd, ret, used, code_x)
@@ -100,16 +96,22 @@ def code_c(node, lmbd, ret, used, code_x):
                 *array.code,
                 ("=[]", array.ty, ret, arr_reg, 0),  # make array code_b
                 *index.code,
-                ("=[]", array.ty[2:], ret, ret, idx_reg),  # dereference array
+                (
+                    "=[]",
+                    array.ty[2:] if array.ty.startswith("[]") else "i64",
+                    ret,
+                    ret,
+                    idx_reg,
+                ),  # dereference array
             ]
 
         case "if", condition, then_body, else_body:
             has_else = bool(else_body and else_body[-1][0] == "else")
             n_elifs = len(else_body) - (1 if has_else else 0)
 
-            if_l, else_l, end_l = next(if_label)
-            elif_cond_l = [next(elif_label)[0] for _ in range(n_elifs)]
-            elif_body_l = [next(elif_label)[1] for _ in range(n_elifs)]
+            if_l, else_l, end_l = next(LABELS["if"])
+            elif_cond_l = [next(LABELS["elif"])[0] for _ in range(n_elifs)]
+            elif_body_l = [next(LABELS["elif"])[1] for _ in range(n_elifs)]
 
             code_c(condition, lmbd, ret, used, code_b)
             code_c(then_body, lmbd, ret, used, code_x)
@@ -166,7 +168,7 @@ def code_c(node, lmbd, ret, used, code_x):
             ]
 
         case "while", cond, body:
-            while_l, end_l = next(while_label)
+            while_l, end_l = next(LABELS["while"])
             (cond_reg,) = gen_reg(used | {ret})
 
             code_c(cond, lmbd, cond_reg, used | {ret}, code_b)
@@ -183,7 +185,7 @@ def code_c(node, lmbd, ret, used, code_x):
             ]
 
         case "loop", counter, interval, body:
-            loop_l, end_l = next(loop_label)
+            loop_l, end_l = next(LABELS["loop"])
 
             (counter_reg, cond_reg) = gen_reg(used | {ret}, 2)
 
@@ -204,16 +206,16 @@ def code_c(node, lmbd, ret, used, code_x):
             ]
 
         case "interval", _, e1, e2, _:
-            x_reg, y_reg = gen_reg(used | {ret}, 2)
-            code_c(e1, lmbd, x_reg, used, code_b)
-            code_c(e2, lmbd, y_reg, used | {x_reg}, code_b)
+            (tmp_reg,) = gen_reg(used | {ret})
+            code_c(e1, lmbd, tmp_reg, used | {ret}, code_b)
+            code_c(e2, lmbd, tmp_reg, used | {ret}, code_b)
             node.code = [
                 ("comment", "interval"),
-                *e1.code,
-                *e2.code,
                 ("mk[]", "*", ret, 2),
-                ("[]=", ret, 0, x_reg),
-                ("[]=", ret, 1, y_reg),
+                *e1.code,
+                ("[]=", ret, 0, tmp_reg),
+                *e2.code,
+                ("[]=", ret, 1, tmp_reg),
             ]
 
         case "letrec", decls, body:
@@ -226,7 +228,7 @@ def code_c(node, lmbd, ret, used, code_x):
             for i, name in enumerate(sorted(body.free | free_names)):
                 body.sym[name].idx = i
 
-            (letrec_l,) = next(let_label)
+            (letrec_l,) = next(LABELS["let"])
             (env_reg,) = gen_reg(used | {ret})
 
             global_vars = []
@@ -282,8 +284,6 @@ def code_c(node, lmbd, ret, used, code_x):
 
 def code_b(node: Node, lmbd, ret, used) -> Any:
     match node.ast:
-        case "seq", exprs:
-            code_c(node, lmbd, ret, used, code_b)
         case "program", expr:
             code_c(node, lmbd, ret, used, code_v)
             node.code += [("=", ret, ret)]
@@ -321,19 +321,7 @@ def code_b(node: Node, lmbd, ret, used) -> Any:
                 *code_list,
             ]
 
-        case "var", name:
-            code_c(node, lmbd, ret, used, code_v)
-            node.code += [("get", ret, ret)]
-
-        case "call", func, _:
-            code_c(node, lmbd, ret, used, code_v)
-            match func:
-                case "var", name:
-                    node.code += [("get", ret, node.sym[name].idx)]
-                case _:
-                    node.code += [("get", ret, ret)]
-
-        case "assign", _, name, _:
+        case "var" | "call" | "assign", *_:
             code_c(node, lmbd, ret, used, code_v)
             node.code += [("get", ret, ret)]
 
@@ -382,29 +370,26 @@ def code_b(node: Node, lmbd, ret, used) -> Any:
                 tmp = tmp[3]
             exprs.append(tmp)
 
-            tmp_regs = list(gen_reg(used | {ret}, len(exprs)))
+            r1, r2 = list(gen_reg(used | {ret}, 2))
 
-            code_c(exprs[0], lmbd, tmp_regs[0], used, code_b)
-            code_c(exprs[1], lmbd, tmp_regs[1], used | {tmp_regs[0]}, code_b)
+            code_c(exprs[0], lmbd, r1, used, code_b)
+            code_c(exprs[1], lmbd, r2, used, code_b)
 
             code = [
                 *exprs[0].code,
                 *exprs[1].code,
-                (OPS[ops[0]], ret, tmp_regs[0], tmp_regs[1]),
+                (OPS[ops[0]], ret, r1, r2),
             ]
 
+            def ch(i):
+                return r1 if i % 2 == 0 else r2
+
             for i in range(1, len(ops)):
-                code_c(
-                    exprs[i + 1],
-                    lmbd,
-                    tmp_regs[i + 1],
-                    used | set(tmp_regs),
-                    code_b,
-                )
+                code_c(exprs[i + 1], lmbd, ch(i), used | {ret, ch(i - 1)}, code_b)
                 code += exprs[i + 1].code
                 code += [
-                    (OPS[ops[i]], tmp_regs[i + 1], tmp_regs[i], tmp_regs[i + 1]),
-                    ("and", ret, ret, tmp_regs[i + 1]),
+                    (OPS[ops[i]], r1, ch(i - 1), ch(i)),
+                    ("and", ret, ret, r1),
                 ]
             node.code = code
         case _:
@@ -440,11 +425,10 @@ def code_v(node: Node, lmbd, ret, used) -> Any:
 
         case "lambda", params, body, _:
             body.sym.cpy(node.free)
-            (lambda_l,) = next(lambda_label)
-
+            (lambda_l,) = next(LABELS["lambda"])
             (env_reg,) = gen_reg(used | {ret})
-            env = [("mk[]", "*", env_reg, len(node.free))]
 
+            env = [("mk[]", "*", env_reg, len(node.free))]
             for i, name in enumerate(node.free):
                 body.sym[name].idx = i
                 env += [("=[]", node.sym[name].ty, ret, "V", node.sym[name].idx)]
@@ -456,8 +440,7 @@ def code_v(node: Node, lmbd, ret, used) -> Any:
                 body.sym[name].idx = len(node.free) + i
 
             (body_ret_reg,) = gen_reg({"R0"})
-            code_c(body, lmbd, body_ret_reg, {"R0"}, code_b)
-
+            code_c(body, lmbd, body_ret_reg, {"R0"}, code_v)
             lmbd[lambda_l] = [
                 ("label", lambda_l),
                 *body.code,
@@ -469,16 +452,16 @@ def code_v(node: Node, lmbd, ret, used) -> Any:
                 ("comment", f"lambda start {lambda_l}"),
                 *env,
                 ("mk[]", "*", ret, 2),
-                ("[]=", ret, 0, env_reg),
-                ("[]=", ret, 1, lambda_l),
+                ("[]=", ret, 0, lambda_l),
+                ("[]=", ret, 1, env_reg),
                 ("comment", f"lambda end {lambda_l}"),
             ]
 
         case "call", func, args:
-            env_reg, arg_reg, closure_reg = gen_reg(used | {ret, "R0"}, 3)
+            code_c(func, lmbd, ret, used, code_v)
+            env_reg, arg_reg = gen_reg(used | {ret}, 2)
 
-            code_c(func, lmbd, closure_reg, used | {ret, "R0"}, code_v)
-            (call_l,) = next(call_label)
+            (call_l,) = next(LABELS["call"])
 
             argvec = [("mk[]", "*", env_reg, len(args))]
             for i, argument in enumerate(args):
@@ -488,7 +471,7 @@ def code_v(node: Node, lmbd, ret, used) -> Any:
                             expr,
                             lmbd,
                             arg_reg,
-                            used | {ret, closure_reg, env_reg},
+                            used | {ret, env_reg},
                             code_v,
                         )
                         argvec += [("[]=", env_reg, i, arg_reg)]
@@ -497,14 +480,14 @@ def code_v(node: Node, lmbd, ret, used) -> Any:
                             expr,
                             lmbd,
                             arg_reg,
-                            used | {ret, closure_reg, env_reg},
+                            used | {ret, env_reg},
                             code_v,
                         )
                         argvec += [("[]=", env_reg, func.sym[var_name].idx, arg_reg)]
             argvec += [
-                ("=[]", "[*]", arg_reg, closure_reg, 0),
+                ("=[]", "[*]", arg_reg, ret, 1),
                 ("veccat", env_reg, arg_reg, env_reg),
-                ("=[]", "i64", arg_reg, closure_reg, 1),
+                ("=[]", "i64", arg_reg, ret, 0),
             ]
 
             node.code = [
@@ -515,7 +498,6 @@ def code_v(node: Node, lmbd, ret, used) -> Any:
                 ("call", arg_reg),
                 ("fleave",),
                 ("=", ret, "R0"),
-                ("mk[]", ret, ret),
                 ("comment", f"call end {call_l}"),
             ]
 
@@ -623,103 +605,6 @@ def free(node) -> Any:
             raise NotImplementedError("free not implemented for this AST node")
 
 
-def _type(node: list[Inst]):
-    TYP = {
-        int: "i64",
-        float: "f64",
-        complex: "c64",
-        str: "str",
-    }
-    pc = 0
-    while pc < len(node):
-        instruction: Inst = node[pc]
-        instruction.type = node[pc - 1].type.copy() if pc > 0 else dict()
-
-        def get_type(val):
-            if isinstance(val, str) and val.startswith("R"):
-                return instruction.type.get(val, "unknown")
-            else:
-                return TYP[type(val)]
-
-        match instruction:
-            case ("=", register, value):
-                instruction.type[register] = get_type(value)
-            case (op, dest, *srcs) if op in OPS.values():
-                if dest.startswith("R") and all(s.startswith("R") for s in srcs):
-                    if op == "|":
-                        instruction.type[dest] = "f64"
-                    else:
-                        instruction.type[dest] = get_type(srcs[0])
-            case ("mk[]", dest, arg):
-                instruction.type[dest] = f"[{get_type(arg)}]"
-            case ("mk[]", ty, dest, _):
-                instruction.type[dest] = f"[{ty}]"
-            case ("=[]", ty, dest, src, _):
-                src_type = get_type(src)
-                if src_type.startswith("[") and src_type.endswith("]"):
-                    instruction.type[dest] = ty
-            case ("=[]", dest, src, _):
-                src_type = get_type(src)
-                if src_type.startswith("[") and src_type.endswith("]"):
-                    instruction.type[dest] = src_type[1:-1]
-            case ("[]=", dest, _, src):
-                # nothing
-                pass
-            case ("get", dest, src):
-                # nothing maybe check if src is i64
-                pass
-            case ("veccat", dest, src1, src2):
-                type1 = get_type(src1)
-                type2 = get_type(src2)
-                hierachy = {
-                    "*": 0,
-                    "i64": 1,
-                    "f64": 2,
-                    "c64": 3,
-                    "str": 4,
-                    "unknown": 99,
-                }
-                if (
-                    isinstance(type1, str)
-                    and type1.startswith("[")
-                    and type1.endswith("]")
-                    and isinstance(type2, str)
-                    and type2.startswith("[")
-                    and type2.endswith("]")
-                ):
-                    inner1 = type1[1:-1]
-                    inner2 = type2[1:-1]
-                    if hierachy.get(inner1, -1) >= hierachy.get(inner2, -1):
-                        instruction.type[dest] = type1
-                    else:
-                        instruction.type[dest] = type2
-                else:
-                    inner1 = type1[1:-1]
-                    inner2 = type2[1:-1]
-                    if hierachy.get(inner1, -1) >= hierachy.get(inner2, -1):
-                        instruction.type[dest] = f"[{inner1}]"
-                    else:
-                        instruction.type[dest] = f"[{inner2}]"
-
-            case ("rewrite", dest, src):
-                instruction.type[dest] = get_type(src)
-            case ("ifgoto", register, _):
-                pass
-            case ("goto", _):
-                pass
-            case ("call", _):
-                pass
-            case _:
-                pass
-        pc += 1
-
-
-def mkInstrLabels(code):
-    return [Inst(*instr) for instr in code]
-
-
-def write_iic(code, filename="iic_code.iic"):
-    with open(filename, "w") as f:
-        for t in code:
-            f.write(tuple_to_infix(t))
-            f.write("\n")
+def write_iic(code, fn="iic_code.iic"):
+    with open(fn, "w") as f:
+        f.write("\n".join(map(tuple_to_infix, code)))

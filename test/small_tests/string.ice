@@ -24,7 +24,7 @@ sei i64 res := 0 in {
     }.;
   }.;
 # Beispiel 3 #
-#  res +:= sei str wort := "Test", ()->str func := lambda -> str: "Halle"
+# res +:= sei str wort := "Test", ()->str func := lambda -> str: "Halle"
   in
     func()[4] = wort[1]
   .;#

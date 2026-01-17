@@ -1,9 +1,7 @@
-import subprocess
 from ice2_ws25.ice_machine import find_labels
-from zwischencode import Inst
 
 
-def maschine_code(node: list[Inst], libICE=False):
+def maschine_code(node, libICE=False):
     register_mapping = {
         "R0": "r15",
         "R1": "r14",
@@ -13,25 +11,26 @@ def maschine_code(node: list[Inst], libICE=False):
         "R5": "r10",
         "R6": "r9",
         "R7": "r8",
+        "RS": "rbx",
     }
     labels = find_labels(node)
 
-    def return_label():
+    def ret_label():
         count = 0
         while True:
             yield (f"ret_label_{count}",)
             count += 1
 
-    return_l = return_label()
+    return_l = ret_label()
 
     # find all used registers
-    saved_registers = set()
-    for instr in node:
-        for part in instr:
-            if isinstance(part, str) and part in register_mapping:
-                saved_registers.add(register_mapping[part])
-    saved_registers = list(saved_registers)
-    saved_registers.sort()
+    def used_registers(node, mapping):
+        return sorted(
+            {mapping[p] for inst in node for p in inst if p in mapping}
+            | {"r8", "r9", "r10", "r11"}
+        )
+
+    saved_registers = used_registers(node, register_mapping)
 
     externe = [
         "extern malloc" if not libICE else "extern ice_alloc",
@@ -50,6 +49,7 @@ def maschine_code(node: list[Inst], libICE=False):
         "fmt: db '%ld', 10, 0",
         "debug: db 'D: %ld', 10, 0",
     ]
+
     asm = ["global main", *externe, "section .text"]
 
     # print result
@@ -80,9 +80,9 @@ def maschine_code(node: list[Inst], libICE=False):
         code = []
         aligned = len(saved_registers) % 2 == 1
 
+        # save registers and align stack
         for reg in saved_registers:
-            code += [f"push {reg}"]
-        code += ["push rbp"]
+            code += [f"push {regs(reg)}"]
         if aligned:
             code += ["sub rsp, 8"]
 
@@ -102,11 +102,11 @@ def maschine_code(node: list[Inst], libICE=False):
                 "call malloc",
             ]
 
+        # restore registers and align stack
         if aligned:
             code += ["add rsp, 8"]
-        code += ["pop rbp"]
         for reg in reversed(saved_registers):
-            code += [f"pop {reg}"]
+            code += [f"pop {regs(reg)}"]
 
         code += [f"mov {regs(ret_ret)}, rax"]
         return code
@@ -229,12 +229,13 @@ def maschine_code(node: list[Inst], libICE=False):
                 asm += [f"jmp {label}"]
             case "comment", text:
                 asm += [f";; {text}"]
+
+            # -------------------------
+
             case "mk[]", res, arg1:
-                asm += ["mov rdi, 24"]
-                asm += [] if not libICE else ["mov rsi, 1"]
                 asm += [
                     f"mov rbx, {regs(arg1)}",
-                    "call malloc" if not libICE else "call ice_alloc",
+                    *call_malloc("8", "1", res),
                     f"mov {regs(res)}, rax",
                     # Oject schreiben
                     "mov rax, [rel type_i64]",  # TODO: type bestimmen
@@ -255,10 +256,8 @@ def maschine_code(node: list[Inst], libICE=False):
                     else:
                         return ty
 
-                asm += [f"mov rdi, {16+8*n}"]
-                asm += [] if not libICE else [f"mov rsi, {n}"]
                 asm += [
-                    "call malloc" if not libICE else "call ice_alloc",
+                    *call_malloc("8", n, res),
                     f"mov {regs(res)}, rax",
                     # Oject schreiben
                     f"mov rax, [rel {ty_conv(ty)}]",  # TODO: type bestimmen
@@ -319,12 +318,7 @@ def maschine_code(node: list[Inst], libICE=False):
                     "add ecx, ebx",  # total length
                     "imul eax, ecx",  # total size in bytes
                     "add eax, 16",  # + header
-                    "mov rdi, rax",
-                ]
-                asm += [] if not libICE else ["mov rsi, ecx"]  # TODO: für libICE
-                asm += [
-                    "call malloc" if not libICE else "call ice_alloc",
-                    "mov rbx, rax",
+                    *call_malloc("rax", "1", "rbx"),
                     # set header
                     "mov rdx, [rel type_i64]",
                     "mov [rbx], rdx",
@@ -354,6 +348,9 @@ def maschine_code(node: list[Inst], libICE=False):
                 ]
             case "leave",:
                 asm += ["pop rbp"]
+
+            # -------------------------
+
             case "fenter", arg:
                 for reg in saved_registers:
                     asm += [f"push {reg}"]
@@ -375,6 +372,9 @@ def maschine_code(node: list[Inst], libICE=False):
                 if len(saved_registers) % 2 == 1:
                     asm += ["pop rbx"]
                 asm += [f"mov {register_mapping['R0']}, rax"]
+
+            # -------------------------
+
             case "ret",:
                 asm += ["ret"]
             case "call", fct:
@@ -390,60 +390,24 @@ def maschine_code(node: list[Inst], libICE=False):
 
     asm += asm_print(register_mapping["R0"], "fmt")
     # exit syscall
-    asm += ["mov rax, 60", "mov rdi, 0", "syscall"]
-    asm += ["ret"]
+    asm += ["mov rax, 60", "mov rdi, 0", "syscall", "ret"]
 
     return asm
 
 
-def format_asm(asm):
-    formatted = ""
-    for line in asm:
-        match line:
-            case line if line.strip() == "":
-                formatted += "\n"
-            case label if label.endswith(":"):
-                formatted += f"{label}\n"
-            case line if line.startswith(";"):
-                formatted += f"{line}\n"
-            case line if (
-                line.startswith("section")
-                or line.startswith("global")
-                or line.startswith("extern")
-            ):
-                formatted += f"{line}\n"
-            case _:
-                formatted += f"    {line}\n"
-    return formatted
-
-
 def write_to_file(asm, filename="out.asm"):
     with open(filename, "w") as f:
-        f.write(format_asm(asm))
-
-
-if __name__ == "__main__":
-    example = [
-        ("label", "main"),
-        ("=", "R0", 3),
-        ("=", "R2", 12),
-        ("+", "R1", "R0", "R2"),
-        ("=", "R0", 4),
-        ("=", "R3", 2),
-        ("*", "R2", "R0", "R3"),
-        ("+", "R0", "R1", "R2"),
-        ("=", "R0", "R0"),
-    ]
-    for x in example:
-        print(x)
-    asm = maschine_code(example)
-
-    for x in asm:
-        print(x)
-
-    # print to file
-    write_to_file(asm)
-
-    # assemble and link
-    subprocess.run(["nasm", "-felf64", "out.asm", "-o", "out.o"])
-    subprocess.run(["ld", "out.o", "-o", "out"])
+        f.write(
+            "".join(
+                (
+                    f"{line}\n"
+                    if (
+                        not line.strip()
+                        or line.endswith(":")
+                        or line.startswith(("section", "global", "extern"))
+                    )
+                    else f"    {line}\n"
+                )
+                for line in asm
+            )
+        )

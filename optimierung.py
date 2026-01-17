@@ -1,5 +1,5 @@
 from graphviz import Digraph
-from ice2_ws25.ice_machine import *
+from ice2_ws25.ice_machine import Inst, tuple_to_infix, reads, writes
 from utils import generator
 
 unique = generator()
@@ -12,13 +12,26 @@ def optimize(iir, visual=False, debug=False):
     cfg = CFGraph(iir)
     if visual:
         cfg.visualize()
-    cfg_liveness(cfg)
-    print("Spilling complete.") if debug else None
+
+    liveness(cfg)
     spilling(cfg)
+
+    cfg.print_cfg()
+
+    return cfg.iir
+
+
+def small_reg(cfg):
+    used_regs = set()
+    for line in cfg.iir:
+        used_regs |= line.read | line.write
+    reg_map = {reg: f"R{i}" for i, reg in enumerate(sorted(used_regs))}
+    cfg.iir = [line.replace(reg_map) for line in cfg.iir]
+
+
+def coloring(cfg, visual=False):
     for x, y in zip(cfg.part, cfg.last):
         cfg.iir[x : y + 1] = reg_color(cfg.iir[x : y + 1], visual)
-    print("Optimization complete.") if debug else None
-    return cfg.iir
 
 
 # --------- CONTROL FLOW GRAPH ---------
@@ -60,6 +73,18 @@ class CFGraph:
             )
         self.last = [x - 1 for x in self.part[1:]] + [len(iir) - 1]
 
+    def print_cfg(self):
+        """debuggind function to print the control flow graph and liveness info"""
+        print("Control Flow Graph:")
+        for i in range(len(self.part)):
+            x, y = self.part[i], self.last[i]
+            print(f"Block {i}: Instructions {x} to {y}")
+            print("  Instructions:")
+            for line in self.iir:
+                print(f"    {line} \t\t {line.read=}, {line.write=}, {line.live=}")
+            print("  Jumps to:", self.jump.get(i, []))
+        print()
+
     def visualize(self):
         dot = Digraph(format="png")
         dot.attr(
@@ -76,9 +101,12 @@ class CFGraph:
         dot.render("dot/cfgraph", view=True)
 
 
-def cfg_liveness(cfg):
-    for i in range(len(iir := cfg.iir)):
-        line = cfg.iir[i] = Inst(*iir[i])
+def liveness(cfg):
+
+    r = list(cfg.iir)
+    iir = cfg.iir = [Inst(*entry) for entry in r]
+
+    for line in iir:
         line.read = reads(line) - {"V"}
         line.write = writes(line) - {"V"}
         line.live = set()
@@ -87,14 +115,25 @@ def cfg_liveness(cfg):
     while repeat:
         repeat = False
         for i, x in enumerate(cfg.part):
+
             for a in reversed(range(x + 1, cfg.last[i] + 1)):
-                iir[a - 1].live |= (iir[a].live | iir[a].read) - iir[a - 1].write
+                prev = iir[a - 1]
+                succ = iir[a]
+                new_line = (succ.live | succ.read) - prev.write
+                if not new_line.issubset(prev.live):
+                    iir[a - 1].live |= new_line
+                    repeat = True
+
             for src, dest in cfg.jump.items():
                 if i in dest:
-                    tmp = iir[a := cfg.last[src]].live
-                    iir[a].live |= (iir[x].live | iir[x].read) - iir[a].write
-                    if tmp != iir[a].live:
+                    a = cfg.last[src]
+                    new_line = (iir[x].live | iir[x].read) - iir[a].write
+                    if not new_line.issubset(iir[a].live):
+                        iir[a].live |= new_line
                         repeat = True
+
+
+#  --------- REGISTER ALLOCATION (GRAPH COLORING) ---------
 
 
 def reg_color(iir, visual=False):
@@ -140,173 +179,42 @@ def reg_color(iir, visual=False):
         for x, y in edges:
             dot.edge(str(x), str(y), dir="none")
         dot.render(unique("dot/reg_color"), view=True)
-    # TODO change this, because minimum doesnt work like intended on strings
+    # TODO: change this, because minimum doesnt work like intended on strings
     norm = {r: min(k for k, v in col.items() if v == val) for r, val in col.items()}
     return [line.replace(norm) for line in iir]
 
 
-def spilling(cfg, k=4):
-    """
-    Führt Register-Spilling auf dem gegebenen Kontrollflussgraphen (CFG) durch.
-
-    Implementierung basierend auf Ihrer Beschreibung:
-    - Wenn Variablen ausgewählt werden zu spillen, wird am Funktionsanfang ein
-    Vektor alloziert und in einem speziellen Register `RS` abgelegt.
-    - Es werden drei temporäre Reserveregister verwendet (R_S0..R_S2), um
-    geladene Werte temporär zu halten, wenn sie in einer Anweisung gelesen
-    oder geschrieben werden.
-    - An den Stellen, an denen eine gespillte Variable gelesen wird, wird
-    vor der Anweisung eine Lade-Anweisung eingefügt: ("=[]", tmp, "RS", idx)
-    - Wenn die Anweisung die gespillte Variable schreibt, wird nach der
-    modifizierenden Anweisung eine Speicher-Anweisung eingefügt:
-    ("[]=", "RS", idx, tmp)
-
-    Hinweise:
-    - Diese Implementierung benutzt neue IR-Operationen: "alloc_spill",
-    "rload" und "rstore". Die restliche Pipeline (reads/writes/Inst.replace)
-    muss diese eventuell erkennen bzw. behandeln.
+# ------------ SPILLING ------------
+def spill_register(cfg, reg, spill_reg):
+    for i in cfg.part:
+        for a in range(i, cfg.last[cfg.part.index(i)] + 1):
+            line = cfg.iir[a]
+            print(f"{line=}, {line.read=}, {line.write=}")
+            if reg in line.read:
+                line_idx = cfg.iir.index(line)
+                cfg.iir.insert(
+                    line_idx,
+                    Inst("=[]", spill_reg, "V", reg),
+                )
+            if reg in line.write:
+                line_idx = cfg.iir.index(line) + 1
+                cfg.iir.insert(
+                    line_idx,
+                    Inst("[]=", "V", reg, spill_reg),
+                )
 
 
-    :param cfg: CFGraph-Objekt mit cfg.iir als Liste von Instruktionen (wird
-    in-place verändert). Vor der Verwendung sollte cfg_liveness
-    aufgerufen worden sein oder wir rufen es hier erneut.
-    :param k: Anzahl physischer Register, die verfügbar sind.
-    """
-    print("Spilling...")
-    # liveness wurde bereits berechnet
-    iir = cfg.iir
-
-    # Mapping: variable -> slot index in the spill vector
-    spilled_map = dict()
-    # Drei reservierte temporäre Register für Load/Store-Temporaries
-    tmp_regs = ["R0", "R1", "R2"]
-
-    # Hilfsfunktion: wähle Variable zum Spill (einfach heuristisch)
-    def choose_var_to_spill_at_point(live_set):
-        # Wähle diejenige Variable, die am häufigsten in live-sets vorkommt
-        # (ein einfacher Heuristik). Andere Heuristiken sind möglich.
-        return max(
-            live_set,
-            key=lambda v: sum((1 for line in iir if v in getattr(line, "live", set()))),
-        )
-
-    # Iterativ spillen bis an keiner Stelle mehr > k Variablen gleichzeitig live sind
-    print("pre-loop")
-    while True:
-        # Finde einen Programmpunkt, an dem die Live-Anzahl > k
-        idx = next(
-            (i for i, line in enumerate(iir) if len(getattr(line, "live", set())) > k),
-            None,
-        )
-        if idx is None:
-            break  # kein Spill mehr nötig
-
-        # Wähle eine Variable zum Spill an diesem Punkt
-        var_to_spill = choose_var_to_spill_at_point(iir[idx].live)
-        # Falls noch nicht gespillt, eine neue Slot-Nummer zuweisen
-        if var_to_spill not in spilled_map:
-            spilled_map[var_to_spill] = len(spilled_map)
-
-        slot = spilled_map[var_to_spill]
-
-        if isinstance(var_to_spill, list):
-            var_to_spill = tuple(var_to_spill)
-
-        # Erzeuge eine neue Instruktionsliste mit Load/Store-Einfügungen und Ersetzungen
-        new_iir = []
-        tmp_idx = 0
-        print("var_to_spill:", var_to_spill)
-        print("pre reassign register")
-        for inst in iir:
-            print(tmp_idx, inst)
-            # Wir benutzen Inst.replace(mapping) um Register zu ersetzen.
-            reads_var = var_to_spill in inst.read
-            writes_var = var_to_spill in inst.write
-
-            if reads_var:
-                tmp = tmp_regs[tmp_idx % len(tmp_regs)]
-                tmp_idx += 1
-                # rload tmp, RS, slot
-                new_iir.append(Inst("=[]", tmp, "RS", slot))
-                # ersetze die gelesene Variable in der Anweisung durch tmp
-                inst = inst.replace({var_to_spill: tmp})
-
-            if writes_var and not reads_var:
-                # Variable wird nur geschrieben (kein vorheriges Lesen)
-                # Dann müssen wir sicherstellen, dass die Zieldestination
-                # in der Instruktion durch ein temporäres Register ersetzt wird
-                tmp = tmp_regs[tmp_idx % len(tmp_regs)]
-                tmp_idx += 1
-                inst = inst.replace({var_to_spill: tmp})
-                # Füge die modifizierende Instruktion ein
-                new_iir.append(inst)
-                # rstore RS, slot, tmp
-                new_iir.append(Inst("[]=", "RS", slot, tmp))
-                print(*[str(x) for x in new_iir], sep="\n")
-                continue
-
-            if writes_var and reads_var:
-                # Fall: x = x + ..  (zuerst geladen, dann geschrieben)
-                # Wir haben die Variable oben bereits durch tmp ersetzt, also
-                # schreiben wir nach der Instruktion zurück in den Spill-Slot.
-                new_iir.append(inst)
-                tmp = tmp_regs[(tmp_idx - 1) % len(tmp_regs)]
-                new_iir.append(Inst("[]=", "RS", slot, tmp))
-                continue
-
-            # Kein Bezug zur gespillten Variable -> einfach kopieren
-            new_iir.append(inst)
-        print(*[str(x) for x in new_iir], sep="\n")
-        print("post reassign register")
-
-        # Recompute read/write/live for die neuen Instruktionen
-        print("pre-recomp-liveness")
-        cfg_liveness(cfg)
-        print("post-recomp-liveness")
-
-        # Continue the outer while loop: falls noch Stellen mit live>k existieren,
-        # wird eine neue Variable zum Spillen gewählt.
-    print("post-loop")
-
-    # Wenn wir gespillt haben, füge am Funktionsanfang die Allokation des Vektors ein
-    if spilled_map:
-        alloc_inst = Inst("mk[]", "RS", len(spilled_map))
-        cfg.iir.insert(0, alloc_inst)
-
-        # Nach dem Einfügen der Allokation müssen wir ggf. part/last/jump anpassen.
-        # Hier vereinfachend: wir setzen alle Metadaten zurück und lassen den
-        # Aufrufer (oder einen weiteren Pass) die CFG neu aufbauen falls nötig.
-
-    print(f"Spilled variables: {spilled_map}")
-    return cfg.iir
-    # print("Spilling...")
-    # for i in range(len(iir := cfg.iir)):
-    #     line = cfg.iir[i] = Inst(*iir[i])
-    #     line.read = reads(line) - {"V"}
-    #     line.write = writes(line) - {"V"}
-    #     line.live = set()
-    #
-    # repeat = True
-    # while repeat:
-    #     repeat = False
-    #     for i, x in enumerate(cfg.part):
-    #         for a in reversed(range(x + 1, cfg.last[i] + 1)):
-    #             iir[a - 1].live |= (iir[a].live | iir[a].read) - iir[a - 1].write
-    #         for src, dest in cfg.jump.items():
-    #             if i in dest:
-    #                 tmp = iir[a := cfg.last[src]].live
-    #                 iir[a].live |= (iir[x].live | iir[x].read) - iir[a].write
-    #                 if tmp != iir[a].live:
-    #                     repeat = True
-    #
-    # for i in range(len(iir)):
-    #     while len(iir[i].live) > k:
-    #         var_to_spill = next(iter(iir[i].live))
-    #         iir[i].live.remove(var_to_spill)
-    #         # Insert load before instruction
-
-
-#  --------- REGISTER ALLOCATION (GRAPH COLORING) ---------
+def spilling(cfg, threshold=4):
+    # find registers to spill
+    reg_usage = {}
+    for line in cfg.iir:
+        for r in line.read | line.write:
+            reg_usage.setdefault(r, 0)
+            reg_usage[r] += 1
+    # spill registers used more than a threshold
+    for r, usage in reg_usage.items():
+        if usage > threshold:
+            spill_register(cfg, r, f"spill_{r}")
 
 
 # MIME

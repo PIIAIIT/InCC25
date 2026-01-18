@@ -81,8 +81,12 @@ def mksymtabs(node, gamma):
         case "letrec", assignments, body:
             names = [name for _, _, name, _ in assignments]
             local_gamma = gamma.cpy(names)
-            for _, _, _, rhs in assignments:
-                mksymtabs(rhs, local_gamma)
+            for assgn in assignments:
+                mksymtabs(assgn, local_gamma)
+            mksymtabs(body, local_gamma)
+        case "loop", counter, interval, body:
+            mksymtabs(interval, gamma)
+            local_gamma = gamma.cpy(counter)
             mksymtabs(body, local_gamma)
         case (
             "num"
@@ -91,7 +95,6 @@ def mksymtabs(node, gamma):
             | "complex"
             | "binop"
             | "unary"
-            | "loop"
             | "interval"
             | "list"
             | "cons"
@@ -149,22 +152,22 @@ def _typecheck(node, debug=DEBUG or False):
                 )
             return "i64"
 
-        case ("assign", ty_var, var_name, val):
-            if var_name not in node.sym:
-                raise NameError(f"Undefined variable '{var_name}'")
+        case ("assign", ty_var, name, val):
+            if name not in node.sym:
+                raise NameError(f"Undefined variable '{name}'")
             rhs_ty = typecheck(val)
             if ty_var is None:
-                tty_var = node.sym[var_name].ty
+                tty_var = node.sym[name].ty
                 if tty_var is None:
-                    node.sym[var_name].ty = rhs_ty
+                    node.sym[name].ty = rhs_ty
                     return rhs_ty
                 else:
                     ty_var = tty_var
             if ty_var != rhs_ty:
                 raise TypeError(
-                    f"Type mismatch in assignment to '{var_name}': '{ty_var}' and '{rhs_ty}'"
+                    f"Type mismatch in assignment to '{name}': '{ty_var}' and '{rhs_ty}'"
                 )
-            node.sym[var_name].ty = ty_var
+            node.sym[name].ty = ty_var
             return ty_var
 
         case ("undef", ("var", var)):
@@ -216,11 +219,11 @@ def _typecheck(node, debug=DEBUG or False):
 
         case ("loop", counter, interval, body):
             t_interval = typecheck(interval)
-            t_counter = typecheck(counter)
-            if not t_counter.startswith("i64"):
-                raise TypeError(
-                    f"Loop counter must be of type 'i64', got '{t_counter}'"
-                )
+            body.sym[counter].ty = "i64"
+
+            for k, v in node.sym.items():
+                body.sym[k].ty = v.ty
+
             if not t_interval.startswith("[]"):
                 raise TypeError(
                     f"Loop interval must be of type 'interval', got '{t_interval}'"
@@ -237,6 +240,8 @@ def _typecheck(node, debug=DEBUG or False):
             return "[]i64"
 
         case ("lambda", parameter, body, ret_ty):
+            for k, v in node.sym.items():
+                body.sym[k].ty = v.ty
             parmam_type = []
             for param_group in parameter:
                 match param_group:
@@ -282,21 +287,20 @@ def _typecheck(node, debug=DEBUG or False):
             print("LET", assignments) if debug else None
 
             # node sym to body sym
-            # TODO: absolute hässlich
             for k, v in node.sym.items():
                 body.sym[k].ty = v.ty
 
             for assgn in assignments:
-                _, ty, var_name, _ = assgn
-                body.sym[var_name].ty = ty
-                assgn.ty = ty
+                _, ty, name, _ = assgn
+                typecheck(assgn)
+                body.sym[name].ty = ty
 
-            for _, ty, var_name, val in assignments:
-                rhs_ty = typecheck(val)
+            for _, ty, name, rhs in assignments:
+                rhs_ty = typecheck(rhs)
 
                 if ty != rhs_ty:
                     raise TypeError(
-                        f"Type mismatch in letrec assignment to '{var_name}': '{ty}' and '{rhs_ty}'"
+                        f"Type mismatch in letrec assignment to '{name}': '{ty}' and '{rhs_ty}'"
                     )
 
             print("LET BODY", body) if debug else None
@@ -403,4 +407,3 @@ def _typecheck(node, debug=DEBUG or False):
             return typecheck(expr)
         case _:
             raise TypeError(f"Unknown expression type: {node}")
-    return node

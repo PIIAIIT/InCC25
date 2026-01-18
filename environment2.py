@@ -28,6 +28,17 @@ class SymbolTable(dict):
             self[names] = Entry()
         return self
 
+    def define(self, name, value):
+        """
+        Definiert eine Variable im Environment
+        @arg name: Name der Variable
+        @arg value: Wert der Variable
+        @return gibt sich selber als Object aus
+        """
+        self.put(name)
+        self[name].value = value
+        return self
+
     def cpy(self, names):
         """
         Erstellet eine Deepcopy des Environments und packt die Namen als undefiniert darauf.

@@ -1,40 +1,63 @@
 from graphviz import Digraph
-from ice2_ws25.ice_machine import Inst, tuple_to_infix, reads, writes
+from ice2_ws25.ice_machine import (
+    Inst,
+    reads,
+    writes,
+    reassign_registers,
+    tuple_to_infix,
+)
 from utils import generator
 
 unique = generator()
 
 
-### OPTIMIZATION ###
-def optimize(iir, visual=False, debug=False):
-    print("Optimizing...") if debug else None
-    print("Control Flow Graph created.") if debug else None
+def optimize(iir, config={}):
+    """
+    Führt Optimierungen auf dem gegebenen Control Flow Graph (CFG) durch.
+    Aktuell implementierte Optimierungen:
+    - Register-Allokation mit Spilling
+
+    Args:
+        cfg: Control Flow Graph
+        visual: Ob der CFG visualisiert werden soll
+        debug: Ob Debug-Informationen ausgegeben werden sollen
+
+    Returns:
+        Optimierte Instruktionsliste
+    """
+    print("Starte Optimierung...") if config.debug else None
+
     cfg = CFGraph(iir)
-    if visual:
+    liveness(cfg)
+
+    if config.debug:
+        cfg.print_cfg()
+    if config.Ov:
         cfg.visualize()
 
+    # Lokale Optimierungen auf Basisblöcken
+    optimized_iir = []
+    for x in cfg.part:
+        y = cfg.last[cfg.part.index(x)]
+        optimized_iir += constant_folding(cfg.iir[x : y + 1])
+
+    cfg = CFGraph(optimized_iir)
     liveness(cfg)
-    spilling(cfg)
 
-    cfg.print_cfg()
+    # Globale Optimierungen
+    optimized_iir = spilling(cfg, config=config)
 
-    return cfg.iir
+    # TODO: Weitere Optimierungen implementieren
+    # optimized_iir = dead_code_elimination(cfg)
+    # optimized_iir = common_subexpression_elimination(optimized_iir)
+    # optimized_iir = copy_propagation(optimized_iir)
+    # optimized_iir = loop_invariant_code_motion(optimized_iir)
+    # optimized_iir = strength_reduction(optimized_iir)
 
-
-def small_reg(cfg):
-    used_regs = set()
-    for line in cfg.iir:
-        used_regs |= line.read | line.write
-    reg_map = {reg: f"R{i}" for i, reg in enumerate(sorted(used_regs))}
-    cfg.iir = [line.replace(reg_map) for line in cfg.iir]
-
-
-def coloring(cfg, visual=False):
-    for x, y in zip(cfg.part, cfg.last):
-        cfg.iir[x : y + 1] = reg_color(cfg.iir[x : y + 1], visual)
+    print("Optimierung abgeschlossen.") if config.debug else None
+    return optimized_iir
 
 
-# --------- CONTROL FLOW GRAPH ---------
 class CFGraph:
     def __init__(self, iir):
         self.iir = iir
@@ -66,7 +89,7 @@ class CFGraph:
         self.part = sorted(part | {0})
         self.jump = dict()
         for x, y in jump:
-            if not (x and y):
+            if x is None or y is None:
                 continue
             self.jump.setdefault(self.part.index(x + 1) - 1, []).append(
                 self.part.index(y)
@@ -81,7 +104,9 @@ class CFGraph:
             print(f"Block {i}: Instructions {x} to {y}")
             print("  Instructions:")
             for line in self.iir:
-                print(f"    {line} \t\t {line.read=}, {line.write=}, {line.live=}")
+                print(
+                    f"    {(str(line) + " " * 20)[:30]:30} {line.read=}, {line.write=}, {line.live_out=}"
+                )
             print("  Jumps to:", self.jump.get(i, []))
         print()
 
@@ -101,61 +126,64 @@ class CFGraph:
         dot.render("dot/cfgraph", view=True)
 
 
-def liveness(cfg):
+class InterferenceGraph:
+    def __init__(self, iir, exclude=None):
+        self.nodes = set()
+        self.edges = set()
 
-    r = list(cfg.iir)
-    iir = cfg.iir = [Inst(*entry) for entry in r]
+        if exclude is None:
+            exclude = set()
 
-    for line in iir:
-        line.read = reads(line) - {"V"}
-        line.write = writes(line) - {"V"}
-        line.live = set()
+        # Sammle alle Register
+        for inst in iir:
+            self.nodes |= inst.live_in
+            self.nodes |= inst.live_out
+            self.nodes |= inst.read
+            self.nodes |= inst.write
 
-    repeat = True
-    while repeat:
-        repeat = False
-        for i, x in enumerate(cfg.part):
+        def is_reg(r):
+            if not isinstance(r, str) and not r.startswith("R"):
+                return False
+            if exclude and r in exclude:
+                return False
+            return True
 
-            for a in reversed(range(x + 1, cfg.last[i] + 1)):
-                prev = iir[a - 1]
-                succ = iir[a]
-                new_line = (succ.live | succ.read) - prev.write
-                if not new_line.issubset(prev.live):
-                    iir[a - 1].live |= new_line
-                    repeat = True
+        # Entferne spezielle Register und Nicht-Register
+        self.nodes = {n for n in self.nodes if is_reg(n)}
 
-            for src, dest in cfg.jump.items():
-                if i in dest:
-                    a = cfg.last[src]
-                    new_line = (iir[x].live | iir[x].read) - iir[a].write
-                    if not new_line.issubset(iir[a].live):
-                        iir[a].live |= new_line
-                        repeat = True
+        # Baue Interferenz-Kanten
+        for inst in iir:
+            live_regs = {r for r in inst.live_out if is_reg(r)}
+            for r1 in inst.write:
+                for r2 in live_regs:
+                    if r1 != r2:
+                        edge = tuple(sorted([r1, r2]))
+                        self.edges.add(edge)
+            live_list = sorted(live_regs)
+            for i, r1 in enumerate(live_list):
+                for r2 in live_list[i + 1 :]:
+                    self.edges.add((r1, r2))
 
+    def neighbors(self, node):
+        """Gibt alle Nachbarn eines Knotens zurück"""
+        n = set()
+        for e1, e2 in self.edges:
+            if e1 == node:
+                n.add(e2)
+            elif e2 == node:
+                n.add(e1)
+        return n
 
-#  --------- REGISTER ALLOCATION (GRAPH COLORING) ---------
+    def degree(self, node):
+        """Gibt den Grad eines Knotens zurück"""
+        return len(self.neighbors(node))
 
+    def remove_node(self, node):
+        """Entfernt einen Knoten aus dem Graph"""
+        self.nodes.discard(node)
+        self.edges = {(e1, e2) for e1, e2 in self.edges if e1 != node and e2 != node}
 
-def reg_color(iir, visual=False):
-    edges = set()
-    for e in ((x, y) for line in iir for x in line.write for y in line.live):
-        edges |= {tuple(sorted(e))}
-    nodes = set.union(*(line.read | line.write for line in iir))
-    dep = dict()
-    for x, y in edges:
-        dep.setdefault(x, []).append(y)
-        dep.setdefault(y, []).append(x)
-    stk = sorted(nodes, key=lambda x: len(dep.get(x) or []))
-    col = dict()
-    while stk:
-        reg = stk.pop()
-        adj = set(col.get(x) for x in dep.get(reg) or []) - {None}
-        for i, x in enumerate(sorted(adj)):
-            if i != x:
-                col[reg] = i
-        else:
-            col[reg] = len(adj)
-    if visual:
+    def visualize(self, coloring=None, filename="dot/interference_graph"):
         dot = Digraph(format="png")
         dot.attr(
             "node",
@@ -174,218 +202,401 @@ def reg_color(iir, visual=False):
             "#ea76cb",
             "#4c4f69",
         ]
-        for reg in nodes:
-            dot.node(str(reg), str(reg), color=cpal[col[reg] % len(cpal)])
-        for x, y in edges:
-            dot.edge(str(x), str(y), dir="none")
-        dot.render(unique("dot/reg_color"), view=True)
-    # TODO: change this, because minimum doesnt work like intended on strings
-    norm = {r: min(k for k, v in col.items() if v == val) for r, val in col.items()}
-    return [line.replace(norm) for line in iir]
+        for reg in sorted(self.nodes):
+            if coloring and reg in coloring:
+                color = cpal[coloring[reg] % len(cpal)]
+            else:
+                color = "#6c7086"
+            dot.node(reg, reg, color=color)
+        for x, y in self.edges:
+            dot.edge(x, y, dir="none")
+
+        dot.render(unique(filename), view=True)
+
+
+def liveness(cfg):
+    for i in range(len(iir := cfg.iir)):
+        line = cfg.iir[i] = Inst(*iir[i])
+        line.read = reads(line) - {"V"}
+        line.write = writes(line) - {"V"}
+        line.live_in = set()
+        line.live_out = set()
+
+    repeat = True
+    while repeat:
+        repeat = False
+        for idx in reversed(range(len(iir))):
+            inst = iir[idx]
+
+            succ = []
+            if hasattr(inst, "jump"):
+                for src, dest in cfg.jump.items():
+                    if idx in src:
+                        for d in dest:
+                            succ.append(iir[d])
+            if idx + 1 < len(iir):
+                succ = [iir[idx + 1]]
+            old_live_in = inst.live_in.copy()
+            old_live_out = inst.live_out.copy()
+            inst.live_out = set()
+            for s in succ:
+                inst.live_out |= s.live_in
+            inst.live_in = inst.read | (inst.live_out - inst.write)
+            if inst.live_in != old_live_in or inst.live_out != old_live_out:
+                repeat = True
+
+
+# ------------ GRAPH COLORING ------------
+def graph_coloring(graph, k):
+    """
+    Versucht den Interferenz-Graph mit k Farben zu färben.
+    Gibt (erfolg, färbung, zu_spillende_knoten) zurück.
+    """
+    stack = []
+    g = InterferenceGraph.__new__(InterferenceGraph)
+    g.nodes = graph.nodes.copy()
+    g.edges = graph.edges.copy()
+
+    while g.nodes:
+        # Finde Knoten mit Grad < k
+        low_degree = [n for n in g.nodes if g.degree(n) < k]
+
+        if low_degree:
+            # Wähle einen Knoten mit niedrigem Grad
+            node = low_degree[0]
+            stack.append((node, False))
+            g.remove_node(node)
+        else:
+            # Kein Knoten mit Grad < k gefunden -> Spilling notwendig
+            if not g.nodes:
+                break
+            # Wähle Knoten zum Spillen (Heuristik: höchster Grad)
+            node = max(g.nodes, key=lambda n: g.degree(n))
+            stack.append((node, True))
+            g.remove_node(node)
+
+    coloring = {"R0": 0}
+    to_spill = set()
+
+    while stack:
+        node, _ = stack.pop()
+
+        # Finde verwendete Farben der Nachbarn
+        neighbor_colors = {coloring[n] for n in graph.neighbors(node) if n in coloring}
+
+        # Finde freie Farbe
+        available_colors = set(range(k)) - neighbor_colors
+
+        if available_colors:
+            coloring[node] = min(available_colors)
+        else:
+            # Keine Farbe verfügbar -> muss gespillt werden
+            to_spill.add(node)
+
+    success = len(to_spill) == 0
+    return success, coloring, to_spill
 
 
 # ------------ SPILLING ------------
-def spill_register(cfg, reg, spill_reg):
-    for i in cfg.part:
-        for a in range(i, cfg.last[cfg.part.index(i)] + 1):
-            line = cfg.iir[a]
-            print(f"{line=}, {line.read=}, {line.write=}")
-            if reg in line.read:
-                line_idx = cfg.iir.index(line)
-                cfg.iir.insert(
-                    line_idx,
-                    Inst("=[]", spill_reg, "V", reg),
+def insert_spill_code(iir, to_spill, spill_offset, RS, helper_regs):
+    """
+    Fügt Spill-Code für die angegebenen Register ein.
+    Verwendet RS als Spill-Vektor und R_SPILL0-2 als Hilfsregister.
+    """
+    if not to_spill:
+        return iir, spill_offset
+
+    # Erstelle Mapping: Register -> Spill-Offset
+    spill_map = spill_offset.copy()
+
+    for reg in sorted(to_spill):
+        if reg not in spill_map:
+            spill_map[reg] = len(spill_map)
+
+    # Durchlaufe alle Instruktionen und füge Spill-Code ein
+    new_iir = []
+    for inst in iir:
+        reads_spilled = inst.read & to_spill
+        writes_spilled = inst.write & to_spill
+
+        helper_idx = 0
+        helper_usage = []
+        load_map = {}
+        # Weise Hilfsregister zu
+        for reg in reads_spilled | writes_spilled:
+            if reg not in load_map:
+                helper = helper_regs[helper_idx % len(helper_regs)]
+                load_map[reg] = helper
+                helper_usage.append(helper)
+                helper_idx += 1
+
+        # Lade gespillte Register vor der Instruktion
+        for reg in reads_spilled:
+            helper = load_map[reg]
+            load_inst = Inst("=[]", "*", helper, RS, spill_map[reg])
+            load_inst.read = {RS}
+            load_inst.write = {helper}
+            load_inst.live_out = inst.live_out.copy()
+            new_iir.append(load_inst)
+
+        # Ersetze gespillte Register in der Instruktion
+        new_inst_tuple = tuple(load_map.get(x, x) for x in inst)
+        new_inst = Inst(*new_inst_tuple)
+
+        # Aktualisiere Metadaten
+        new_inst.read = (inst.read - to_spill) | {
+            load_map[r] for r in inst.read & to_spill
+        }
+        new_inst.write = (inst.write - to_spill) | {
+            load_map[r] for r in inst.write & to_spill
+        }
+        new_inst.live_out = (inst.live_out - to_spill) | set(helper_usage)
+
+        new_iir.append(new_inst)
+
+        # Speichere gespillte Register nach der Instruktion
+        for reg in writes_spilled:
+            helper = load_map[reg]
+
+            # Helper -> RS[offset]
+            store_inst = Inst("[]=", RS, spill_map[reg], helper)
+            store_inst.read = {RS, helper}
+            store_inst.write = {RS}
+            store_inst.live_out = inst.live_out.copy()
+            new_iir.append(store_inst)
+
+    return new_iir, spill_map
+
+
+def spilling(cfg, max_registers=7, config={}):
+    """
+    Haupt-Spilling-Funktion mit iterativer Register-Allokation.
+
+    Args:
+        cfg: Control Flow Graph
+        max_registers: Anzahl verfügbarer Register (k)
+
+    Returns:
+        Modifizierte Instruktionsliste
+    """
+    max_iterations = 20
+    iteration = 0
+    if max_registers > 7:
+        max_registers = 7
+
+    RS = "RS"
+    helper_regs = ["R_SPILL0", "R_SPILL1", "R_SPILL2"]
+    max_registers -= len(helper_regs)
+    exclude = {RS} | set(helper_regs)
+    spill_map = {}
+    spill_env_initialized = False
+
+    while iteration < max_iterations:
+        iteration += 1
+
+        ig = InterferenceGraph(cfg.iir, exclude=exclude)
+
+        success, coloring, to_spill = graph_coloring(ig, max_registers)
+
+        # Visualisiere Interferenz-Graph
+        if config.Ov:
+            ig.visualize(coloring)
+
+        if success:
+            # Erfolgreich gefärbt! Ersetze Register durch zugewiesene Register
+            (
+                print(f"Register-Allokation erfolgreich nach {iteration} Iteration(en)")
+                if config.debug
+                else None
+            )
+            print(f"Färbung: {coloring}") if config.debug else None
+
+            # Erstelle Mapping
+            reg_mapping = {
+                old: f"R{color}"
+                for old, color in coloring.items()
+                if old not in exclude
+            }
+
+            # Ersetze Register in allen Instruktionen
+            # RS und Hilfsregister haben feste Zuordnung
+            new_iir = []
+            reg_mapping.update({RS: "R7"})
+            reg_mapping.update({"R_SPILL0": "R4", "R_SPILL1": "R5", "R_SPILL2": "R6"})
+            for inst in cfg.iir:
+                new_inst = reassign_registers(inst, reg_mapping)
+                new_iir.append(new_inst)
+
+            return new_iir
+        else:
+            # Spilling notwendig
+            (
+                print(
+                    f"Iteration {iteration}: Spilling von {len(to_spill)} Registern: {sorted(to_spill)}"
                 )
-            if reg in line.write:
-                line_idx = cfg.iir.index(line) + 1
-                cfg.iir.insert(
-                    line_idx,
-                    Inst("[]=", "V", reg, spill_reg),
-                )
+                if config.debug
+                else None
+            )
 
+            if not spill_env_initialized:
+                labels_idxs = []
 
-def spilling(cfg, threshold=4):
-    # find registers to spill
-    reg_usage = {}
-    for line in cfg.iir:
-        for r in line.read | line.write:
-            reg_usage.setdefault(r, 0)
-            reg_usage[r] += 1
-    # spill registers used more than a threshold
-    for r, usage in reg_usage.items():
-        if usage > threshold:
-            spill_register(cfg, r, f"spill_{r}")
+                for i, inst in enumerate(cfg.iir):
+                    if inst[0] == "label" and (
+                        inst[1] == "main" or inst[1].startswith("lambda_")
+                    ):
+                        labels_idxs.append(i)
 
+                for idx_offset, main_idx in enumerate(labels_idxs):
+                    alloc_inst = Inst("mk[]", "*", RS, 0)
+                    alloc_inst.read = set()
+                    alloc_inst.write = {RS}
+                    alloc_inst.live_out = set()
+                    insert_idx = main_idx + 1 + idx_offset
+                    cfg.iir = cfg.iir[:insert_idx] + [alloc_inst] + cfg.iir[insert_idx:]
+                spill_env_initialized = True
 
-# MIME
-# def find_labels(tac):
-#     labels = {}
-#     for i, instruction in enumerate(tac):
-#         match instruction:
-#             case ("label", target_l):
-#                 labels[target_l] = i
-#     return labels
-#
-#
-# def control_flow_graph(tac):
-#     """
-#     Erstellt einen Kontrollflussgraphen (CFG) aus dem gegebenen dreistelligen Zwischencode (TAC).
-#     :param tac: Liste von TAC-Anweisungen
-#     :return: Kontrollflussgraph als Dictionary
-#     """
-#     cfg = {}
-#     labels = find_labels(tac)
-#
-#     for i, instruction in enumerate(tac):
-#         match instruction:
-#             case ("goto", target_l):
-#                 cfg[i] = [labels[target_l]]
-#             case ("ifgoto", _, target_l):
-#                 cfg[i] = []
-#                 if i + 1 < len(tac):
-#                     cfg[i].append(i + 1)
-#                 cfg[i].append(labels[target_l])
-#             case _:
-#                 cfg[i] = []
-#                 if i + 1 < len(tac):
-#                     cfg[i].append(i + 1)
-#
-#     return cfg
-#
+                liveness(cfg)
 
-# network X - coloring algorithmus
-# def basis_block(n_instructions, tac):
-#     """
-#     Teilt den Kontrollflussgraphen in Basisblöcke auf.
-#     :param cfg: Kontrollflussgraph als Dictionary
-#     :param n_instructions: Anzahl der TAC-Instruktionen
-#     :return: Liste von Basisblöcken (Start-, Endindex)
-#     """
-#     leaders = {0}
-#     labels = {}
-#
-#     for i, instr in enumerate(tac):
-#         match instr:
-#             case ("label", target_l):
-#                 labels[target_l] = i
-#
-#     for i, instr in enumerate(tac):
-#         match instr:
-#             case ("goto", target_l):
-#                 if i + 1 < n_instructions:
-#                     leaders.add(i + 1)
-#                 leaders.add(labels[target_l])
-#             case ("ifgoto", _, target_l):
-#                 if i + 1 < n_instructions:
-#                     leaders.add(i + 1)
-#                 leaders.add(labels[target_l])
-#             case _:
-#                 continue
-#
-#     leaders = sorted(leaders)
-#     blocks = []
-#     for i in range(len(leaders)):
-#         start = leaders[i]
-#         end = leaders[i + 1] if i + 1 < len(leaders) else n_instructions
-#         blocks.append((start, end))
-#
-#     return blocks
-#
+            # Füge Spill-Code ein
+            cfg.iir, spill_map = insert_spill_code(
+                cfg.iir, to_spill, spill_map, RS, helper_regs
+            )
 
+            num_spills = len(spill_map)
+            for i, inst in enumerate(cfg.iir):
+                if inst[0] == "mk[]" and len(inst) > 2 and inst[2] == RS:
+                    new_inst = Inst("mk[]", "*", RS, num_spills)
+                    new_inst.read = set()
+                    new_inst.write = {RS}
+                    new_inst.live_out = inst.live_out.copy()
+                    cfg.iir[i] = new_inst
 
-# def register_coloring(cfg, tac):
-#     """
-#     Führt eine einfache Register-Allokation basierend auf Lebendigkeitsanalyse durch.
-#     :param cfg: Kontrollflussgraph als Dictionary
-#     :param tac: Liste von TAC-Anweisungen
-#     :return: Mapping von Registern zu reduzierten Registern
-#     """
-#     in_sets, out_sets = liveness2(cfg, tac)
-#     interference_graph = {}
-#
-#     n_instructions = infer_n_instructions(cfg)
-#     for i in range(n_instructions):
-#         live_vars = out_sets[i].union(in_sets[i])
-#         for var1 in live_vars:
-#             if var1 not in interference_graph:
-#                 interference_graph[var1] = set()
-#             for var2 in live_vars:
-#                 if var1 != var2:
-#                     interference_graph[var1].add(var2)
-#
-#     coloring = {}
-#
-#     for var in sorted(
-#         interference_graph, key=lambda v: len(interference_graph[v]), reverse=True
-#     ):
-#         neighbor_colors = {
-#             coloring.get(neigh)
-#             for neigh in interference_graph[var]
-#             if neigh in coloring
-#         }
-#         color = 0
-#         while color in neighbor_colors:
-#             color += 1
-#         coloring[var] = color
-#
-#     return coloring
-#
-#
-# def assign_regs(tac, coloring):
-#     """
-#     Weist den TAC-Anweisungen die zugewiesenen Register zu.
-#     :param tac: Liste von TAC-Anweisungen
-#     :param coloring: Mapping von Variablen zu Registern
-#     :return: TAC mit zugewiesenen Registern
-#     """
-#     print(tac)
-#     print(coloring)
-#     assigned_tac = []
-#
-#     for instruction in tac:
-#         new_instruction = []
-#         for part in instruction:
-#             if isinstance(part, str) and part in coloring:
-#                 new_instruction.append(f"R{coloring[part]}")
-#             else:
-#                 new_instruction.append(part)
-#         assigned_tac.append(tuple(new_instruction))
-#
-#     print("\nTAC mit zugewiesenen Registern:")
-#     for line_no, instr in enumerate(assigned_tac):
-#         print(f"{line_no:02}: {instr}")
-#
-#     return assigned_tac
+            # Aktualisiere Liveness-Analyse
+            liveness(cfg)
+
+    (
+        print(
+            f"Warnung: Register-Allokation nach {max_iterations} Iterationen nicht erfolgreich"
+        )
+        if config.debug
+        else None
+    )
+    return cfg.iir
 
 
 #  --------- CONSTANT FOLDING ---------
-def constant_folding(tac):
+def constant_folding(iir):
     """
     Führt Constant Folding auf dem gegebenen dreistelligen Zwischencode (TAC) durch.
-    :param tac: Liste von TAC-Anweisungen
+    :param iir: Liste von TAC-Anweisungen
     :return: Optimierter TAC mit gefalteten Konstanten
     """
-    optimized_tac = []
+    optimized_iir = []
+    heap: dict[str, int] = {}
 
-    for instruction in tac:
+    def arg(a):
+        if a in heap:
+            return heap[a]
+        elif isinstance(a, str) and a.startswith("R"):
+            return a
+        return a
+
+    for instruction in iir:
         match instruction:
-            case (op, target, arg1, arg2) if op in {"+", "-", "*", "/"}:
-                if isinstance(arg1, int) and isinstance(arg2, int):
-                    if op == "+":
-                        result = arg1 + arg2
-                    elif op == "-":
-                        result = arg1 - arg2
-                    elif op == "*":
-                        result = arg1 * arg2
-                    elif op == "/":
-                        result = arg1 // arg2  # Ganzzahlige Division
-                    optimized_tac.append(("=", target, result))
+            case ("=", "R0", value):
+                heap["R0"] = arg(value)
+                optimized_iir.append(instruction)
+            case ("=", target, value) if isinstance(value, int):
+                heap[target] = value
+            case "=[]", typ, res, vec, i:
+                heap.pop(res, None)
+                if i in heap:
+                    optimized_iir.append(("=[]", typ, res, vec, arg(i)))
                 else:
-                    optimized_tac.append(instruction)
+                    optimized_iir.append(instruction)
+            case "=[]", res, vec, i:
+                heap.pop(res, None)
+                if i in heap:
+                    optimized_iir.append(("=[]", res, vec, arg(i)))
+                else:
+                    optimized_iir.append(instruction)
+            case "[]=", vec, i, val:
+                optimized_iir.append(("[]=", vec, i, arg(val)))
+            case "get", res, _:
+                heap.pop(res, None)
+                optimized_iir.append(instruction)
+            case ("mk[]", target, size):
+                if size in heap:
+                    optimized_iir.append(("mk[]", target, arg(size)))
+                    heap.pop(target, None)
+                else:
+                    optimized_iir.append(instruction)
+                    heap.pop(target, None)
+            case ("mk[]", ty, target, size):
+                if size in heap:
+                    optimized_iir.append(("mk[]", ty, target, arg(size)))
+                    heap.pop(target, None)
+                else:
+                    optimized_iir.append(instruction)
+                    heap.pop(target, None)
+            case (op, target, arg1, arg2) if op in {"+", "-", "*", "/", "%"}:
+                val1 = arg(arg1)
+                val2 = arg(arg2)
+                if isinstance(val1, int) and isinstance(val2, int):
+                    if op == "+":
+                        result = val1 + val2
+                    elif op == "-":
+                        result = val1 - val2
+                    elif op == "*":
+                        result = val1 * val2
+                    elif op == "/":
+                        result = val1 // val2  # Ganzzahlige Division
+                    elif op == "%":
+                        result = val1 % val2  # Ganzzahlige Division
+                    heap[target] = result
+                    optimized_iir.append(("=", target, result))
+                    heap.pop(target, None)
+                elif isinstance(val1, int):
+                    optimized_iir.append((op, target, val1, arg2))
+                    heap.pop(target, None)
+                elif isinstance(val2, int):
+                    optimized_iir.append((op, target, arg1, val2))
+                    heap.pop(target, None)
+                else:
+                    optimized_iir.append(instruction)
+                    heap.pop(target, None)
+            case (op, target, arg1, arg2) if op in {"<=", "<", ">=", ">", "==", "!="}:
+                val1 = arg(arg1)
+                val2 = arg(arg2)
+                if isinstance(val1, int) and isinstance(val2, int):
+                    if op == "<=":
+                        result = int(val1 <= val2)
+                    elif op == "<":
+                        result = int(val1 < val2)
+                    elif op == ">=":
+                        result = int(val1 >= val2)
+                    elif op == ">":
+                        result = int(val1 > val2)
+                    elif op == "==":
+                        result = int(val1 == val2)
+                    elif op == "!=":
+                        result = int(val1 != val2)
+                    heap[target] = result
+                    optimized_iir.append(("=", target, result))
+                elif isinstance(val1, int):
+                    optimized_iir.append((op, target, val1, arg2))
+                    heap.pop(target, None)
+                elif isinstance(val2, int):
+                    optimized_iir.append((op, target, arg1, val2))
+                    heap.pop(target, None)
+                else:
+                    optimized_iir.append(instruction)
+                    heap.pop(target, None)
             case _:
-                optimized_tac.append(instruction)
+                optimized_iir.append(instruction)
 
-    return optimized_tac
+    return optimized_iir
 
 
 #  --------- COMMON SUBEXPRESSION ELIMINATION ---------
@@ -396,72 +607,10 @@ def common_subexpression_elimination(tac):
     :return: Optimierter TAC mit eliminierten gemeinsamen Teilausdrücken
     """
     optimized_tac = []
-    expr_table = {}
+    expr_map = {}
 
     for instruction in tac:
         match instruction:
-            case (op, target, arg1, arg2) if op in {"+", "-", "*", "/"}:
-                expr = (op, arg1, arg2)
-                if expr in expr_table:
-                    optimized_tac.append(("=", target, expr_table[expr]))
-                else:
-                    expr_table[expr] = target
-                    optimized_tac.append(instruction)
-            case _:
-                optimized_tac.append(instruction)
-
-    return optimized_tac
-
-
-#  --------- COPY PROPAGATION ---------
-def copy_propagation(tac):
-    """
-    Führt Copy Propagation auf dem gegebenen dreistelligen Zwischencode (TAC) durch.
-    :param tac: Liste von TAC-Anweisungen
-    :return: Optimierter TAC mit propagierten Kopien
-    """
-    optimized_tac = []
-    copy_table = {}
-
-    for instruction in tac:
-        match instruction:
-            case ("=", target, source):
-                if source in copy_table:
-                    copy_table[target] = copy_table[source]
-                else:
-                    copy_table[target] = source
-                optimized_tac.append(instruction)
-            case _:
-                new_instruction = []
-                for part in instruction:
-                    if isinstance(part, str) and part in copy_table:
-                        new_instruction.append(copy_table[part])
-                    else:
-                        new_instruction.append(part)
-                optimized_tac.append(tuple(new_instruction))
-
-    return optimized_tac
-
-
-#  --------- DEAD CODE ELIMINATION ---------
-def dead_code_elimination(tac):
-    """
-    Führt Dead Code Elimination auf dem gegebenen dreistelligen Zwischencode (TAC) durch.
-    :param tac: Liste von TAC-Anweisungen
-    :return: Optimierter TAC mit eliminiertem totem Code
-    """
-    optimized_tac = []
-    used_vars = set()
-
-    for instruction in reversed(tac):
-        match instruction:
-            case ("=", target, source):
-                if target in used_vars:
-                    optimized_tac.append(instruction)
-                    if isinstance(source, str):
-                        used_vars.add(source)
-                else:
-                    continue
             case (op, target, arg1, arg2) if op in {
                 "+",
                 "-",
@@ -474,19 +623,74 @@ def dead_code_elimination(tac):
                 "==",
                 "!=",
             }:
-                if target in used_vars:
-                    optimized_tac.append(instruction)
-                    if isinstance(arg1, str):
-                        used_vars.add(arg1)
-                    if isinstance(arg2, str):
-                        used_vars.add(arg2)
+                expr_key = (op, arg1, arg2)
+                if expr_key in expr_map:
+                    existing_target = expr_map[expr_key]
+                    optimized_tac.append(("=", target, existing_target))
                 else:
-                    continue
+                    expr_map[expr_key] = target
+                    optimized_tac.append(instruction)
             case _:
                 optimized_tac.append(instruction)
 
-    optimized_tac.reverse()
     return optimized_tac
+
+
+#  --------- COPY PROPAGATION ---------
+def copy_propagation(iir):
+    """
+    Führt Copy Propagation auf dem gegebenen dreistelligen Zwischencode (TAC) durch.
+    :param tac: Liste von TAC-Anweisungen
+    :return: Optimierter TAC mit propagierten Kopien
+    """
+    pass
+    cfg = CFGraph(iir)
+    liveness(cfg)
+    iir = cfg.iir
+    for idx, inst in enumerate(iir):
+        if inst[0] == "=":
+            dest, src = inst[1], inst[2]
+
+            for j in range(idx + 1, len(iir)):
+                next_inst = iir[j]
+                print(j, iir[j], next_inst.write)
+
+                if dest in next_inst.write:
+                    break
+
+                next_inst.read = {src if r == dest else r for r in next_inst.read}
+
+                next_inst_tuple = tuple(
+                    src if operand == dest else operand for operand in next_inst
+                )
+
+                iir[j] = Inst(*next_inst_tuple)
+    return iir
+
+
+#  --------- DEAD CODE ELIMINATION ---------
+def dead_code_elimination(cfg):
+    """
+    Führt Dead Code Elimination auf dem gegebenen dreistelligen Zwischencode (TAC) durch.
+    :param cfg: Control Flow Graph mit annotierten tac
+    :return: Optimierter TAC ohne toten Code
+    """
+    iir = cfg.iir.copy()
+    new_iir = []
+    for inst in iir:
+        if not inst.write:
+            new_iir.append(inst)
+        elif inst.write & inst.live_out:
+            new_iir.append(inst)
+        elif inst[0] in {"call", "ret", "ifgoto", "goto", "=[]", "[]=", "get", "mk[]"}:
+            new_iir.append(inst)
+        else:
+            pass  # Tote Anweisung wird entfernt
+    cfg = CFGraph(new_iir)
+    liveness(cfg)
+    if cfg.iir != iir:
+        print("Dead Code Elimination: Entfernte Anweisungen")
+    return cfg.iir
 
 
 #  --------- LOOP INVARIANT CODE MOTION ---------
@@ -496,29 +700,7 @@ def loop_invariant_code_motion(tac):
     :param tac: Liste von TAC-Anweisungen
     :return: Optimierter TAC mit verschobenem loop-invariantem Code
     """
-    optimized_tac = []
-    loop_invariants = []
-
-    in_loop = False
-    for instruction in tac:
-        match instruction:
-            case ("label", label) if label.startswith("loop_start"):
-                in_loop = True
-                optimized_tac.append(instruction)
-            case ("label", label) if label.startswith("loop_end"):
-                in_loop = False
-                optimized_tac.append(instruction)
-                optimized_tac.extend(loop_invariants)
-                loop_invariants.clear()
-            case (op, target, arg1, arg2) if op in {"+", "-", "*", "/"}:
-                if in_loop and isinstance(arg1, int) and isinstance(arg2, int):
-                    loop_invariants.append(instruction)
-                else:
-                    optimized_tac.append(instruction)
-            case _:
-                optimized_tac.append(instruction)
-
-    return optimized_tac
+    pass
 
 
 #  --------- STRENGTH REDUCTION ---------
@@ -528,16 +710,4 @@ def strength_reduction(tac):
     :param tac: Liste von TAC-Anweisungen
     :return: Optimierter TAC mit reduzierter Rechenstärke
     """
-    optimized_tac = []
-
-    for instruction in tac:
-        match instruction:
-            case ("*", target, arg1, arg2):
-                if isinstance(arg2, int) and arg2 == 2:
-                    optimized_tac.append(("+", target, arg1, arg1))
-                else:
-                    optimized_tac.append(instruction)
-            case _:
-                optimized_tac.append(instruction)
-
-    return optimized_tac
+    pass

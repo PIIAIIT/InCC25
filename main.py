@@ -1,16 +1,18 @@
-from parser import parser, print_ast
 import os
 import argparse
 from argparse import Namespace
 
+from parser import parser
 from environment2 import SymbolTable
 from interpreter import eval
 from typisierung import typecheck, mksymtabs
-from zwischencode import free, iic_gen, write_iic
+from zwischencode import free, iic_gen
 from optimierung import optimize
-import subprocess
+from maschinecode import maschine_code
 import ice2_ws25.ice_machine as ice_machine
-from maschinecode import maschine_code, write_to_file
+from utils import write_iic, write_to_file
+
+import subprocess
 import readline
 
 COLORS = {
@@ -25,6 +27,8 @@ def prod(src, config: Namespace):
     # Parser
     result = parser.parse(src)
     print("Parsed successfully.") if config.debug else None
+    if config.parser:
+        print(result)
 
     # Typecheck und Symboltabelle
     mksymtabs(result, SymbolTable())
@@ -65,11 +69,11 @@ def prod(src, config: Namespace):
         if not inter_result:
             raise Exception("Intermediate code must be generated before optimization.")
 
-        inter_result = optimize(inter_result, visual=config.visual, debug=config.debug)
+        inter_result = optimize(inter_result, config=config)
 
         # Verify correctness after optimization
         regs2 = ice_machine.run(inter_result, debug=config.debug, detailed=config.debug)
-        if regs != regs2:
+        if regs["R0"] != regs2["R0"]:
             (
                 print(
                     COLORS["r"]
@@ -166,11 +170,15 @@ def test_code(config: Namespace):
 
             prod(src, config=config)
         except EOFError:
-            exit()
+            print("\nExiting interactive mode.")
+            break
         except Exception as e:
             print(COLORS["r"] + str(e) + COLORS["_"])
         except KeyboardInterrupt as e:
             print(e)
+        finally:
+            readline.write_history_file(histfile)
+            exit(1)
     else:
         with open(config.read, "r") as f:
             src = f.read()
@@ -179,12 +187,16 @@ def test_code(config: Namespace):
                 print("Execution finished.")
             except Exception as e:
                 print(COLORS["r"] + str(e) + COLORS["_"])
+                exit(1)
 
 
 if __name__ == "__main__":
     cli = argparse.ArgumentParser()  # just to enable -h/--help
     cli.add_argument("filename", nargs="?", help="Source code file to execute")
     cli.add_argument("-d", "--debug", action="store_true", help="Enable debug mode")
+    cli.add_argument(
+        "-p", "--parser", action="store_true", help="Print AST after parsing"
+    )
     cli.add_argument(
         "-D", "--detailed", action="store_true", help="Enable detailed debug mode"
     )
@@ -227,5 +239,6 @@ if __name__ == "__main__":
         help="Enable visualization for optimization",
     )
     args = cli.parse_args()
+    args.debug = args.debug or args.detailed
 
     test_code(config=args)

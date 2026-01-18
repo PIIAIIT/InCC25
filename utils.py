@@ -1,3 +1,6 @@
+from ice2_ws25.ice_machine import tuple_to_infix
+
+
 # ---------------- FUNKTIONS FOR PARSER ----------------
 def generator():
     count = dict()
@@ -99,4 +102,32 @@ def save_in_file(iic_code, filename="iic_code.iic"):
             f.write(line + "\n")
 
 
+def write_iic(code, fn="iic_code.iic"):
+    with open(fn, "w") as f:
+        f.write("\n".join(map(tuple_to_infix, code)))
+
+
 # ---------------- FUNKTIONS FOR ZWISCHENCODE ----------------
+
+# ---------------- FUNKTIONS FOR MACHINECODE ----------------
+
+
+def write_to_file(asm, filename="out.asm"):
+    with open(filename, "w") as f:
+        f.write(
+            "".join(
+                (
+                    f"{line}\n"
+                    if (
+                        not line.strip()
+                        or line.endswith(":")
+                        or line.startswith(("section", "global", "extern"))
+                    )
+                    else f"    {line}\n"
+                )
+                for line in asm
+            )
+        )
+
+
+# ---------------- FUNKTIONS FOR MACHINECODE ----------------

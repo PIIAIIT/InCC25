@@ -112,7 +112,6 @@ def maschine_code(node, libICE=False):
         return code
 
     for instr in node:
-        print(instr)
         match instr:
             case "label", "main":
                 asm += ["main:"]
@@ -132,8 +131,14 @@ def maschine_code(node, libICE=False):
                     "or": "or",
                     "and": "and",
                 }
-                asm += [f"{OPS[op]} {regs(reg1)}, {regs(reg2)}"]
-                asm += [f"mov {regs(res)}, {regs(reg1)}"]
+                r1, r2 = regs(reg1), regs(reg2)
+                if isinstance(r1, int):
+                    asm += [f"mov rax, {r1}"]
+                    asm += [f"{OPS[op]} rax, {r2}"]
+                    asm += [f"mov {regs(res)}, rax"]
+                else:
+                    asm += [f"{OPS[op]} {r1}, {r2}"]
+                    asm += [f"mov {regs(res)}, {r1}"]
             case "not", res, reg1:
                 if res == reg1:
                     asm += [f"xor {regs(res)}, 1"]
@@ -236,7 +241,6 @@ def maschine_code(node, libICE=False):
                 asm += [
                     f"mov rbx, {regs(arg1)}",
                     *call_malloc("8", "1", res),
-                    f"mov {regs(res)}, rax",
                     # Oject schreiben
                     "mov rax, [rel type_i64]",  # TODO: type bestimmen
                     f"mov [{regs(res)}], rax",  # type header
@@ -258,7 +262,6 @@ def maschine_code(node, libICE=False):
 
                 asm += [
                     *call_malloc("8", n, res),
-                    f"mov {regs(res)}, rax",
                     # Oject schreiben
                     f"mov rax, [rel {ty_conv(ty)}]",  # TODO: type bestimmen
                     f"mov [{regs(res)}], rax",  # type header
@@ -386,28 +389,9 @@ def maschine_code(node, libICE=False):
                     f"{nl}:",
                 ]
             case _:
-                raise ValueError(f"Unknown instruction: {instr}")
+                raise NotImplementedError(f"Instruction not implemented: {instr}")
 
     asm += asm_print(register_mapping["R0"], "fmt")
-    # exit syscall
     asm += ["mov rax, 60", "mov rdi, 0", "syscall", "ret"]
 
     return asm
-
-
-def write_to_file(asm, filename="out.asm"):
-    with open(filename, "w") as f:
-        f.write(
-            "".join(
-                (
-                    f"{line}\n"
-                    if (
-                        not line.strip()
-                        or line.endswith(":")
-                        or line.startswith(("section", "global", "extern"))
-                    )
-                    else f"    {line}\n"
-                )
-                for line in asm
-            )
-        )

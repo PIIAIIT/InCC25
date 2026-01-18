@@ -2,7 +2,6 @@ from optimierung import CFGraph, liveness
 from parser import Node
 from typing import Any
 from utils import gen_label, gen_reg
-from ice2_ws25.ice_machine import tuple_to_infix
 
 OPS = {
     "plus": "+",
@@ -91,18 +90,13 @@ def code_c(node, lmbd, ret, used, code_x):
             arr_reg, idx_reg = gen_reg(used | {ret}, 2)
             code_c(array, lmbd, arr_reg, used | {ret}, code_v)
             code_c(index, lmbd, idx_reg, used | {ret, arr_reg}, code_b)
+            ty = array.ty[2:] if array.ty.startswith("[]") else "i64"
             node.code = [
                 ("comment", "array access"),
                 *array.code,
                 ("=[]", array.ty, ret, arr_reg, 0),  # make array code_b
                 *index.code,
-                (
-                    "=[]",
-                    array.ty[2:] if array.ty.startswith("[]") else "i64",
-                    ret,
-                    ret,
-                    idx_reg,
-                ),  # dereference array
+                ("=[]", ty, ret, ret, idx_reg),  # dereference array
             ]
 
         case "if", condition, then_body, else_body:
@@ -186,44 +180,95 @@ def code_c(node, lmbd, ret, used, code_x):
 
         case "loop", counter, interval, body:
             loop_l, end_l = next(LABELS["loop"])
+            body.sym.cpy(body.free)
 
-            (counter_reg, cond_reg) = gen_reg(used | {ret}, 2)
+            for i, name in enumerate(sorted(body.free)):
+                body.sym[name].idx = i
 
-            code_c(interval, lmbd, counter_reg, used, code_v)
-            code_c(body, lmbd, ret, used | {counter_reg}, code_x)
+            (env_reg, cnt_reg, interval_reg) = gen_reg(used | {ret}, 3)
+
+            global_vars = []
+            for name in sorted(node.free):
+                global_vars += [
+                    ("=[]", node.sym[name].ty, ret, "V", node.sym[name].idx)
+                ]
+                global_vars += [("[]=", env_reg, body.sym[name].idx, ret)]
+
+            hull_cnt = [
+                ("mk[]", ret, 0),
+                ("[]=", env_reg, body.sym[counter].idx, ret),
+            ]
+
+            interval_code = [
+                *code_c(interval, lmbd, interval_reg, used, code_v),
+                ("=[]", "i64", cnt_reg, interval_reg, 0),
+                ("mk[]", cnt_reg, cnt_reg),
+                ("=[]", "i64", ret, "V", body.sym[counter].idx),
+                ("rewrite", ret, cnt_reg),
+            ]
+
+            condition = [
+                ("=[]", "i64", cnt_reg, interval_reg, 0),
+                ("=[]", "i64", ret, interval_reg, 1),
+                (">", ret, cnt_reg, ret),
+                ("ifgoto", ret, end_l),
+            ]
+
+            code_c(body, lmbd, ret, used | {interval_reg}, code_x)
+
+            count_up = [
+                ("=[]", "i64", cnt_reg, interval_reg, 0),
+                ("+", cnt_reg, cnt_reg, 1),
+                ("[]=", interval_reg, 0, cnt_reg),
+                ("mk[]", cnt_reg, cnt_reg),
+                ("=[]", "i64", ret, "V", body.sym[counter].idx),
+                ("rewrite", ret, cnt_reg),
+            ]
 
             node.code = [
                 ("comment", f"loop start {loop_l}"),
-                ("mk[]", "i64", counter_reg, 1),
-                *counter.code,
+                ("mk[]", "*", env_reg, len(body.free)),
+                *global_vars,
+                *hull_cnt,
+                ("enter", env_reg),
+                *interval_code,
                 ("label", loop_l),
-                ("<=", cond_reg, counter_reg, 0),
-                ("ifgoto", cond_reg, end_l),
-                ("-", counter_reg, counter_reg, 1),
+                *condition,
                 *body.code,
+                ("=", env_reg, ret),
+                *count_up,
                 ("goto", loop_l),
                 ("label", end_l),
+                ("=", ret, env_reg),
+                ("leave",),
+                ("comment", f"loop end {loop_l}"),
             ]
 
-        case "interval", _, e1, e2, _:
+        case "interval", s_br, e1, e2, e_br:
             (tmp_reg,) = gen_reg(used | {ret})
             code_c(e1, lmbd, tmp_reg, used | {ret}, code_b)
             code_c(e2, lmbd, tmp_reg, used | {ret}, code_b)
-            node.code = [
-                ("comment", "interval"),
-                ("mk[]", "*", ret, 2),
-                *e1.code,
-                ("[]=", ret, 0, tmp_reg),
-                *e2.code,
-                ("[]=", ret, 1, tmp_reg),
-            ]
+            node.code = [("comment", "interval"), ("mk[]", "i64", ret, 2), *e1.code]
+            node.code += [] if s_br == "[" else [("+", tmp_reg, tmp_reg, 1)]
+            node.code += [("[]=", ret, 0, tmp_reg), *e2.code]
+            node.code += [] if e_br == "]" else [("-", tmp_reg, tmp_reg, 1)]
+            node.code += [("[]=", ret, 1, tmp_reg)]
 
         case "letrec", decls, body:
-            body.sym.cpy(body.free)
+            letrec_names = [name for _, _, name, _ in decls]
+            mutual = any(
+                rhs.free & set(letrec_names) - {var_name}
+                for _, _, var_name, rhs in decls
+            )
             free_names = set()
-            for _, _, name, rhs in decls:
-                free_names |= rhs.free
-            free_names -= {name for *_, name, _ in decls}
+            if not mutual:
+                for _, _, name, rhs in decls:
+                    free_names |= rhs.free
+                free_names -= {name for *_, name, _ in decls}
+            else:
+                for _, _, var_name, rhs in decls:
+                    free_names |= rhs.free & set(letrec_names) - {var_name}
+            body.sym.cpy(body.free | free_names)
 
             for i, name in enumerate(sorted(body.free | free_names)):
                 body.sym[name].idx = i
@@ -239,8 +284,8 @@ def code_c(node, lmbd, ret, used, code_x):
                 global_vars += [("[]=", env_reg, body.sym[name].idx, ret)]
 
             hulls = []
-            for _, ty, var_name, rhs in decls:
-                if var_name not in body.free:
+            for i, (_, ty, var_name, rhs) in enumerate(decls):
+                if var_name not in (body.free | free_names):
                     continue
 
                 match ty:
@@ -251,11 +296,13 @@ def code_c(node, lmbd, ret, used, code_x):
                 hulls += [("[]=", env_reg, body.sym[var_name].idx, ret)]
 
             declared_vars = []
-            for _, ty, name, rhs in decls:
+            for i, (_, ty, name, rhs) in enumerate(decls):
                 declared_vars += code_c(rhs, lmbd, ret, used, code_v)
 
-                if name in body.free:
-                    declared_vars += [("=[]", ty, env_reg, "V", body.sym[name].idx)]
+                if name in body.free | free_names:
+                    declared_vars += [
+                        ("=[]", f"[{ty}]", env_reg, "V", body.sym[name].idx)
+                    ]
                     declared_vars += [("rewrite", env_reg, ret)]
 
             code_c(body, lmbd, ret, used, code_x)
@@ -372,8 +419,8 @@ def code_b(node: Node, lmbd, ret, used) -> Any:
 
             r1, r2 = list(gen_reg(used | {ret}, 2))
 
-            code_c(exprs[0], lmbd, r1, used, code_b)
-            code_c(exprs[1], lmbd, r2, used, code_b)
+            code_c(exprs[0], lmbd, r1, used | {ret}, code_b)
+            code_c(exprs[1], lmbd, r2, used | {ret, r1}, code_b)
 
             code = [
                 *exprs[0].code,
@@ -403,14 +450,17 @@ def code_v(node: Node, lmbd, ret, used) -> Any:
             code_c(node, lmbd, ret, used, code_b)
             node.code += [("mk[]", ret, ret)]
 
-        case "str" | "array", _:
+        case "str", _:
+            (tmp_reg,) = gen_reg(used | {ret})
+            code_c(node, lmbd, tmp_reg, used | {ret}, code_b)
+            node.code += [("mk[]", "str", ret, 1), ("[]=", ret, 0, tmp_reg)]
+        case "array", _:
             (tmp_reg,) = gen_reg(used | {ret})
             code_c(node, lmbd, tmp_reg, used | {ret}, code_b)
             node.code += [("mk[]", node.ty, ret, 1), ("[]=", ret, 0, tmp_reg)]
 
         case "var", name:
             node.code = [
-                ("comment", f"var: {name}"),
                 ("=[]", node.sym[name].ty, ret, "V", node.sym[name].idx),
             ]
 
@@ -429,14 +479,13 @@ def code_v(node: Node, lmbd, ret, used) -> Any:
             (env_reg,) = gen_reg(used | {ret})
 
             env = [("mk[]", "*", env_reg, len(node.free))]
-            for i, name in enumerate(node.free):
+            for i, name in enumerate(sorted(node.free)):
                 body.sym[name].idx = i
                 env += [("=[]", node.sym[name].ty, ret, "V", node.sym[name].idx)]
                 env += [("[]=", env_reg, body.sym[name].idx, ret)]
 
             for i, (*_, name) in enumerate(params):
-                # TODO: implement keyword and infty params
-                # TODO: heap alloc function später checken
+                # TODO: implement keyword and infty params; heap alloc function später checken
                 body.sym[name].idx = len(node.free) + i
 
             (body_ret_reg,) = gen_reg({"R0"})
@@ -509,11 +558,11 @@ def code_v(node: Node, lmbd, ret, used) -> Any:
 def free(node) -> Any:
     node.free = set()
     match node.ast:
+        case "num" | "float" | "str" | "complex", _:
+            pass
         case "program", body:
             free(body)
             node.free |= body.free
-        case "num" | "float" | "str" | "complex", _:
-            pass
         case "array", elements:
             for element in elements:
                 free(element)
@@ -566,7 +615,7 @@ def free(node) -> Any:
         case "loop", counter, interval, body:
             free(interval)
             free(body)
-            node.free |= body.free | interval.free | {counter}
+            node.free |= (body.free | interval.free) - {counter}
         case "interval", _, e1, e2, _:
             free(e1)
             free(e2)
@@ -603,8 +652,3 @@ def free(node) -> Any:
                         node.free |= a.free
         case _:
             raise NotImplementedError("free not implemented for this AST node")
-
-
-def write_iic(code, fn="iic_code.iic"):
-    with open(fn, "w") as f:
-        f.write("\n".join(map(tuple_to_infix, code)))

@@ -194,18 +194,21 @@ def code_c(node, lmbd, ret, used, code_x):
                 ]
                 global_vars += [("[]=", env_reg, body.sym[name].idx, ret)]
 
-            hull_cnt = [
-                ("mk[]", ret, 0),
-                ("[]=", env_reg, body.sym[counter].idx, ret),
-            ]
+            hull_cnt = []
+            if counter in body.free:
+                hull_cnt = [
+                    ("mk[]", ret, 0),
+                    ("[]=", env_reg, body.sym[counter].idx, ret),
+                ]
 
-            interval_code = [
-                *code_c(interval, lmbd, interval_reg, used, code_v),
-                ("=[]", "i64", cnt_reg, interval_reg, 0),
-                ("mk[]", cnt_reg, cnt_reg),
-                ("=[]", "i64", ret, "V", body.sym[counter].idx),
-                ("rewrite", ret, cnt_reg),
-            ]
+            interval_code = code_c(interval, lmbd, interval_reg, used, code_v)
+            if counter in body.free:
+                interval_code += [
+                    ("=[]", "i64", cnt_reg, interval_reg, 0),
+                    ("mk[]", cnt_reg, cnt_reg),
+                    ("=[]", "i64", ret, "V", body.sym[counter].idx),
+                    ("rewrite", ret, cnt_reg),
+                ]
 
             condition = [
                 ("=[]", "i64", cnt_reg, interval_reg, 0),
@@ -221,9 +224,12 @@ def code_c(node, lmbd, ret, used, code_x):
                 ("+", cnt_reg, cnt_reg, 1),
                 ("[]=", interval_reg, 0, cnt_reg),
                 ("mk[]", cnt_reg, cnt_reg),
-                ("=[]", "i64", ret, "V", body.sym[counter].idx),
-                ("rewrite", ret, cnt_reg),
             ]
+            if counter in body.free:
+                count_up += [
+                    ("=[]", "i64", ret, "V", body.sym[counter].idx),
+                    ("rewrite", ret, cnt_reg),
+                ]
 
             node.code = [
                 ("comment", f"loop start {loop_l}"),

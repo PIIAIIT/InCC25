@@ -59,7 +59,6 @@ def prod(src, config: Namespace):
 
         regs = ice_machine.run(
             inter_result,
-            debug=config.debug or config.detailed,
             detailed=config.detailed,
         )
         print("IIC executed successfully.") if config.debug else None
@@ -72,7 +71,7 @@ def prod(src, config: Namespace):
         inter_result = optimize(inter_result, config=config)
 
         # Verify correctness after optimization
-        regs2 = ice_machine.run(inter_result, debug=config.debug, detailed=config.debug)
+        regs2 = ice_machine.run(inter_result, detailed=config.debug)
         if regs["R0"] != regs2["R0"]:
             (
                 print(

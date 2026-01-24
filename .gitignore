@@ -5,6 +5,7 @@ ice2_ws25/__pycache__/
 .*
 # executables
 main
+test_run
 test.exe
 # temporary files
 out.*
@@ -21,3 +22,4 @@ dot/
 # generated parser files
 parser.out
 parsetab.py
+results.csv

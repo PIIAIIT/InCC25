@@ -46,9 +46,10 @@ def optimize(iir, config={}):
 
     # Globale Optimierungen
     optimized_iir = spilling(cfg, config=config)
+    # optimized_iir = dead_code_elimination(optimized_iir)
 
     # TODO: Weitere Optimierungen implementieren
-    # optimized_iir = dead_code_elimination(cfg)
+    # optimized_iir = dead_code_elimination(optimized_iir)
     # optimized_iir = common_subexpression_elimination(optimized_iir)
     # optimized_iir = copy_propagation(optimized_iir)
     # optimized_iir = loop_invariant_code_motion(optimized_iir)
@@ -381,12 +382,10 @@ def spilling(cfg, max_registers=7, config={}):
     """
     max_iterations = 20
     iteration = 0
-    if max_registers > 7:
-        max_registers = 7
+    max_registers = max(max_registers, 7)
 
     RS = "RS"
     helper_regs = ["R_SPILL0", "R_SPILL1", "R_SPILL2"]
-    max_registers -= len(helper_regs)
     exclude = {RS} | set(helper_regs)
     spill_map = {}
     spill_env_initialized = False
@@ -396,7 +395,9 @@ def spilling(cfg, max_registers=7, config={}):
 
         ig = InterferenceGraph(cfg.iir, exclude=exclude)
 
-        success, coloring, to_spill = graph_coloring(ig, max_registers)
+        success, coloring, to_spill = graph_coloring(
+            ig, max_registers - len(helper_regs)
+        )
 
         # Visualisiere Interferenz-Graph
         if config.Ov:
@@ -411,18 +412,15 @@ def spilling(cfg, max_registers=7, config={}):
             )
             print(f"Färbung: {coloring}") if config.debug else None
 
+            ig = InterferenceGraph(cfg.iir, exclude={})
+            _, coloring, _ = graph_coloring(ig, max_registers)
+
             # Erstelle Mapping
-            reg_mapping = {
-                old: f"R{color}"
-                for old, color in coloring.items()
-                if old not in exclude
-            }
+            reg_mapping = {old: f"R{color}" for old, color in coloring.items()}
 
             # Ersetze Register in allen Instruktionen
             # RS und Hilfsregister haben feste Zuordnung
             new_iir = []
-            reg_mapping.update({RS: "R7"})
-            reg_mapping.update({"R_SPILL0": "R4", "R_SPILL1": "R5", "R_SPILL2": "R6"})
             for inst in cfg.iir:
                 new_inst = reassign_registers(inst, reg_mapping)
                 new_iir.append(new_inst)
@@ -492,53 +490,49 @@ def constant_folding(iir):
     :param iir: Liste von TAC-Anweisungen
     :return: Optimierter TAC mit gefalteten Konstanten
     """
-    optimized_iir = []
-    heap: dict[str, int] = {}
+    optimized = []
+    heap = {}
 
     def arg(a):
-        if a in heap:
-            return heap[a]
-        elif isinstance(a, str) and a.startswith("R"):
-            return a
-        return a
+        return heap.get(a, a) if isinstance(a, str) and a.startswith("R") else a
 
-    for instruction in iir:
-        match instruction:
-            case ("=", "R0", value):
+    for instr in iir:
+        match instr:
+            case ("=", "R0", value) if isinstance(value, int):
                 heap["R0"] = arg(value)
-                optimized_iir.append(instruction)
-            case ("=", target, value) if isinstance(value, int):
-                heap[target] = value
+                optimized.append(instr)
+            case ("=", tgt, value) if isinstance(value, int):
+                heap[tgt] = value
             case "=[]", typ, res, vec, i:
-                heap.pop(res, None)
                 if i in heap:
-                    optimized_iir.append(("=[]", typ, res, vec, arg(i)))
+                    optimized.append(("=[]", typ, res, vec, arg(i)))
                 else:
-                    optimized_iir.append(instruction)
+                    optimized.append(instr)
+                heap.pop(res, None)
             case "=[]", res, vec, i:
-                heap.pop(res, None)
                 if i in heap:
-                    optimized_iir.append(("=[]", res, vec, arg(i)))
+                    optimized.append(("=[]", res, vec, arg(i)))
                 else:
-                    optimized_iir.append(instruction)
-            case "[]=", vec, i, val:
-                optimized_iir.append(("[]=", vec, i, arg(val)))
-            case "get", res, _:
+                    optimized.append(instr)
                 heap.pop(res, None)
-                optimized_iir.append(instruction)
+            case "[]=", vec, i, val:
+                optimized.append(("[]=", vec, i, arg(val)))
+            case "get", res, _:
+                optimized.append(instr)
+                heap.pop(res, None)
             case ("mk[]", target, size):
                 if size in heap:
-                    optimized_iir.append(("mk[]", target, arg(size)))
+                    optimized.append(("mk[]", target, arg(size)))
                     heap.pop(target, None)
                 else:
-                    optimized_iir.append(instruction)
+                    optimized.append(instr)
                     heap.pop(target, None)
             case ("mk[]", ty, target, size):
                 if size in heap:
-                    optimized_iir.append(("mk[]", ty, target, arg(size)))
+                    optimized.append(("mk[]", ty, target, arg(size)))
                     heap.pop(target, None)
                 else:
-                    optimized_iir.append(instruction)
+                    optimized.append(instr)
                     heap.pop(target, None)
             case (op, target, arg1, arg2) if op in {"+", "-", "*", "/", "%"}:
                 val1 = arg(arg1)
@@ -555,16 +549,15 @@ def constant_folding(iir):
                     elif op == "%":
                         result = val1 % val2  # Ganzzahlige Division
                     heap[target] = result
-                    optimized_iir.append(("=", target, result))
-                    heap.pop(target, None)
+                    optimized.append(("=", target, result))
                 elif isinstance(val1, int):
-                    optimized_iir.append((op, target, val1, arg2))
+                    optimized.append((op, target, val1, arg2))
                     heap.pop(target, None)
                 elif isinstance(val2, int):
-                    optimized_iir.append((op, target, arg1, val2))
+                    optimized.append((op, target, arg1, val2))
                     heap.pop(target, None)
                 else:
-                    optimized_iir.append(instruction)
+                    optimized.append(instr)
                     heap.pop(target, None)
             case (op, target, arg1, arg2) if op in {"<=", "<", ">=", ">", "==", "!="}:
                 val1 = arg(arg1)
@@ -583,20 +576,50 @@ def constant_folding(iir):
                     elif op == "!=":
                         result = int(val1 != val2)
                     heap[target] = result
-                    optimized_iir.append(("=", target, result))
+                    optimized.append(("=", target, result))
                 elif isinstance(val1, int):
-                    optimized_iir.append((op, target, val1, arg2))
+                    optimized.append((op, target, val1, arg2))
                     heap.pop(target, None)
                 elif isinstance(val2, int):
-                    optimized_iir.append((op, target, arg1, val2))
+                    optimized.append((op, target, arg1, val2))
                     heap.pop(target, None)
                 else:
-                    optimized_iir.append(instruction)
+                    optimized.append(instr)
                     heap.pop(target, None)
             case _:
-                optimized_iir.append(instruction)
+                optimized.append(instr)
 
-    return optimized_iir
+    return optimized
+
+
+def dead_code_elimination(tac):
+    """
+    Führt Dead Code Elimination auf dem gegebenen dreistelligen Zwischencode (TAC) durch.
+    :param tac: Liste von TAC-Anweisungen
+    :return: Optimierter TAC ohne toten Code
+    """
+    optimized_tac = []
+    live_vars = set()
+
+    last_op = True
+    for instruction in reversed(tac):
+        match instruction:
+            case ("=", "R0", _) if last_op:
+                last_op = False
+                optimized_tac.append(instruction)
+            case ("=", target, _):
+                if target in live_vars:
+                    optimized_tac.append(instruction)
+                    live_vars.discard(target)
+            case _:
+                optimized_tac.append(instruction)
+                live_vars |= writes(instruction)
+
+        live_vars -= writes(instruction)
+        live_vars |= reads(instruction)
+
+    optimized_tac.reverse()
+    return optimized_tac
 
 
 #  --------- COMMON SUBEXPRESSION ELIMINATION ---------
@@ -669,7 +692,7 @@ def copy_propagation(iir):
 
 
 #  --------- DEAD CODE ELIMINATION ---------
-def dead_code_elimination(cfg):
+def dead_code_elimination2(cfg):
     """
     Führt Dead Code Elimination auf dem gegebenen dreistelligen Zwischencode (TAC) durch.
     :param cfg: Control Flow Graph mit annotierten tac
